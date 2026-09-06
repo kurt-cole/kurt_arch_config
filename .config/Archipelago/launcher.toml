@@ -1,0 +1,215 @@
+# Archipelago quick launcher  --  SUPER + ;
+#
+# Only entries with visible = true show up in the list; everything installed is
+# listed here so you can flip on the ones you actually play. Order here is the
+# order in the launcher.
+#
+# Per entry:
+#   visible    show it in the launcher
+#   emoji      whatever you like, shown on the left
+#   name       label in the list
+#   component  Archipelago launcher component, run as: Archipelago "<component>"
+#              (leave "" if the game needs no AP client)
+#   commands   extra shell commands launched alongside it, in order
+#
+# In the launcher: j/k or arrows move, / filters, Enter launches, d launches
+# with the Archipelago client in a terminal (the Linux equivalent of Windows'
+# ArchipelagoLauncherDebug), e opens this file in the editor, q/Esc closes.
+#
+# Components marked "guessed name" were scraped out of a frozen world and may
+# be off -- check against the names in the real Archipelago Launcher.
+
+entries = [
+  { visible = false, emoji = "🎮", name = "2048", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "A Hat in Time", component = "A Hat in Time Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "A Link Between Worlds", component = "A Link Between Worlds Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "A Link to the Past", component = "SNI Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "A Short Hike", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Adventure", component = "Adventure Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "AM2R", component = "AM2R Client", commands = [] },
+  { visible = true, emoji = "🎮", name = "ANIMAL WELL", component = "ANIMAL WELL Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "AP WebSocket Proxy", component = "AP WebSocket Proxy", commands = [] },
+  { visible = false, emoji = "🎮", name = "APBingo", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "APQuest", component = "APQuest Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Aquaria", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "ArchipelaCode", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Archipeladoku", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Baba Is You", component = "Baba Is You Client", commands = [] },
+  { visible = true, emoji = "🎮", name = "Balatro", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Banjo-Tooie", component = "Banjo-Tooie Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Bizhawk Ut", component = "BizHawk Client + Universal Tracker", commands = [] },
+  { visible = false, emoji = "🎮", name = "Blasphemous", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Bloons TD6", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Bomb Rush Cyberfunk", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Bumper Stickers", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Castlevania - Circle of the Moon", component = "BizHawk Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Castlevania 64", component = "BizHawk Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Catan", component = "Catan Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Cave Story", component = "Cave Story Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Celeste (Open World)", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Celeste 64", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "ChecksFinder", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Choo-Choo Charles", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Civilization VI", component = "Civ6 Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Clair Obscur Expedition 33", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Cobalt Core", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Cookie Clicker", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Crypt of the NecroDancer", component = "Crypt of the NecroDancer Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Cursed Mario 64", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Dark Souls III", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Dark Souls Remastered", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "DeathLinkipelago", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "DELTARUNE", component = "DELTARUNE Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Dicey Dungeons", component = "Dicey Dungeons Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "DLCQuest", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Donkey Kong 64", component = "DK64 Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Donkey Kong Country 3", component = "SNI Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "DOOM 1993", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "DOOM II", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "EarthBound", component = "SNI Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Factorio", component = "Factorio Client", commands = [] },  # guessed name; also: KRCON Client, RCON Client
+  { visible = false, emoji = "🎮", name = "Faxanadu", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Fe8", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Feeding Frenzy 2", component = "Feeding Frenzy 2 Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Final Fantasy", component = "BizHawk Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Final Fantasy Mystic Quest", component = "SNI Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Final Fantasy Tactics A2", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Final Fantasy V PR", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Final Fantasy X", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Garfield Kart - Furious Racing", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Generate Until Successful", component = "Generate Until Successful", commands = [] },
+  { visible = false, emoji = "🎮", name = "Golden Sun The Lost Age", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Half-Life", component = "Half-Life Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Half-Life (Sven Co-op)", component = "Half-Life (Sven Co-op) Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Halo The Master Chief Collection", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Hangman", component = "Hangman Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Haste", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Heretic", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Hollow Knight", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Hollow Knight: Silksong", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Horse Riding Classic", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Hylics 2", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Inscryption", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Inscryption Beta", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Jak and Daxter: The Precursor Legacy", component = "Jak and Daxter ArchipelaGOAL Client", commands = [] },  # guessed name; also: Jak and Daxter Client
+  { visible = false, emoji = "🎮", name = "Jigsaw", component = "Jigsaw AutoLaunch", commands = [] },
+  { visible = false, emoji = "🎮", name = "Johnny Upgrade", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Kingdom Hearts", component = "KH1 Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Kingdom Hearts 2", component = "KH2 Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Kirby's Dream Land 3", component = "SNI Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Landstalker - The Treasures of King Nole", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Lego Star Wars: The Complete Saga", component = "Lego Star Wars: The Complete Saga Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Lethal Company", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Lingo", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Links Awakening DX", component = "Links Awakening DX Client", commands = [] },  # guessed name; also: Link's Awakening Client, Open Tracker
+  { visible = false, emoji = "🎮", name = "Lufia II Ancient Cave", component = "SNI Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Majora's Mask Recompiled", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Manual", component = "Manual Client", commands = [] },  # also: Manual Discord Server
+  { visible = false, emoji = "🎮", name = "Marble It Up! Ultra", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Mario & Luigi Superstar Saga", component = "BizHawk Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Mario Kart Wii", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Mega Man 2", component = "BizHawk Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Mega Man 3", component = "BizHawk Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Mega Man X", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "MegaMan Battle Network 3", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Meritous", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Metroid Dread", component = "Dread Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Metroid Fusion", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Metroid: Zero Mission", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Minecraft", component = "Minecraft Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Minecraft Dig", component = "Minecraft Dig Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Minecraft Fabric", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Mirror's Edge", component = "Mirror's Edge Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Modded Minecraft", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Monster Hunter World", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Muse Dash", component = "", commands = [] },  # no AP client found
+  { visible = true , emoji = "🍄", name = "New Super Mario Bros. DS", component = "NSMBDS Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Noita", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Nonopelagram", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "NSMBW", component = "New Super Mario Bros Wii Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Ocarina of Time", component = "Ocarina of Time Client", commands = [] },  # also: Ocarina of Time Adjuster
+  { visible = false, emoji = "🎮", name = "Old School Runescape", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "OpenRCT2", component = "OpenRCT2 Client", commands = [] },  # also: OpenRCT2 Client
+  { visible = false, emoji = "🎮", name = "Overcooked! 2", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Paint", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Paper Mario", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Paper Mario: The Thousand-Year Door", component = "TTYDClient", commands = [] },
+  { visible = false, emoji = "🎮", name = "PEAK", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Peggle Deluxe", component = "Peggle Deluxe Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Persona 5 Royal", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Plants vs. Zombies", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Pokemon Black and White", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Pokemon Emerald", component = "BizHawk Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Pokemon Mystery Dungeon Explorers of Sky", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Pokemon Platinum", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Pokemon Red and Blue", component = "BizHawk Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Pokepelago", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Portal 2", component = "Portal 2 Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Psychonauts", component = "Psychonauts Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Pvz2Gardendless", component = "PvZ2 Gardendless Installer", commands = [] },
+  { visible = false, emoji = "🎮", name = "R.E.P.O", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Raft", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Refunct", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Rift of the Necrodancer", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Risk of Rain 2", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Satisfactory", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Saving Princess", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Secret of Evermore", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Shadow Generations", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "shapez", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Shivers", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Slay the Spire", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Slay the Spire II", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Slime Rancher", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Slime Rancher 2", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "SlotLock", component = "Slot Lock Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Slow Release", component = "Slow Release Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Sly Cooper and the Thievius Raccoonus", component = "Sly 1 Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "SM64: Spicy Mycena 64", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "SMBWonder", component = "SMBW Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "SMZ3", component = "SNI Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Sonic Advance 2", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Sonic Adventure 2 Battle", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Sonic Adventure DX", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Sonic Battle", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Sonic Heroes", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Ssbb Sse", component = "Subspace Emissary Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Stacklands", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Starcraft 2", component = "Starcraft 2 Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Stardew Valley", component = "Stardew Valley Tracker", commands = [] },  # guessed name; also: Universal Tracker
+  { visible = false, emoji = "🎮", name = "Subnautica", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Super Mario 64", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Super Mario Land 2", component = "BizHawk Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Super Mario Sunshine", component = "Super Mario Sunshine Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Super Mario World", component = "SNI Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Super Metroid", component = "SNI Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Taskipelago", component = "Taskipelago Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "Team Fortress 2 Mann vs Machine", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Terraria", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "The Binding of Isaac Repentance", component = "Isaac Client", commands = [] },
+  { visible = false, emoji = "🎮", name = "The Legend of Zelda", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "The Messenger", component = "Messenger Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "The Wind Waker", component = "The Wind Waker Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "The Witness", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Timespinner", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Toontown", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "TUNIC", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Undertale", component = "Undertale Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Unfair Flips", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Universal Tracker", component = "Universal Tracker", commands = [] },
+  { visible = false, emoji = "🎮", name = "Voltorb Flip", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "VVVVVV", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Wargroove", component = "Wargroove Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Wordipelago", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Yacht Dice", component = "", commands = [] },  # no AP client found
+  { visible = false, emoji = "🎮", name = "Yoshi's Island", component = "SNI Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Yu-Gi-Oh! 2006", component = "BizHawk Client", commands = [] },  # guessed name
+  { visible = false, emoji = "🎮", name = "Zillion", component = "", commands = [] },  # no AP client found
+]
+
+# Settings come last: TOML puts every bare key above the first [table].
+[settings]
+# The newest ~/Applications/Archipelago*.AppImage is used if this path is gone.
+archipelago = "/home/barretglass/Applications/Archipelago_0.6.7_linux-x86_64_30a01a0369579383beb81bc3ed6a95bf.AppImage"
+terminal = ["foot", "-a", "ap-debug", "-T", "Archipelago (debug)"]
+editor = ["foot", "-a", "ap-config", "-T", "launcher.toml", "nvim"]

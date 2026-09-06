@@ -1,0 +1,18 @@
+{
+    "appearance": {
+        "transparency": {
+            "enabled": false
+        }
+    },
+    "dashboard": {
+        "showOnHover": true
+    },
+    "launcher": {
+        "favouriteApps": [
+            "firefox",
+            "foot",
+            "codium",
+            "steam"
+        ]
+    }
+}

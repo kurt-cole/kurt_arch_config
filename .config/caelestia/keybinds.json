@@ -1,0 +1,370 @@
+{
+  "_comment": "Source of truth for the SUPER + ` cheatsheet. Keep this in sync whenever a keybind is added or changed in ~/.config/caelestia/hypr-vars.lua or hypr-user.lua (or when caelestia's defaults in ~/.config/hypr/variables.lua move).",
+  "sections": [
+    {
+      "title": "Launch",
+      "binds": [
+        [
+          "SUPER",
+          "App launcher (tap SUPER on its own)"
+        ],
+        [
+          "SUPER + T",
+          "Terminal"
+        ],
+        [
+          "SUPER + W",
+          "Browser"
+        ],
+        [
+          "SUPER + C",
+          "Editor"
+        ],
+        [
+          "SUPER + E",
+          "File explorer"
+        ],
+        [
+          "CTRL + ALT + V",
+          "Audio settings"
+        ],
+        [
+          "SUPER + '",
+          "Claude Code (~/Projects/claude-scratchwork)"
+        ],
+        [
+          "SUPER + ;",
+          "Archipelago quick launcher (Enter launches, d debug client, e edit list)"
+        ]
+      ]
+    },
+    {
+      "title": "Special workspaces",
+      "binds": [
+        [
+          "SUPER + `",
+          "This cheatsheet (right 1/3)"
+        ],
+        [
+          "SUPER + G",
+          "Audio mixer (left 1/3)"
+        ],
+        [
+          "SUPER + Y",
+          "Scratchpad"
+        ],
+        [
+          "SUPER + D",
+          "Communication (discord, whatsapp)"
+        ],
+        [
+          "SUPER + M",
+          "Music (Apple Music in firefox)"
+        ],
+        [
+          "SUPER + R",
+          "Todo (checklist)"
+        ],
+        [
+          "SUPER + S",
+          "Steam"
+        ],
+        [
+          "CTRL + SHIFT + Escape",
+          "System monitor (btop)"
+        ]
+      ]
+    },
+    {
+      "title": "Window layout",
+      "binds": [
+        [
+          "SUPER + H",
+          "Split 1/3 left, 2/3 right"
+        ],
+        [
+          "SUPER + L",
+          "Split 2/3 left, 1/3 right"
+        ],
+        [
+          "SUPER + arrows",
+          "Focus window in direction"
+        ],
+        [
+          "SUPER + SHIFT + arrows",
+          "Move window in direction"
+        ],
+        [
+          "SUPER + F",
+          "Fullscreen"
+        ],
+        [
+          "SUPER + ALT + F",
+          "Bordered fullscreen"
+        ],
+        [
+          "SUPER + ALT + Space",
+          "Toggle floating"
+        ],
+        [
+          "SUPER + P",
+          "Pin window"
+        ],
+        [
+          "SUPER + N",
+          "Hide window (stays linked to this workspace)"
+        ],
+        [
+          "SUPER + SHIFT + N",
+          "Show hidden windows, pick one to bring back"
+        ],
+        [
+          "SUPER + Q",
+          "Close window"
+        ],
+        [
+          "SUPER + Z",
+          "Move window (drag)"
+        ],
+        [
+          "SUPER + X",
+          "Resize window (drag)"
+        ],
+        [
+          "CTRL + SUPER + \\",
+          "Center window"
+        ],
+        [
+          "CTRL + SUPER + ALT + \\",
+          "Normalize window"
+        ],
+        [
+          "SUPER + ALT + \\",
+          "Picture-in-picture"
+        ]
+      ]
+    },
+    {
+      "title": "Resize",
+      "binds": [
+        [
+          "SUPER + -",
+          "Narrower  (or SUPER + ALT + Left)"
+        ],
+        [
+          "SUPER + =",
+          "Wider  (or SUPER + ALT + Right)"
+        ],
+        [
+          "SUPER + SHIFT + -",
+          "Shorter  (or SUPER + ALT + Up)"
+        ],
+        [
+          "SUPER + SHIFT + =",
+          "Taller  (or SUPER + ALT + Down)"
+        ]
+      ]
+    },
+    {
+      "title": "Workspaces",
+      "binds": [
+        [
+          "SUPER + 1-0",
+          "Go to workspace"
+        ],
+        [
+          "SUPER + ALT + 1-0",
+          "Move window to workspace"
+        ],
+        [
+          "CTRL + SUPER + 1-0",
+          "Go to workspace group"
+        ],
+        [
+          "CTRL + SUPER + ALT + 1-0",
+          "Move window to workspace group"
+        ],
+        [
+          "CTRL + SUPER + Left/Right",
+          "Previous / next workspace"
+        ],
+        [
+          "SUPER + Page_Up/Down",
+          "Previous / next workspace"
+        ],
+        [
+          "CTRL + SUPER + scroll",
+          "Previous / next workspace group"
+        ],
+        [
+          "CTRL + SUPER + SHIFT + Left/Right",
+          "Move window to prev / next workspace"
+        ],
+        [
+          "SUPER + ALT + S",
+          "Move window to scratchpad"
+        ],
+        [
+          "CTRL + SUPER + SHIFT + Down",
+          "Pull window out of scratchpad"
+        ]
+      ]
+    },
+    {
+      "title": "Window groups",
+      "binds": [
+        [
+          "ALT + TAB",
+          "Cycle windows"
+        ],
+        [
+          "SHIFT + ALT + TAB",
+          "Cycle windows backwards"
+        ],
+        [
+          "CTRL + ALT + TAB",
+          "Cycle groups"
+        ],
+        [
+          "CTRL + SHIFT + ALT + TAB",
+          "Cycle groups backwards"
+        ],
+        [
+          "SUPER + ,",
+          "Toggle group"
+        ],
+        [
+          "SUPER + SHIFT + ,",
+          "Lock active group"
+        ],
+        [
+          "SUPER + U",
+          "Move window out of group"
+        ]
+      ]
+    },
+    {
+      "title": "Screenshot & record",
+      "binds": [
+        [
+          "Print",
+          "Screenshot"
+        ],
+        [
+          "SUPER + SHIFT + S",
+          "Screenshot (freeze)"
+        ],
+        [
+          "SUPER + SHIFT + ALT + S",
+          "Screenshot region"
+        ],
+        [
+          "CTRL + ALT + R",
+          "Record screen"
+        ],
+        [
+          "SUPER + ALT + R",
+          "Record with sound"
+        ],
+        [
+          "SUPER + SHIFT + ALT + R",
+          "Record region"
+        ],
+        [
+          "SUPER + SHIFT + C",
+          "Colour picker"
+        ]
+      ]
+    },
+    {
+      "title": "Media & audio",
+      "binds": [
+        [
+          "CTRL + SUPER + Space",
+          "Play / pause"
+        ],
+        [
+          "CTRL + SUPER + =",
+          "Next track"
+        ],
+        [
+          "CTRL + SUPER + -",
+          "Previous track"
+        ],
+        [
+          "CTRL + SUPER + Backspace",
+          "Stop"
+        ],
+        [
+          "SUPER + SHIFT + M",
+          "Mute"
+        ],
+        [
+          "Mouse F13",
+          "Toggle discord mute"
+        ],
+        [
+          "Mouse F14",
+          "Toggle discord deafen"
+        ]
+      ]
+    },
+    {
+      "title": "Shell & session",
+      "binds": [
+        [
+          "SUPER + ALT + N",
+          "Sidebar"
+        ],
+        [
+          "SUPER + K",
+          "Show all panels"
+        ],
+        [
+          "SUPER + V",
+          "Clipboard history"
+        ],
+        [
+          "SUPER + ALT + V",
+          "Delete from clipboard history"
+        ],
+        [
+          "CTRL + SHIFT + ALT + V",
+          "Paste latest clipboard entry"
+        ],
+        [
+          "SUPER + .",
+          "Emoji picker"
+        ],
+        [
+          "CTRL + ALT + C",
+          "Clear notifications"
+        ],
+        [
+          "SUPER + \\",
+          "Lock screen"
+        ],
+        [
+          "SUPER + ALT + L",
+          "Restore lock screen"
+        ],
+        [
+          "SUPER + SHIFT + L",
+          "Sleep"
+        ],
+        [
+          "CTRL + ALT + Delete",
+          "Session menu"
+        ],
+        [
+          "CTRL + SUPER + SHIFT + R",
+          "Kill shell"
+        ],
+        [
+          "CTRL + SUPER + ALT + R",
+          "Restart shell"
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[Default Applications]
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
+application/x-compressed-tar=userapp-7z x %f -aou-L61WU3.desktop
+application/x-tar=userapp-7z e-XTEQU3.desktop
+application/x-7z-compressed=userapp-7z x %f -aou-L61WU3.desktop
+
+[Added Associations]
+application/x-compressed-tar=userapp-7z x %f -aou-L61WU3.desktop;userapp-7z-X808U3.desktop;userapp-7z e-XTEQU3.desktop;
+application/x-tar=userapp-7z x %f -aou-L61WU3.desktop;userapp-7z e-XTEQU3.desktop;
+application/x-7z-compressed=userapp-7z x %f -aou-L61WU3.desktop;

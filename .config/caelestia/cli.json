@@ -1,0 +1,45 @@
+{
+  "toggles": {
+    "audio": {
+      "pavucontrol": {
+        "enable": true,
+        "match": [{ "class": "org.pulseaudio.pavucontrol" }],
+        "command": ["pavucontrol"],
+        "move": true
+      }
+    },
+    "music": {
+      "spotify": { "enable": false },
+      "feishin": { "enable": false },
+      "applemusic": {
+        "enable": true,
+        "match": [{ "class": "firefox", "title": "Music - Web Player" }],
+        "command": ["firefox", "--new-window", "https://music.apple.com"],
+        "move": true
+      }
+    },
+    "steam": {
+      "steam": {
+        "enable": true,
+        "match": [{ "class": "steam", "initial_title": "Steam" }],
+        "command": ["steam"],
+        "move": true
+      }
+    },
+    "cheatsheet": {
+      "cheatsheet": {
+        "enable": true,
+        "match": [{ "class": "cheatsheet", "title": "cheatsheet", "workspace": { "name": "special:cheatsheet" } }],
+        "command": ["foot", "-a", "cheatsheet", "-T", "cheatsheet", "fish", "-C", "exec /home/barretglass/.config/caelestia/scripts/cheatsheet.py"]
+      }
+    },
+    "todo": {
+      "todoist": { "enable": false },
+      "checklist": {
+        "enable": true,
+        "match": [{ "class": "checklist", "title": "checklist", "workspace": { "name": "special:todo" } }],
+        "command": ["foot", "-a", "checklist", "-T", "checklist", "fish", "-C", "exec checklist"]
+      }
+    }
+  }
+}
