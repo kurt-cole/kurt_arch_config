@@ -107,9 +107,13 @@ proton_client = {}
 visible = true
 emoji = "🐟️"
 name = "Feeding Frenzy 2"
-component = ""
-commands = []
-proton_client = { appid = 3390, client = "Feeding Frenzy 2 Client", apworld = "feeding_frenzy_2.apworld", mode = "standalone" }
+component = "Feeding Frenzy 2 Client"
+commands = ["steam steam://rungameid/3390"]
+# proton_client is parked until the apworld is updated -- see
+# ~/Projects/claude-scratchwork/ff2-linux-support.md. To re-enable, drop the {}
+# below and restore:
+#   proton_client = { appid = 3390, client = "Feeding Frenzy 2 Client", apworld = "feeding_frenzy_2.apworld", mode = "standalone", dll_overrides = ["dsound"] }
+proton_client = {}
 
 [[entries]]  # no AP client found TODO: gale
 visible = true

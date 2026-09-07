@@ -138,8 +138,10 @@ class Launcher:
         if not pc:
             return
         script = os.path.join(HOME, ".config/caelestia/scripts/ap-proton-client.sh")
+        overrides = pc.get("dll_overrides", [])
         argv = [script, str(pc["appid"]), pc["client"], "debug" if debug else "",
-                pc.get("apworld", ""), pc.get("mode", "attach")]
+                pc.get("apworld", ""), pc.get("mode", "attach"),
+                ",".join(overrides) if isinstance(overrides, list) else str(overrides)]
         spawn(argv)
 
     def launch(self, debug=False):
