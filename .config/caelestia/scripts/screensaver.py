@@ -53,6 +53,18 @@ def dispatch(expr: str) -> None:
     subprocess.run(["hyprctl", "dispatch", expr], capture_output=True, text=True)
 
 
+def set_cursor_visible(visible: bool) -> None:
+    """Hide or restore the pointer compositor-wide.
+
+    viewer.py blanks the cursor over its own surface, but that only takes
+    effect once the pointer enters that surface -- a pointer sitting still on
+    another monitor keeps whatever shape it had. `cursor.invisible` is global,
+    so it covers every monitor at once.
+    """
+    dispatch(f'(function() hl.config({{ ["cursor.invisible"] = '
+             f'{"true" if not visible else "false"} }}) return hl.dsp.no_op() end)()')
+
+
 def monitors() -> list[dict]:
     return hypr("monitors")
 
@@ -227,6 +239,8 @@ def start(name: str | None, stay: bool) -> int:
     for address in placed:
         fullscreen(address)
 
+    set_cursor_visible(False)
+
     # Keep the keyboard on the saver so a stray keystroke lands there rather
     # than in whatever was underneath.
     if focus_address:
@@ -274,6 +288,7 @@ def wait_for_window(before: set[str]) -> str | None:
 # ------------------------------------------------------------------- stop ---
 def stop() -> int:
     state = read_state()
+    set_cursor_visible(True)
 
     for pid in state.get("pids", []):
         try:
