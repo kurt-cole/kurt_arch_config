@@ -47,6 +47,7 @@ visible = true
 emoji = "🐇"
 name = "ANIMAL WELL"
 component = ""
+label = "Proton client"
 commands = ["steam steam://rungameid/813230"]
 proton_client = { appid = 813230, client = "ANIMAL WELL Client", apworld = "animal_well.apworld" }
 
@@ -55,6 +56,7 @@ visible = true
 emoji = "🔢"
 name = "Archipeladoku"
 component = ""
+label = "browser"
 commands = []
 proton_client = {}
 
@@ -63,6 +65,7 @@ visible = true
 emoji = "🃏"
 name = "Balatro"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungameid/2379780"]
 proton_client = {}
 
@@ -86,6 +89,7 @@ visible = true
 emoji = "🖼️"
 name = "Clair Obscur Expedition 33"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungameid/1903340"]
 proton_client = {}
 
@@ -94,6 +98,7 @@ visible = true
 emoji = "🚀"
 name = "Cobalt Core"
 component = ""
+label = "Nickel mod · todo"
 commands = []
 proton_client = {}
 
@@ -102,6 +107,7 @@ visible = true
 emoji = "🍪"
 name = "Cookie Clicker"
 component = ""
+label = "browser · Tampermonkey"
 commands = []
 proton_client = {}
 
@@ -130,6 +136,7 @@ visible = true
 emoji = "🐈️"
 name = "Garfield Kart - Furious Racing"
 component = ""
+label = "Gale mod · todo"
 commands = []
 proton_client = {}
 
@@ -154,6 +161,7 @@ visible = true
 emoji = " "
 name = "Halo The Master Chief Collection"
 component = ""
+label = "mod · todo"
 commands = []
 proton_client = {}
 
@@ -170,6 +178,7 @@ visible = true
 emoji = "👟"
 name = "Haste"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungame/1796470"]
 proton_client = {}
 
@@ -178,6 +187,7 @@ visible = true
 emoji = "🖤"
 name = "Hollow Knight"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungameid/367520"]
 proton_client = {}
 
@@ -186,6 +196,7 @@ visible = true
 emoji = "🪡"
 name = "Hollow Knight: Silksong"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungameid/1030300"]
 proton_client = {}
 
@@ -194,6 +205,7 @@ visible = true
 emoji = "🏇"
 name = "Horse Riding Classic"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungameid/4384880"]
 proton_client = {}
 
@@ -202,6 +214,7 @@ visible = true
 emoji = "📷️"
 name = "Inscryption"
 component = ""
+label = "mod · todo"
 commands = []
 proton_client = {}
 
@@ -210,6 +223,7 @@ visible = true
 emoji = "📸"
 name = "Inscryption Beta"
 component = ""
+label = "mod · todo"
 commands = []
 proton_client = {}
 
@@ -218,6 +232,7 @@ visible = true
 emoji = "🪙"
 name = "Johnny Upgrade"
 component = ""
+label = "todo"
 commands = []
 proton_client = {}
 
@@ -234,6 +249,7 @@ visible = true
 emoji = "🪏"
 name = "Lethal Company"
 component = ""
+label = "Gale mod · todo"
 commands = []
 proton_client = {}
 
@@ -242,6 +258,7 @@ visible = true
 emoji = "🪩"
 name = "Marble It Up! Ultra"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungameid/864060"]
 proton_client = {}
 
@@ -258,6 +275,7 @@ visible = true
 emoji = " "
 name = "Metroid Fusion"
 component = ""
+label = "BizHawk · todo"
 commands = []
 proton_client = {}
 
@@ -266,6 +284,7 @@ visible = true
 emoji = "👩‍🚀"
 name = "Metroid: Zero Mission"
 component = ""
+label = "BizHawk · todo"
 commands = []
 proton_client = {}
 
@@ -290,6 +309,7 @@ visible = true
 emoji = " "
 name = "Minecraft Fabric"
 component = ""
+label = "Prism instance · todo"
 commands = []
 proton_client = {}
 
@@ -306,6 +326,7 @@ visible = true
 emoji = "󰆩 "
 name = "Modded Minecraft"
 component = ""
+label = "Prism instance · todo"
 commands = []
 proton_client = {}
 
@@ -330,6 +351,7 @@ visible = true
 emoji = "⛰️"
 name = "PEAK"
 component = ""
+label = "Gale mod · todo"
 commands = []
 proton_client = {}
 
@@ -338,6 +360,7 @@ visible = true
 emoji = "🌻"
 name = "Plants vs. Zombies Replanted"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungameid/3654560"]
 proton_client = {}
 
@@ -362,6 +385,7 @@ visible = true
 emoji = "󱚠 "
 name = "R.E.P.O"
 component = ""
+label = "Gale mod · todo"
 commands = []
 proton_client = {}
 
@@ -370,6 +394,7 @@ visible = true
 emoji = "🌧️"
 name = "Risk of Rain 2"
 component = ""
+label = "Gale mod · todo"
 commands = []
 proton_client = {}
 
@@ -378,6 +403,7 @@ visible = true
 emoji = "🏭️"
 name = "Satisfactory"
 component = ""
+label = "SML mod · todo"
 commands = []
 proton_client = {}
 
@@ -386,6 +412,7 @@ visible = true
 emoji = " "
 name = "Slay the Spire"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungameid/646570"]
 proton_client = {}
 
@@ -394,6 +421,7 @@ visible = true
 emoji = "󰘸 "
 name = "Slay the Spire II"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungameid/2868840"]
 proton_client = {}
 
@@ -410,6 +438,7 @@ visible = true
 emoji = "🤡"
 name = "SM64: Spicy Mycena 64"
 component = ""
+label = "BizHawk · todo"
 commands = []
 proton_client = {}
 
@@ -418,6 +447,7 @@ visible = true
 emoji = "🧑‍🌾"
 name = "Stardew Valley"
 component = ""
+label = "Stardrop mod · todo"
 commands = []
 proton_client = {}
 
@@ -426,6 +456,7 @@ visible = true
 emoji = "🏰"
 name = "Super Mario 64"
 component = ""
+label = "BizHawk · todo"
 commands = []
 proton_client = {}
 
@@ -450,6 +481,7 @@ visible = true
 emoji = "🍗"
 name = "Team Fortress 2 Mann vs Machine"
 component = ""
+label = "mod · todo"
 commands = ["steam steam://rungameid/440"]
 proton_client = {}
 
@@ -458,6 +490,7 @@ visible = true
 emoji = "⚒️"
 name = "Terraria"
 component = ""
+label = "tModLoader mod · todo"
 commands = []
 proton_client = {}
 
@@ -474,6 +507,7 @@ visible = true
 emoji = "📣"
 name = "Toontown"
 component = ""
+label = "install · todo"
 commands = []
 proton_client = {}
 
@@ -490,6 +524,7 @@ visible = true
 emoji = "😤"
 name = "Unfair Flips"
 component = ""
+label = "Gale mod · todo"
 commands = []
 proton_client = {}
 
@@ -506,6 +541,7 @@ visible = true
 emoji = "🔠"
 name = "Wordipelago"
 component = ""
+label = "browser"
 commands = []
 proton_client = {}
 
