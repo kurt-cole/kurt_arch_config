@@ -5,7 +5,17 @@
 # game is one opaque wine process, and a client started outside the container gets
 # its own wineserver, sharing nothing.
 #
-# Usage:  ap-proton-client.sh <appid> <client name> [debug] [apworld]
+# Usage:  ap-proton-client.sh <appid> <client name> [debug] [apworld] [mode]
+#
+# mode = attach (default)
+#     Wait for Steam to publish the *running* game's container and start the
+#     client inside it. For clients that read or patch game memory, which needs
+#     the same wineserver session as the game (ANIMAL WELL).
+# mode = standalone
+#     Start the client in the game's prefix right away, without waiting for
+#     anything. For clients that launch the game themselves, and for clients that
+#     talk to an injected DLL over loopback TCP rather than touching the game's
+#     memory -- that crosses the container boundary fine (Feeding Frenzy 2).
 #
 # Requires STEAM_COMPAT_LAUNCHER_SERVICE=proton in Steam's environment (set for
 # the session in ~/.config/uwsm/env-hyprland), which makes pressure-vessel publish
@@ -17,6 +27,7 @@ appid=${1:?usage: ap-proton-client.sh <appid> <client> [debug] [apworld]}
 client=${2:?usage: ap-proton-client.sh <appid> <client> [debug] [apworld]}
 mode=${3:-}
 apworld=${4:-}
+how=${5:-attach}
 
 AP_DIR="$HOME/Applications/Archipelago-win"
 WORLDS="$HOME/.local/share/Archipelago/worlds"
@@ -62,6 +73,26 @@ if [ -z "$launch_client" ]; then
     exit 1
 fi
 
+if [ "$how" = "standalone" ]; then
+    say "standalone: starting $client in the prefix for $appid"
+    prefix="$HOME/.local/share/Steam/steamapps/compatdata/$appid"
+    proton=""
+    for p in /mnt/win/f/SteamLibrary/steamapps/common/Proton*/proton \
+             "$HOME"/.local/share/Steam/steamapps/common/Proton*/proton; do
+        [ -x "$p" ] && proton="$p"
+    done
+    if [ -z "$proton" ]; then
+        say "no Proton found"
+        exit 1
+    fi
+    say "using $proton with prefix $prefix"
+    export STEAM_COMPAT_DATA_PATH="$prefix"
+    export STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/Steam"
+    export SteamAppId="$appid" SteamGameId="$appid"
+    exec "$proton" run "$exe" "$client" >> "$log" 2>&1
+fi
+
+# --- attach mode ------------------------------------------------------------
 # If Steam itself was started without the variable, no container will ever
 # publish a service -- say so now instead of waiting out the timeout.
 steam_pid=$(pgrep -f "ubuntu12_32/steam$" | head -1)

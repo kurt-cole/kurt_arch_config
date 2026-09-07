@@ -41,7 +41,7 @@
 
 [[entries]]
 visible = true
-emoji = "🎮"
+emoji = "🐇"
 name = "ANIMAL WELL"
 component = ""
 commands = ["steam steam://rungameid/813230"]
@@ -49,7 +49,7 @@ proton_client = { appid = 813230, client = "ANIMAL WELL Client", apworld = "anim
 
 [[entries]]  # no AP client found #TODO: web link
 visible = true
-emoji = "🎮"
+emoji = "🔢"
 name = "Archipeladoku"
 component = ""
 commands = []
@@ -57,7 +57,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: mods?
 visible = true
-emoji = "🎮"
+emoji = "🃏"
 name = "Balatro"
 component = ""
 commands = ["steam steam://rungameid/2379780"]
@@ -108,8 +108,8 @@ visible = true
 emoji = "🐟️"
 name = "Feeding Frenzy 2"
 component = ""
-commands = ["steam steam://rungameid/3390"]
-proton_client = { appid = 3390, client = "Feeding Frenzy 2 Client", apworld = "feeding_frenzy_2.apworld" }
+commands = []
+proton_client = { appid = 3390, client = "Feeding Frenzy 2 Client", apworld = "feeding_frenzy_2.apworld", mode = "standalone" }
 
 [[entries]]  # no AP client found TODO: gale
 visible = true
@@ -495,6 +495,13 @@ component = ""
 commands = []
 proton_client = {}
 
+[[entries]]
+visible = true
+emoji = "🤖"
+name = "Cave Story"
+component = "Cave Story Client"
+proton_client = {}
+
 # --------------------------------------------------------------- disabled ---
 # Flip visible = true to put one of these in the launcher.
 
@@ -522,7 +529,6 @@ entries = [
   { visible = false, emoji = "🎮", name = "Castlevania - Circle of the Moon", component = "BizHawk Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Castlevania 64", component = "BizHawk Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Catan", component = "Catan Client", commands = [] },
-  { visible = false, emoji = "🎮", name = "Cave Story", component = "Cave Story Client", commands = [] },
   { visible = false, emoji = "🎮", name = "Celeste (Open World)", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Celeste 64", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "ChecksFinder", component = "", commands = [] },  # no AP client found

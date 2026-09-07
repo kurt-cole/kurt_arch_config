@@ -138,8 +138,8 @@ class Launcher:
         if not pc:
             return
         script = os.path.join(HOME, ".config/caelestia/scripts/ap-proton-client.sh")
-        argv = [script, str(pc["appid"]), pc["client"], "debug" if debug else ""]
-        argv.append(pc.get("apworld", ""))
+        argv = [script, str(pc["appid"]), pc["client"], "debug" if debug else "",
+                pc.get("apworld", ""), pc.get("mode", "attach")]
         spawn(argv)
 
     def launch(self, debug=False):
@@ -160,8 +160,8 @@ class Launcher:
                 spawn([ap, component])
         for command in entry.get("commands", []):
             spawn(command, shell=True)
-        if not component and not entry.get("commands"):
-            self.status = f"{entry.get('name')} has no component or commands"
+        if not component and not entry.get("commands") and not entry.get("proton_client"):
+            self.status = f"{entry.get('name')} has nothing to launch"
             return True
         return False  # launched -- close the launcher
 
