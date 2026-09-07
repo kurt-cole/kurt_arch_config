@@ -80,7 +80,10 @@ def load_config():
     with open(CONFIG, "rb") as f:
         data = tomllib.load(f)
     settings = data.get("settings", {})
-    entries = [e for e in data.get("entries", []) if e.get("visible")]
+    # [[entries]] blocks are the configured games; [disabled] holds the one-line
+    # rest, so flipping visible = true down there works without moving anything.
+    listed = list(data.get("entries", [])) + list(data.get("disabled", {}).get("entries", []))
+    entries = [e for e in listed if e.get("visible")]
     return settings, entries
 
 

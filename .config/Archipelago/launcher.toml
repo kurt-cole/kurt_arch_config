@@ -1,8 +1,10 @@
 # Archipelago quick launcher  --  SUPER + ;
 #
-# Only entries with visible = true show up in the list; everything installed is
-# listed here so you can flip on the ones you actually play. Order here is the
-# order in the launcher.
+# Two sections:
+#   [[entries]]  the games you actually play, one block each, in launcher order
+#   [disabled]   everything else installed, one line each -- flip visible = true
+#                and it shows up immediately; move it up to [[entries]] when you
+#                want to fill in the details
 #
 # Per entry:
 #   visible    show it in the launcher
@@ -11,18 +13,22 @@
 #   component  Archipelago launcher component, run as: Archipelago "<component>"
 #              (leave "" if the game needs no AP client)
 #   commands   extra shell commands launched alongside it, in order
-#   proton_client  { appid, client }: run the *Windows* AP client inside the
-#              game's running Proton container instead of the Linux one. Needed
-#              when the client reads or patches game memory (pymem /
+#   proton_client  { appid, client, apworld }: run the *Windows* AP client inside
+#              the game's running Proton container instead of the Linux one.
+#              Needed when the client reads or patches game memory (pymem /
 #              ReadProcessMemory), which cannot reach a wine process from the
-#              Linux side. Set component = "" for these -- the client comes up
-#              in the prefix instead. Nothing to configure in Steam: no launch
-#              options, and launching the game from Steam by hand is unaffected.
-#              Needs Windows Archipelago in ~/Applications/Archipelago-win (see
-#              scripts/ap-proton-client.sh) and
-#              commands = ["steam steam://rungameid/<appid>"].
-#              Optional apworld = "<file>.apworld" copies just that world over
-#              from the Linux install; without it every custom world is mirrored.
+#              Linux side. Set component = "" for these -- the client comes up in
+#              the prefix instead. {} means "no Proton client", the normal case.
+#              Nothing to configure in Steam: no launch options, and launching the
+#              game from Steam by hand is unaffected. Needs Windows Archipelago in
+#              ~/Applications/Archipelago-win (see scripts/ap-proton-client.sh)
+#              and commands = ["steam steam://rungameid/<appid>"]. The optional
+#              apworld = "<file>.apworld" copies just that world over from the
+#              Linux install; without it every custom world is mirrored, which
+#              works but makes the client log a warning per world it can't parse.
+#
+# Blocks, not { } on several lines: TOML forbids a newline inside an inline
+# table, so a multi-line entry has to be an [[entries]] block.
 #
 # In the launcher: j/k or arrows move, / filters, Enter launches, d launches
 # with the Archipelago client in a terminal (the Linux equivalent of Windows'
@@ -31,6 +37,468 @@
 # Components marked "guessed name" were scraped out of a frozen world and may
 # be off -- check against the names in the real Archipelago Launcher.
 
+# ---------------------------------------------------------------- enabled ---
+
+[[entries]]
+visible = true
+emoji = "🎮"
+name = "ANIMAL WELL"
+component = ""
+commands = ["steam steam://rungameid/813230"]
+proton_client = { appid = 813230, client = "ANIMAL WELL Client", apworld = "animal_well.apworld" }
+
+[[entries]]  # no AP client found #TODO: web link
+visible = true
+emoji = "🎮"
+name = "Archipeladoku"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: mods?
+visible = true
+emoji = "🎮"
+name = "Balatro"
+component = ""
+commands = ["steam steam://rungameid/2379780"]
+proton_client = {}
+
+[[entries]]  # guessed name
+visible = true
+emoji = "🎮"
+name = "Civilization VI"
+component = "Civ6 Client"
+commands = ["steam steam://rungameid/289070"]
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: does the mod work?
+visible = true
+emoji = "🎮"
+name = "Clair Obscur Expedition 33"
+component = ""
+commands = ["steam steam://rungameid/1903340"]
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: nickel
+visible = true
+emoji = "🎮"
+name = "Cobalt Core"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: web browser/tampermonkey
+visible = true
+emoji = "🎮"
+name = "Cookie Clicker"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # TODO: update and also patched DR game
+visible = true
+emoji = "🎮"
+name = "DELTARUNE"
+component = "DELTARUNE Client"
+commands = []
+proton_client = {}
+
+[[entries]]
+visible = true
+emoji = "🐟️"
+name = "Feeding Frenzy 2"
+component = ""
+commands = ["steam steam://rungameid/3390"]
+proton_client = { appid = 3390, client = "Feeding Frenzy 2 Client", apworld = "feeding_frenzy_2.apworld" }
+
+[[entries]]  # no AP client found TODO: gale
+visible = true
+emoji = "🎮"
+name = "Garfield Kart - Furious Racing"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]
+visible = true
+emoji = "🎮"
+name = "Half-Life"
+component = "Half-Life Client"
+commands = ["steam steam://rungameid/70 -game hlap"]
+proton_client = {}
+
+[[entries]]  # TODO: auto-patch script and launch?
+visible = true
+emoji = "🎮"
+name = "Half-Life (Sven Co-op)"
+component = "Half-Life (Sven Co-op) Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: patch for linux or figure out running in proton
+visible = true
+emoji = "🎮"
+name = "Halo The Master Chief Collection"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]
+visible = true
+emoji = "🎮"
+name = "Hangman"
+component = "Hangman Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found
+visible = true
+emoji = "🎮"
+name = "Haste"
+component = ""
+commands = ["steam steam://rungame/1796470"]
+proton_client = {}
+
+[[entries]]  # no AP client found
+visible = true
+emoji = "🎮"
+name = "Hollow Knight"
+component = ""
+commands = ["steam steam://rungameid/367520"]
+proton_client = {}
+
+[[entries]]  # no AP client found
+visible = true
+emoji = "🎮"
+name = "Hollow Knight: Silksong"
+component = ""
+commands = ["steam steam://rungameid/1030300"]
+proton_client = {}
+
+[[entries]]  # no AP client found
+visible = true
+emoji = "🎮"
+name = "Horse Riding Classic"
+component = ""
+commands = ["steam steam://rungameid/4384880"]
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: inscryption
+visible = true
+emoji = "🎮"
+name = "Inscryption"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: inscryption
+visible = true
+emoji = "🎮"
+name = "Inscryption Beta"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: figure this whole situation out
+visible = true
+emoji = "🎮"
+name = "Johnny Upgrade"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # TODO: does this work? probably have to proton the client?
+visible = true
+emoji = "🎮"
+name = "Lego Star Wars: The Complete Saga"
+component = "Lego Star Wars: The Complete Saga Client"
+commands = ["steam steam://rungameid/32440"]
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: gale
+visible = true
+emoji = "🎮"
+name = "Lethal Company"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: mod works?
+visible = true
+emoji = "🎮"
+name = "Marble It Up! Ultra"
+component = ""
+commands = ["steam steam://rungameid/864060"]
+proton_client = {}
+
+[[entries]]  # TODO: ryujinx
+visible = true
+emoji = "🎮"
+name = "Metroid Dread"
+component = "Dread Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found # TODO: what to do ab this?
+visible = true
+emoji = "🎮"
+name = "Metroid Fusion"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found # TODO: what to do ab this?
+visible = true
+emoji = "🎮"
+name = "Metroid: Zero Mission"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # TODO: mc
+visible = true
+emoji = "🎮"
+name = "Minecraft"
+component = "Minecraft Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # TODO: mc
+visible = true
+emoji = "🎮"
+name = "Minecraft Dig"
+component = "Minecraft Dig Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: mc prism?
+visible = true
+emoji = "🎮"
+name = "Minecraft Fabric"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # TODO: make work
+visible = true
+emoji = "🎮"
+name = "Mirror's Edge"
+component = "Mirror's Edge Client"
+commands = ["steam steam://rungameid/17410"]
+proton_client = {}
+
+[[entries]]  # no AP client found # TODO: prism
+visible = true
+emoji = "🎮"
+name = "Modded Minecraft"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]
+visible = true
+emoji = "🍄"
+name = "New Super Mario Bros. DS"
+component = "NSMBDS Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # TODO: anything?
+visible = true
+emoji = "🎮"
+name = "NSMBW"
+component = "New Super Mario Bros Wii Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found
+visible = true
+emoji = "🎮"
+name = "PEAK"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found # TODO: install
+visible = true
+emoji = "🎮"
+name = "Plants vs. Zombies"
+component = ""
+commands = ["steam steam://rungameid/3654560"]
+proton_client = {}
+
+[[entries]]  # TODO: install modded
+visible = true
+emoji = "🎮"
+name = "Portal 2"
+component = "Portal 2 Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # TODO: make work
+visible = true
+emoji = "🎮"
+name = "Pvz2Gardendless"
+component = "PvZ2 Gardendless Installer"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found # TODO: gale
+visible = true
+emoji = "🎮"
+name = "R.E.P.O"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found # TODO: gale
+visible = true
+emoji = "🎮"
+name = "Risk of Rain 2"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found # TODO: SML setup
+visible = true
+emoji = "🎮"
+name = "Satisfactory"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found
+visible = true
+emoji = "🎮"
+name = "Slay the Spire"
+component = ""
+commands = ["steam steam://rungameid/646570"]
+proton_client = {}
+
+[[entries]]  # no AP client found
+visible = true
+emoji = "🎮"
+name = "Slay the Spire II"
+component = ""
+commands = ["steam steam://rungameid/2868840"]
+proton_client = {}
+
+[[entries]]
+visible = true
+emoji = "🎮"
+name = "Slow Release"
+component = "Slow Release Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found
+visible = true
+emoji = "🎮"
+name = "SM64: Spicy Mycena 64"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # guessed name; also: Universal Tracker TODO: stardrop setup
+visible = true
+emoji = "🎮"
+name = "Stardew Valley"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: install/compile build
+visible = true
+emoji = "🎮"
+name = "Super Mario 64"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # guessed name # TODO: how this work?
+visible = true
+emoji = "🎮"
+name = "Super Metroid"
+component = "SNI Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # TODO: fix the linux probs
+visible = true
+emoji = "🎮"
+name = "Taskipelago"
+component = "Taskipelago Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found
+visible = true
+emoji = "🎮"
+name = "Team Fortress 2 Mann vs Machine"
+component = ""
+commands = ["steam steam://rungameid/440"]
+proton_client = {}
+
+[[entries]]  # no AP client found # TODO: update
+visible = true
+emoji = "🎮"
+name = "Terraria"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # guessed name
+visible = true
+emoji = "🎮"
+name = "The Messenger"
+component = "Messenger Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: install
+visible = true
+emoji = "🎮"
+name = "Toontown"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]  # guessed name # TODO: Patch
+visible = true
+emoji = "🎮"
+name = "Undertale"
+component = "Undertale Client"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: gale
+visible = true
+emoji = "🎮"
+name = "Unfair Flips"
+component = ""
+commands = []
+proton_client = {}
+
+[[entries]]
+visible = true
+emoji = "🎮"
+name = "Universal Tracker"
+component = "Universal Tracker"
+commands = []
+proton_client = {}
+
+[[entries]]  # no AP client found TODO: web link
+visible = true
+emoji = "🎮"
+name = "Wordipelago"
+component = ""
+commands = []
+proton_client = {}
+
+# --------------------------------------------------------------- disabled ---
+# Flip visible = true to put one of these in the launcher.
+
+[disabled]
 entries = [
   { visible = false, emoji = "🎮", name = "2048", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "A Hat in Time", component = "A Hat in Time Client", commands = [] },  # guessed name
@@ -39,15 +507,12 @@ entries = [
   { visible = false, emoji = "🎮", name = "A Short Hike", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Adventure", component = "Adventure Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "AM2R", component = "AM2R Client", commands = [] },
-  { visible = true, emoji = "🎮", name = "ANIMAL WELL", component = "", commands = ["steam steam://rungameid/813230"], proton_client = { appid = 813230, client = "ANIMAL WELL Client", apworld = "animal_well.apworld" } },
   { visible = false, emoji = "🎮", name = "AP WebSocket Proxy", component = "AP WebSocket Proxy", commands = [] },
   { visible = false, emoji = "🎮", name = "APBingo", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "APQuest", component = "APQuest Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Aquaria", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "ArchipelaCode", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Archipeladoku", component = "", commands = [] },  # no AP client found #TODO: web link
   { visible = false, emoji = "🎮", name = "Baba Is You", component = "Baba Is You Client", commands = [] },
-  { visible = true, emoji = "🎮", name = "Balatro", component = "", commands = ["steam steam://rungameid/2379780"] },  # no AP client found TODO: mods?
   { visible = false, emoji = "🎮", name = "Banjo-Tooie", component = "Banjo-Tooie Client", commands = [] },
   { visible = false, emoji = "🎮", name = "Bizhawk Ut", component = "BizHawk Client + Universal Tracker", commands = [] },
   { visible = false, emoji = "🎮", name = "Blasphemous", component = "", commands = [] },  # no AP client found
@@ -62,16 +527,11 @@ entries = [
   { visible = false, emoji = "🎮", name = "Celeste 64", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "ChecksFinder", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Choo-Choo Charles", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Civilization VI", component = "Civ6 Client", commands = ["steam steam://rungameid/289070"] },  # guessed name
-  { visible = true, emoji = "🎮", name = "Clair Obscur Expedition 33", component = "", commands = ["steam steam://rungameid/1903340"] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Cobalt Core", component = "", commands = [] },  # no AP client found TODO: nickel
-  { visible = true, emoji = "🎮", name = "Cookie Clicker", component = "", commands = [] },  # no AP client found TODO: web browser/tampermonkey
   { visible = false, emoji = "🎮", name = "Crypt of the NecroDancer", component = "Crypt of the NecroDancer Client", commands = [] },
   { visible = false, emoji = "🎮", name = "Cursed Mario 64", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Dark Souls III", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Dark Souls Remastered", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "DeathLinkipelago", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "DELTARUNE", component = "DELTARUNE Client", commands = [] }, # TODO: update and also patched DR game
   { visible = false, emoji = "🎮", name = "Dicey Dungeons", component = "Dicey Dungeons Client", commands = [] },
   { visible = false, emoji = "🎮", name = "DLCQuest", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Donkey Kong 64", component = "DK64 Client", commands = [] },
@@ -82,42 +542,26 @@ entries = [
   { visible = false, emoji = "🎮", name = "Factorio", component = "Factorio Client", commands = [] },  # guessed name; also: KRCON Client, RCON Client
   { visible = false, emoji = "🎮", name = "Faxanadu", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Fe8", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Feeding Frenzy 2", component = "Feeding Frenzy 2 Client", commands = ["steam steam://rungameid/3390"] },
   { visible = false, emoji = "🎮", name = "Final Fantasy", component = "BizHawk Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Final Fantasy Mystic Quest", component = "SNI Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Final Fantasy Tactics A2", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Final Fantasy V PR", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Final Fantasy X", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Garfield Kart - Furious Racing", component = "", commands = [] },  # no AP client found TODO: gale
   { visible = false, emoji = "🎮", name = "Generate Until Successful", component = "Generate Until Successful", commands = [] },
   { visible = false, emoji = "🎮", name = "Golden Sun The Lost Age", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Half-Life", component = "Half-Life Client", commands = ["steam steam://rungameid/70 -game hlap"] },
-  { visible = true, emoji = "🎮", name = "Half-Life (Sven Co-op)", component = "Half-Life (Sven Co-op) Client", commands = [] }, # TODO: auto-patch script and launch?
-  { visible = true, emoji = "🎮", name = "Halo The Master Chief Collection", component = "", commands = [] },  # no AP client found TODO: patch for linux or figure out running in proton
-  { visible = true, emoji = "🎮", name = "Hangman", component = "Hangman Client", commands = [] },
-  { visible = true, emoji = "🎮", name = "Haste", component = "", commands = ["steam steam://rungame/1796470"] },  # no AP client found 
   { visible = false, emoji = "🎮", name = "Heretic", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Hollow Knight", component = "", commands = ["steam steam://rungameid/367520"] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Hollow Knight: Silksong", component = "", commands = ["steam steam://rungameid/1030300"] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Horse Riding Classic", component = "", commands = ["steam steam://rungameid/4384880"] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Hylics 2", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Inscryption", component = "", commands = [] },  # no AP client found TODO: inscryption
-  { visible = true, emoji = "🎮", name = "Inscryption Beta", component = "", commands = [] },  # no AP client found TODO: inscryption
   { visible = false, emoji = "🎮", name = "Jak and Daxter: The Precursor Legacy", component = "Jak and Daxter ArchipelaGOAL Client", commands = [] },  # guessed name; also: Jak and Daxter Client
   { visible = false, emoji = "🎮", name = "Jigsaw", component = "Jigsaw AutoLaunch", commands = [] },
-  { visible = true, emoji = "🎮", name = "Johnny Upgrade", component = "", commands = [] },  # no AP client found TODO: figure this whole situation out
   { visible = false, emoji = "🎮", name = "Kingdom Hearts", component = "KH1 Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Kingdom Hearts 2", component = "KH2 Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Kirby's Dream Land 3", component = "SNI Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Landstalker - The Treasures of King Nole", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Lego Star Wars: The Complete Saga", component = "Lego Star Wars: The Complete Saga Client", commands = ["steam steam://rungameid/32440"] }, # TODO: does this work? probably have to proton the client?
-  { visible = true, emoji = "🎮", name = "Lethal Company", component = "", commands = [] },  # no AP client found TODO: gale
   { visible = false, emoji = "🎮", name = "Lingo", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Links Awakening DX", component = "Links Awakening DX Client", commands = [] },  # guessed name; also: Link's Awakening Client, Open Tracker
   { visible = false, emoji = "🎮", name = "Lufia II Ancient Cave", component = "SNI Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Majora's Mask Recompiled", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Manual", component = "Manual Client", commands = [] },  # also: Manual Discord Server
-  { visible = true, emoji = "🎮", name = "Marble It Up! Ultra", component = "", commands = ["steam steam://rungameid/864060"] },  # no AP client found TODO: mod works?
   { visible = false, emoji = "🎮", name = "Mario & Luigi Superstar Saga", component = "BizHawk Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Mario Kart Wii", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Mega Man 2", component = "BizHawk Client", commands = [] },  # guessed name
@@ -125,20 +569,10 @@ entries = [
   { visible = false, emoji = "🎮", name = "Mega Man X", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "MegaMan Battle Network 3", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Meritous", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Metroid Dread", component = "Dread Client", commands = [] }, # TODO: ryujinx
-  { visible = true, emoji = "🎮", name = "Metroid Fusion", component = "", commands = [] },  # no AP client found # TODO: what to do ab this?
-  { visible = true, emoji = "🎮", name = "Metroid: Zero Mission", component = "", commands = [] },  # no AP client found # TODO: what to do ab this?
-  { visible = true, emoji = "🎮", name = "Minecraft", component = "Minecraft Client", commands = [] }, # TODO: mc
-  { visible = true, emoji = "🎮", name = "Minecraft Dig", component = "Minecraft Dig Client", commands = [] }, # TODO: mc
-  { visible = true, emoji = "🎮", name = "Minecraft Fabric", component = "", commands = [] },  # no AP client found TODO: mc prism?
-  { visible = true, emoji = "🎮", name = "Mirror's Edge", component = "Mirror's Edge Client", commands = ["steam steam://rungameid/17410"] }, # TODO: make work 
-  { visible = true, emoji = "🎮", name = "Modded Minecraft", component = "", commands = [] },  # no AP client found # TODO: prism
   { visible = false, emoji = "🎮", name = "Monster Hunter World", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Muse Dash", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🍄", name = "New Super Mario Bros. DS", component = "NSMBDS Client", commands = [] },
   { visible = false, emoji = "🎮", name = "Noita", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Nonopelagram", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "NSMBW", component = "New Super Mario Bros Wii Client", commands = [] }, # TODO: anything?
   { visible = false, emoji = "🎮", name = "Ocarina of Time", component = "Ocarina of Time Client", commands = [] },  # also: Ocarina of Time Adjuster
   { visible = false, emoji = "🎮", name = "Old School Runescape", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "OpenRCT2", component = "OpenRCT2 Client", commands = [] },  # also: OpenRCT2 Client
@@ -146,38 +580,27 @@ entries = [
   { visible = false, emoji = "🎮", name = "Paint", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Paper Mario", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Paper Mario: The Thousand-Year Door", component = "TTYDClient", commands = [] },
-  { visible = true, emoji = "🎮", name = "PEAK", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Peggle Deluxe", component = "Peggle Deluxe Client", commands = [] },
   { visible = false, emoji = "🎮", name = "Persona 5 Royal", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Plants vs. Zombies", component = "", commands = ["steam steam://rungameid/3654560"] },  # no AP client found # TODO: install
   { visible = false, emoji = "🎮", name = "Pokemon Black and White", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Pokemon Emerald", component = "BizHawk Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Pokemon Mystery Dungeon Explorers of Sky", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Pokemon Platinum", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Pokemon Red and Blue", component = "BizHawk Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Pokepelago", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Portal 2", component = "Portal 2 Client", commands = [] }, # TODO: install modded
   { visible = false, emoji = "🎮", name = "Psychonauts", component = "Psychonauts Client", commands = [] },
-  { visible = true, emoji = "🎮", name = "Pvz2Gardendless", component = "PvZ2 Gardendless Installer", commands = [] }, # TODO: make work
-  { visible = true, emoji = "🎮", name = "R.E.P.O", component = "", commands = [] },  # no AP client found # TODO: gale
   { visible = false, emoji = "🎮", name = "Raft", component = "", commands = [] },  # no AP client found # TODO: this is horrifying
   { visible = false, emoji = "🎮", name = "Refunct", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Rift of the Necrodancer", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Risk of Rain 2", component = "", commands = [] },  # no AP client found # TODO: gale
-  { visible = true, emoji = "🎮", name = "Satisfactory", component = "", commands = [] },  # no AP client found # TODO: SML setup
   { visible = false, emoji = "🎮", name = "Saving Princess", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Secret of Evermore", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Shadow Generations", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "shapez", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Shivers", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Slay the Spire", component = "", commands = ["steam steam://rungameid/646570"] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Slay the Spire II", component = "", commands = ["steam steam://rungameid/2868840"] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Slime Rancher", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Slime Rancher 2", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "SlotLock", component = "Slot Lock Client", commands = [] },
-  { visible = true, emoji = "🎮", name = "Slow Release", component = "Slow Release Client", commands = [] },
   { visible = false, emoji = "🎮", name = "Sly Cooper and the Thievius Raccoonus", component = "Sly 1 Client", commands = [] },
-  { visible = true, emoji = "🎮", name = "SM64: Spicy Mycena 64", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "SMBWonder", component = "SMBW Client", commands = [] },
   { visible = false, emoji = "🎮", name = "SMZ3", component = "SNI Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Sonic Advance 2", component = "", commands = [] },  # no AP client found
@@ -185,41 +608,28 @@ entries = [
   { visible = false, emoji = "🎮", name = "Sonic Adventure DX", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Sonic Battle", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Sonic Heroes", component = "", commands = [] },  # no AP client found
-  { visible = false, emoji = "🎮", name = "Subspace Emissary", component = "Subspace Emissary Client", commands = [] }, # TODO: update this?
+  { visible = false, emoji = "🎮", name = "Subspace Emissary", component = "Subspace Emissary Client", commands = [] },  # TODO: update this?
   { visible = false, emoji = "🎮", name = "Stacklands", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Starcraft 2", component = "Starcraft 2 Client", commands = [] },  # guessed name
-  { visible = true, emoji = "🎮", name = "Stardew Valley", component = "", commands = [] },  # guessed name; also: Universal Tracker TODO: stardrop setup
   { visible = false, emoji = "🎮", name = "Subnautica", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Super Mario 64", component = "", commands = [] },  # no AP client found TODO: install/compile build
   { visible = false, emoji = "🎮", name = "Super Mario Land 2", component = "BizHawk Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Super Mario Sunshine", component = "Super Mario Sunshine Client", commands = [] },
   { visible = false, emoji = "🎮", name = "Super Mario World", component = "SNI Client", commands = [] },  # guessed name
-  { visible = true, emoji = "🎮", name = "Super Metroid", component = "SNI Client", commands = [] },  # guessed name # TODO: how this work?
-  { visible = true, emoji = "🎮", name = "Taskipelago", component = "Taskipelago Client", commands = [] }, # TODO: fix the linux probs
-  { visible = true, emoji = "🎮", name = "Team Fortress 2 Mann vs Machine", component = "", commands = ["steam steam://rungameid/440"] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Terraria", component = "", commands = [] },  # no AP client found # TODO: update
   { visible = false, emoji = "🎮", name = "The Binding of Isaac Repentance", component = "Isaac Client", commands = [] },
   { visible = false, emoji = "🎮", name = "The Legend of Zelda", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "The Messenger", component = "Messenger Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "The Wind Waker", component = "The Wind Waker Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "The Witness", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Timespinner", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Toontown", component = "", commands = [] },  # no AP client found TODO: install
   { visible = false, emoji = "🎮", name = "TUNIC", component = "", commands = [] },  # no AP client found
-  { visible = true, emoji = "🎮", name = "Undertale", component = "Undertale Client", commands = [] },  # guessed name # TODO: Patch
-  { visible = true, emoji = "🎮", name = "Unfair Flips", component = "", commands = [] },  # no AP client found TODO: gale
-  { visible = true, emoji = "🎮", name = "Universal Tracker", component = "Universal Tracker", commands = [] },
   { visible = false, emoji = "🎮", name = "Voltorb Flip", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "VVVVVV", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Wargroove", component = "Wargroove Client", commands = [] },  # guessed name
-  { visible = true, emoji = "🎮", name = "Wordipelago", component = "", commands = [] },  # no AP client found TODO: web link
   { visible = false, emoji = "🎮", name = "Yacht Dice", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Yoshi's Island", component = "SNI Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Yu-Gi-Oh! 2006", component = "BizHawk Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Zillion", component = "", commands = [] },  # no AP client found
 ]
 
-# Settings come last: TOML puts every bare key above the first [table].
 [settings]
 # The newest ~/Applications/Archipelago*.AppImage is used if this path is gone.
 archipelago = "/home/barretglass/Applications/Archipelago_0.6.7_linux-x86_64_30a01a0369579383beb81bc3ed6a95bf.AppImage"
