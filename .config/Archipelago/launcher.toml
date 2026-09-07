@@ -686,4 +686,5 @@ entries = [
 # The newest ~/Applications/Archipelago*.AppImage is used if this path is gone.
 archipelago = "/home/barretglass/Applications/Archipelago_0.6.7_linux-x86_64_30a01a0369579383beb81bc3ed6a95bf.AppImage"
 terminal = ["foot", "-a", "ap-debug", "-T", "Archipelago (debug)"]
-editor = ["foot", "-a", "ap-config", "-T", "launcher.toml", "nvim"]
+editor = ["foot", "-a", "ap-config", "-T", "launcher.toml",
+          "/home/barretglass/.config/caelestia/scripts/ap-edit.sh"]

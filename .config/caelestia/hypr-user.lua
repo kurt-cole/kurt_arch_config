@@ -79,11 +79,12 @@ hl.window_rule({
     center = true,
 })
 hl.bind("SUPER + semicolon", hl.dsp.exec_cmd(
-    scripts .. "/tui-toggle.sh ap-launcher " ..
+    scripts .. "/tui-toggle.sh ap-launcher,ap-config " ..
     "foot -a ap-launcher -T Archipelago " .. scripts .. "/ap-launcher.py"))
 
--- The config editor it spawns. (The debug terminal, class ap-debug, is left
--- alone on purpose: it tiles like any other terminal.)
+-- The config editor it spawns -- SUPER + ; closes this too, by asking nvim to
+-- quit so an unsaved buffer still gets its save prompt. (The debug terminal,
+-- class ap-debug, is left alone on purpose: it tiles like any other terminal.)
 hl.window_rule({
     match  = { class = "ap-config" },
     float  = true,
