@@ -69,7 +69,8 @@ hl.bind("SUPER + apostrophe", hl.dsp.exec_cmd(
 -- Archipelago quick launcher (SUPER + ;): a floating 60% centred TUI listing
 -- the games flipped on in ~/.config/Archipelago/launcher.toml. Deliberately not
 -- a special workspace -- it floats over the current one so whatever it launches
--- lands on the workspace underneath, and it closes itself on launch.
+-- lands on the workspace underneath, and it closes itself on launch. The key
+-- toggles: pressing it again closes the window instead of stacking a second one.
 local scripts = os.getenv("HOME") .. "/.config/caelestia/scripts"
 hl.window_rule({
     match  = { class = "ap-launcher" },
@@ -78,6 +79,7 @@ hl.window_rule({
     center = true,
 })
 hl.bind("SUPER + semicolon", hl.dsp.exec_cmd(
+    scripts .. "/tui-toggle.sh ap-launcher " ..
     "foot -a ap-launcher -T Archipelago " .. scripts .. "/ap-launcher.py"))
 
 -- The config editor it spawns. (The debug terminal, class ap-debug, is left
@@ -95,6 +97,7 @@ hl.window_rule({
 -- what this workspace has hidden, which sends the pick home again.
 hl.bind("SUPER + N", hl.dsp.exec_cmd(scripts .. "/purgatory.py hide"))
 hl.bind("SUPER + SHIFT + N", hl.dsp.exec_cmd(
+    scripts .. "/tui-toggle.sh purgatory " ..
     "foot -a purgatory -T Hidden " .. scripts .. "/purgatory.py"))
 hl.window_rule({
     match  = { class = "purgatory" },

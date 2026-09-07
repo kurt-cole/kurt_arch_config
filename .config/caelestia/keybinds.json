@@ -34,7 +34,7 @@
         ],
         [
           "SUPER + ;",
-          "Archipelago quick launcher (Enter launches, d debug client, e edit list)"
+          "Toggle the Archipelago quick launcher (Enter launches, d debug client, e edit list)"
         ]
       ]
     },
@@ -116,7 +116,7 @@
         ],
         [
           "SUPER + SHIFT + N",
-          "Show hidden windows, pick one to bring back"
+          "Toggle the hidden-window picker, pick one to bring back"
         ],
         [
           "SUPER + Q",
