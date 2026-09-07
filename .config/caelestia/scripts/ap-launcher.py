@@ -105,6 +105,11 @@ def spawn(argv, shell=False):
     )
 
 
+def label_of(entry):
+    """Right-hand column text: explicit `label`, else the component name."""
+    return entry.get("label") or entry.get("component", "")
+
+
 class Launcher:
     def __init__(self, settings, entries):
         self.settings = settings
@@ -120,7 +125,7 @@ class Launcher:
         needle = self.filter.lower()
         return [e for e in self.entries
                 if not needle or needle in e.get("name", "").lower()
-                or needle in e.get("component", "").lower()]
+                or needle in label_of(e).lower()]
 
     def current(self):
         rows = self.visible()
@@ -199,7 +204,7 @@ class Launcher:
         else:
             for i, entry in enumerate(rows[self.top:self.top + view], self.top):
                 left = f" {entry.get('emoji', ' ')}  {entry.get('name', '?')}"
-                note = entry.get("component", "")
+                note = label_of(entry)
                 gap = width - display_len(left) - display_len(note) - 2
                 if note and gap < 2:
                     note, gap = "", width - display_len(left) - 2

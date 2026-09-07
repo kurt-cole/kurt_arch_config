@@ -12,6 +12,9 @@
 #   name       label in the list
 #   component  Archipelago launcher component, run as: Archipelago "<component>"
 #              (leave "" if the game needs no AP client)
+#   label      text shown greyed out on the right of the row; defaults to
+#              component, so set it for entries with no component (e.g. a mod
+#              loader or the client the game launches itself)
 #   commands   extra shell commands launched alongside it, in order
 #   proton_client  { appid, client, apworld }: run the *Windows* AP client inside
 #              the game's running Proton container instead of the Linux one.
@@ -63,9 +66,16 @@ component = ""
 commands = ["steam steam://rungameid/2379780"]
 proton_client = {}
 
+[[entries]]
+visible = true
+emoji = "🤖"
+name = "Cave Story"
+component = "Cave Story Client"
+proton_client = {}
+
 [[entries]]  # guessed name
 visible = true
-emoji = "🎮"
+emoji = "󰛡 "
 name = "Civilization VI"
 component = "Civ6 Client"
 commands = ["steam steam://rungameid/289070"]
@@ -73,7 +83,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: does the mod work?
 visible = true
-emoji = "🎮"
+emoji = "🖼️"
 name = "Clair Obscur Expedition 33"
 component = ""
 commands = ["steam steam://rungameid/1903340"]
@@ -81,7 +91,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: nickel
 visible = true
-emoji = "🎮"
+emoji = "🚀"
 name = "Cobalt Core"
 component = ""
 commands = []
@@ -89,7 +99,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: web browser/tampermonkey
 visible = true
-emoji = "🎮"
+emoji = "🍪"
 name = "Cookie Clicker"
 component = ""
 commands = []
@@ -97,7 +107,7 @@ proton_client = {}
 
 [[entries]]  # TODO: update and also patched DR game
 visible = true
-emoji = "🎮"
+emoji = "♥️"
 name = "DELTARUNE"
 component = "DELTARUNE Client"
 commands = []
@@ -117,7 +127,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: gale
 visible = true
-emoji = "🎮"
+emoji = "🐈️"
 name = "Garfield Kart - Furious Racing"
 component = ""
 commands = []
@@ -125,7 +135,7 @@ proton_client = {}
 
 [[entries]]
 visible = true
-emoji = "🎮"
+emoji = "󰘧 "
 name = "Half-Life"
 component = "Half-Life Client"
 commands = ["steam steam://rungameid/70 -game hlap"]
@@ -133,15 +143,15 @@ proton_client = {}
 
 [[entries]]  # TODO: auto-patch script and launch?
 visible = true
-emoji = "🎮"
+emoji = "👨‍🔬"
 name = "Half-Life (Sven Co-op)"
 component = "Half-Life (Sven Co-op) Client"
-commands = []
+commands = [] # TODO: find the sven app id
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: patch for linux or figure out running in proton
 visible = true
-emoji = "🎮"
+emoji = " "
 name = "Halo The Master Chief Collection"
 component = ""
 commands = []
@@ -149,7 +159,7 @@ proton_client = {}
 
 [[entries]]
 visible = true
-emoji = "🎮"
+emoji = "🔤"
 name = "Hangman"
 component = "Hangman Client"
 commands = []
@@ -157,7 +167,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found
 visible = true
-emoji = "🎮"
+emoji = "👟"
 name = "Haste"
 component = ""
 commands = ["steam steam://rungame/1796470"]
@@ -165,7 +175,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found
 visible = true
-emoji = "🎮"
+emoji = "🖤"
 name = "Hollow Knight"
 component = ""
 commands = ["steam steam://rungameid/367520"]
@@ -173,7 +183,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found
 visible = true
-emoji = "🎮"
+emoji = "🪡"
 name = "Hollow Knight: Silksong"
 component = ""
 commands = ["steam steam://rungameid/1030300"]
@@ -181,7 +191,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found
 visible = true
-emoji = "🎮"
+emoji = "🏇"
 name = "Horse Riding Classic"
 component = ""
 commands = ["steam steam://rungameid/4384880"]
@@ -189,7 +199,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: inscryption
 visible = true
-emoji = "🎮"
+emoji = "📷️"
 name = "Inscryption"
 component = ""
 commands = []
@@ -197,7 +207,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: inscryption
 visible = true
-emoji = "🎮"
+emoji = "📸"
 name = "Inscryption Beta"
 component = ""
 commands = []
@@ -205,7 +215,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: figure this whole situation out
 visible = true
-emoji = "🎮"
+emoji = "🪙"
 name = "Johnny Upgrade"
 component = ""
 commands = []
@@ -213,7 +223,7 @@ proton_client = {}
 
 [[entries]]  # TODO: does this work? probably have to proton the client?
 visible = true
-emoji = "🎮"
+emoji = " "
 name = "Lego Star Wars: The Complete Saga"
 component = "Lego Star Wars: The Complete Saga Client"
 commands = ["steam steam://rungameid/32440"]
@@ -221,7 +231,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: gale
 visible = true
-emoji = "🎮"
+emoji = "🪏"
 name = "Lethal Company"
 component = ""
 commands = []
@@ -229,7 +239,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: mod works?
 visible = true
-emoji = "🎮"
+emoji = "🪩"
 name = "Marble It Up! Ultra"
 component = ""
 commands = ["steam steam://rungameid/864060"]
@@ -237,7 +247,7 @@ proton_client = {}
 
 [[entries]]  # TODO: ryujinx
 visible = true
-emoji = "🎮"
+emoji = "🦃"
 name = "Metroid Dread"
 component = "Dread Client"
 commands = []
@@ -245,7 +255,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found # TODO: what to do ab this?
 visible = true
-emoji = "🎮"
+emoji = " "
 name = "Metroid Fusion"
 component = ""
 commands = []
@@ -253,7 +263,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found # TODO: what to do ab this?
 visible = true
-emoji = "🎮"
+emoji = "👩‍🚀"
 name = "Metroid: Zero Mission"
 component = ""
 commands = []
@@ -261,7 +271,7 @@ proton_client = {}
 
 [[entries]]  # TODO: mc
 visible = true
-emoji = "🎮"
+emoji = " "
 name = "Minecraft"
 component = "Minecraft Client"
 commands = []
@@ -269,7 +279,7 @@ proton_client = {}
 
 [[entries]]  # TODO: mc
 visible = true
-emoji = "🎮"
+emoji = "🕳️"
 name = "Minecraft Dig"
 component = "Minecraft Dig Client"
 commands = []
@@ -277,7 +287,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: mc prism?
 visible = true
-emoji = "🎮"
+emoji = " "
 name = "Minecraft Fabric"
 component = ""
 commands = []
@@ -285,7 +295,7 @@ proton_client = {}
 
 [[entries]]  # TODO: make work
 visible = true
-emoji = "🎮"
+emoji = "🌇"
 name = "Mirror's Edge"
 component = "Mirror's Edge Client"
 commands = ["steam steam://rungameid/17410"]
@@ -293,7 +303,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found # TODO: prism
 visible = true
-emoji = "🎮"
+emoji = "󰆩 "
 name = "Modded Minecraft"
 component = ""
 commands = []
@@ -309,7 +319,7 @@ proton_client = {}
 
 [[entries]]  # TODO: anything?
 visible = true
-emoji = "🎮"
+emoji = "󰻀 "
 name = "NSMBW"
 component = "New Super Mario Bros Wii Client"
 commands = []
@@ -317,7 +327,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found
 visible = true
-emoji = "🎮"
+emoji = "⛰️"
 name = "PEAK"
 component = ""
 commands = []
@@ -325,15 +335,15 @@ proton_client = {}
 
 [[entries]]  # no AP client found # TODO: install
 visible = true
-emoji = "🎮"
-name = "Plants vs. Zombies"
+emoji = "🌻"
+name = "Plants vs. Zombies Replanted"
 component = ""
 commands = ["steam steam://rungameid/3654560"]
 proton_client = {}
 
 [[entries]]  # TODO: install modded
 visible = true
-emoji = "🎮"
+emoji = "🍋"
 name = "Portal 2"
 component = "Portal 2 Client"
 commands = []
@@ -341,7 +351,7 @@ proton_client = {}
 
 [[entries]]  # TODO: make work
 visible = true
-emoji = "🎮"
+emoji = "🧟‍♂️"
 name = "Pvz2Gardendless"
 component = "PvZ2 Gardendless Installer"
 commands = []
@@ -349,7 +359,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found # TODO: gale
 visible = true
-emoji = "🎮"
+emoji = "󱚠 "
 name = "R.E.P.O"
 component = ""
 commands = []
@@ -357,7 +367,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found # TODO: gale
 visible = true
-emoji = "🎮"
+emoji = "🌧️"
 name = "Risk of Rain 2"
 component = ""
 commands = []
@@ -365,7 +375,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found # TODO: SML setup
 visible = true
-emoji = "🎮"
+emoji = "🏭️"
 name = "Satisfactory"
 component = ""
 commands = []
@@ -373,7 +383,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found
 visible = true
-emoji = "🎮"
+emoji = " "
 name = "Slay the Spire"
 component = ""
 commands = ["steam steam://rungameid/646570"]
@@ -381,7 +391,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found
 visible = true
-emoji = "🎮"
+emoji = "󰘸 "
 name = "Slay the Spire II"
 component = ""
 commands = ["steam steam://rungameid/2868840"]
@@ -389,7 +399,7 @@ proton_client = {}
 
 [[entries]]
 visible = true
-emoji = "🎮"
+emoji = "🕰️"
 name = "Slow Release"
 component = "Slow Release Client"
 commands = []
@@ -397,7 +407,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found
 visible = true
-emoji = "🎮"
+emoji = "🤡"
 name = "SM64: Spicy Mycena 64"
 component = ""
 commands = []
@@ -405,7 +415,7 @@ proton_client = {}
 
 [[entries]]  # guessed name; also: Universal Tracker TODO: stardrop setup
 visible = true
-emoji = "🎮"
+emoji = "🧑‍🌾"
 name = "Stardew Valley"
 component = ""
 commands = []
@@ -413,7 +423,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: install/compile build
 visible = true
-emoji = "🎮"
+emoji = "🏰"
 name = "Super Mario 64"
 component = ""
 commands = []
@@ -421,7 +431,7 @@ proton_client = {}
 
 [[entries]]  # guessed name # TODO: how this work?
 visible = true
-emoji = "🎮"
+emoji = "🧠"
 name = "Super Metroid"
 component = "SNI Client"
 commands = []
@@ -429,7 +439,7 @@ proton_client = {}
 
 [[entries]]  # TODO: fix the linux probs
 visible = true
-emoji = "🎮"
+emoji = " "
 name = "Taskipelago"
 component = "Taskipelago Client"
 commands = []
@@ -437,7 +447,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found
 visible = true
-emoji = "🎮"
+emoji = "🍗"
 name = "Team Fortress 2 Mann vs Machine"
 component = ""
 commands = ["steam steam://rungameid/440"]
@@ -445,7 +455,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found # TODO: update
 visible = true
-emoji = "🎮"
+emoji = "⚒️"
 name = "Terraria"
 component = ""
 commands = []
@@ -453,7 +463,7 @@ proton_client = {}
 
 [[entries]]  # guessed name
 visible = true
-emoji = "🎮"
+emoji = "🥷"
 name = "The Messenger"
 component = "Messenger Client"
 commands = []
@@ -461,7 +471,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: install
 visible = true
-emoji = "🎮"
+emoji = "📣"
 name = "Toontown"
 component = ""
 commands = []
@@ -469,7 +479,7 @@ proton_client = {}
 
 [[entries]]  # guessed name # TODO: Patch
 visible = true
-emoji = "🎮"
+emoji = "🌼"
 name = "Undertale"
 component = "Undertale Client"
 commands = []
@@ -477,7 +487,7 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: gale
 visible = true
-emoji = "🎮"
+emoji = "😤"
 name = "Unfair Flips"
 component = ""
 commands = []
@@ -485,7 +495,7 @@ proton_client = {}
 
 [[entries]]
 visible = true
-emoji = "🎮"
+emoji = "📋️"
 name = "Universal Tracker"
 component = "Universal Tracker"
 commands = []
@@ -493,17 +503,10 @@ proton_client = {}
 
 [[entries]]  # no AP client found TODO: web link
 visible = true
-emoji = "🎮"
+emoji = "🔠"
 name = "Wordipelago"
 component = ""
 commands = []
-proton_client = {}
-
-[[entries]]
-visible = true
-emoji = "🤖"
-name = "Cave Story"
-component = "Cave Story Client"
 proton_client = {}
 
 # --------------------------------------------------------------- disabled ---
