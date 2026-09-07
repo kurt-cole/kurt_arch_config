@@ -12,3 +12,8 @@ export XDG_SESSION_DESKTOP=Hyprland
 
 # ############# Others #############
 export _JAVA_AWT_WM_NONREPARENTING=1
+
+# Expose each Proton game's container on the session bus as
+# com.steampowered.App<appid>, so ap-launcher.py can start an Archipelago
+# Windows client inside a running game's prefix (see ap-proton-client.sh).
+export STEAM_COMPAT_LAUNCHER_SERVICE=proton

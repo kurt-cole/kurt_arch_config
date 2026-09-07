@@ -12,19 +12,17 @@
 #              (leave "" if the game needs no AP client)
 #   commands   extra shell commands launched alongside it, in order
 #   proton_client  { appid, client }: run the *Windows* AP client inside the
-#              game's Proton container instead of the Linux one. Needed when the
-#              client reads or patches game memory (pymem / ReadProcessMemory),
-#              which cannot reach a wine process from the Linux side. Leave
-#              component = "" for these -- the client comes up in the prefix.
-#              Setup, once per game:
-#                - Windows Archipelago installed in ~/Applications/Archipelago-win
-#                  (run the Inno setup under Proton), with the apworld in its
-#                  custom_worlds/
-#                - Steam -> Properties -> Launch Options:
-#                  ~/.config/caelestia/scripts/ap-proton-wrap.sh %command%
-#                - commands = ["steam steam://rungameid/<appid>"]
-#              The wrapper is inert unless this launcher asks for a client, so
-#              launching the game from Steam by hand stays vanilla.
+#              game's running Proton container instead of the Linux one. Needed
+#              when the client reads or patches game memory (pymem /
+#              ReadProcessMemory), which cannot reach a wine process from the
+#              Linux side. Set component = "" for these -- the client comes up
+#              in the prefix instead. Nothing to configure in Steam: no launch
+#              options, and launching the game from Steam by hand is unaffected.
+#              Needs Windows Archipelago in ~/Applications/Archipelago-win (see
+#              scripts/ap-proton-client.sh) and
+#              commands = ["steam steam://rungameid/<appid>"].
+#              Optional apworld = "<file>.apworld" copies just that world over
+#              from the Linux install; without it every custom world is mirrored.
 #
 # In the launcher: j/k or arrows move, / filters, Enter launches, d launches
 # with the Archipelago client in a terminal (the Linux equivalent of Windows'
@@ -41,7 +39,7 @@ entries = [
   { visible = false, emoji = "🎮", name = "A Short Hike", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Adventure", component = "Adventure Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "AM2R", component = "AM2R Client", commands = [] },
-  { visible = true, emoji = "🎮", name = "ANIMAL WELL", component = "", commands = ["steam steam://rungameid/813230"], proton_client = { appid = 813230, client = "ANIMAL WELL Client" } },
+  { visible = true, emoji = "🎮", name = "ANIMAL WELL", component = "", commands = ["steam steam://rungameid/813230"], proton_client = { appid = 813230, client = "ANIMAL WELL Client", apworld = "animal_well.apworld" } },
   { visible = false, emoji = "🎮", name = "AP WebSocket Proxy", component = "AP WebSocket Proxy", commands = [] },
   { visible = false, emoji = "🎮", name = "APBingo", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "APQuest", component = "APQuest Client", commands = [] },  # guessed name

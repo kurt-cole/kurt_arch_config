@@ -124,20 +124,20 @@ class Launcher:
         return rows[self.cursor] if rows else None
 
     # -- launching -------------------------------------------------------
-    def request_proton_client(self, entry, debug=False):
-        """Ask ap-proton-wrap.sh to start a Windows AP client with the game.
+    def start_proton_client(self, entry, debug=False):
+        """Start a Windows AP client inside the game's Proton container.
 
-        Games whose client reads or patches game memory need the client inside
-        the same Proton container, which only Steam can set up -- so we leave a
-        one-shot request the game's launch-options wrapper picks up.
+        Clients that read or patch game memory have to live in the same wine
+        session as the game; ap-proton-client.sh waits for the container to come
+        up and injects it there. Detached, so it outlives this TUI.
         """
         pc = entry.get("proton_client")
         if not pc:
             return
-        d = os.path.join(HOME, ".config/Archipelago/proton-clients")
-        os.makedirs(d, exist_ok=True)
-        with open(os.path.join(d, str(pc["appid"])), "w") as f:
-            f.write(pc["client"] + ("\ndebug" if debug else ""))
+        script = os.path.join(HOME, ".config/caelestia/scripts/ap-proton-client.sh")
+        argv = [script, str(pc["appid"]), pc["client"], "debug" if debug else ""]
+        argv.append(pc.get("apworld", ""))
+        spawn(argv)
 
     def launch(self, debug=False):
         entry = self.current()
@@ -145,7 +145,7 @@ class Launcher:
             return True
         ap = archipelago_path(self.settings)
         component = entry.get("component", "")
-        self.request_proton_client(entry, debug)
+        self.start_proton_client(entry, debug)
         if component:
             if not ap:
                 self.status = "no Archipelago AppImage found"
