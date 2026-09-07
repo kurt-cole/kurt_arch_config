@@ -124,12 +124,28 @@ class Launcher:
         return rows[self.cursor] if rows else None
 
     # -- launching -------------------------------------------------------
+    def request_proton_client(self, entry, debug=False):
+        """Ask ap-proton-wrap.sh to start a Windows AP client with the game.
+
+        Games whose client reads or patches game memory need the client inside
+        the same Proton container, which only Steam can set up -- so we leave a
+        one-shot request the game's launch-options wrapper picks up.
+        """
+        pc = entry.get("proton_client")
+        if not pc:
+            return
+        d = os.path.join(HOME, ".config/Archipelago/proton-clients")
+        os.makedirs(d, exist_ok=True)
+        with open(os.path.join(d, str(pc["appid"])), "w") as f:
+            f.write(pc["client"] + ("\ndebug" if debug else ""))
+
     def launch(self, debug=False):
         entry = self.current()
         if not entry:
             return True
         ap = archipelago_path(self.settings)
         component = entry.get("component", "")
+        self.request_proton_client(entry, debug)
         if component:
             if not ap:
                 self.status = "no Archipelago AppImage found"
