@@ -56,8 +56,8 @@ visible = true
 emoji = "🔢"
 name = "Archipeladoku"
 component = ""
-label = "browser"
-commands = []
+label = "Firefox"
+commands = ["firefox https://galdiuz.github.io/archipeladoku/"]
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: mods?
@@ -89,7 +89,7 @@ visible = true
 emoji = "🖼️"
 name = "Clair Obscur Expedition 33"
 component = ""
-label = "mod · todo"
+label = "E33"
 commands = ["steam steam://rungameid/1903340"]
 proton_client = {}
 
@@ -98,7 +98,7 @@ visible = true
 emoji = "🚀"
 name = "Cobalt Core"
 component = ""
-label = "Nickel mod · todo"
+label = "Nickel · todo"
 commands = []
 proton_client = {}
 
@@ -107,8 +107,8 @@ visible = true
 emoji = "🍪"
 name = "Cookie Clicker"
 component = ""
-label = "browser · Tampermonkey"
-commands = []
+label = "Firefox"
+commands = ["firefox https://orteil.dashnet.org/cookieclicker/"]
 proton_client = {}
 
 [[entries]]  # TODO: update and also patched DR game
@@ -153,7 +153,7 @@ visible = true
 emoji = "👨‍🔬"
 name = "Half-Life (Sven Co-op)"
 component = "Half-Life (Sven Co-op) Client"
-commands = [] # TODO: find the sven app id
+commands = ["steam steam://rungameid/225840"] # TODO: find the sven app id
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: patch for linux or figure out running in proton
@@ -161,7 +161,7 @@ visible = true
 emoji = " "
 name = "Halo The Master Chief Collection"
 component = ""
-label = "mod · todo"
+label = "MCC Launcher · todo"
 commands = []
 proton_client = {}
 
@@ -178,8 +178,8 @@ visible = true
 emoji = "👟"
 name = "Haste"
 component = ""
-label = "mod · todo"
-commands = ["steam steam://rungame/1796470"]
+label = "Haste (workshop mod)"
+commands = ["steam steam://rungameid/1796470"]
 proton_client = {}
 
 [[entries]]  # no AP client found
@@ -187,7 +187,7 @@ visible = true
 emoji = "🖤"
 name = "Hollow Knight"
 component = ""
-label = "mod · todo"
+label = "Lumafly · todo"
 commands = ["steam steam://rungameid/367520"]
 proton_client = {}
 
@@ -196,7 +196,7 @@ visible = true
 emoji = "🪡"
 name = "Hollow Knight: Silksong"
 component = ""
-label = "mod · todo"
+label = "Cogfly · todo"
 commands = ["steam steam://rungameid/1030300"]
 proton_client = {}
 
@@ -214,7 +214,7 @@ visible = true
 emoji = "📷️"
 name = "Inscryption"
 component = ""
-label = "mod · todo"
+label = "gale mod · todo" 
 commands = []
 proton_client = {}
 
@@ -223,7 +223,7 @@ visible = true
 emoji = "📸"
 name = "Inscryption Beta"
 component = ""
-label = "mod · todo"
+label = "gale mod · todo"
 commands = []
 proton_client = {}
 
@@ -232,8 +232,8 @@ visible = true
 emoji = "🪙"
 name = "Johnny Upgrade"
 component = ""
-label = "todo"
-commands = []
+label = "Firefox (todo)"
+commands = ["firefox coolmath-games.com/0-johnny-upgrade"]
 proton_client = {}
 
 [[entries]]  # TODO: does this work? probably have to proton the client?
@@ -258,7 +258,7 @@ visible = true
 emoji = "🪩"
 name = "Marble It Up! Ultra"
 component = ""
-label = "mod · todo"
+label = "MIUU"
 commands = ["steam steam://rungameid/864060"]
 proton_client = {}
 
@@ -267,6 +267,7 @@ visible = true
 emoji = "🦃"
 name = "Metroid Dread"
 component = "Dread Client"
+label = "Dread Client + Ryubing (todo)"
 commands = []
 proton_client = {}
 
@@ -275,7 +276,7 @@ visible = true
 emoji = " "
 name = "Metroid Fusion"
 component = ""
-label = "BizHawk · todo"
+label = "TODO: what this do"
 commands = []
 proton_client = {}
 
@@ -284,7 +285,7 @@ visible = true
 emoji = "👩‍🚀"
 name = "Metroid: Zero Mission"
 component = ""
-label = "BizHawk · todo"
+label = "TODO: what this do"
 commands = []
 proton_client = {}
 
@@ -376,7 +377,8 @@ proton_client = {}
 visible = true
 emoji = "🧟‍♂️"
 name = "Pvz2Gardendless"
-component = "PvZ2 Gardendless Installer"
+component = ""
+label = "PVZ2 Modded"
 commands = []
 proton_client = {}
 
@@ -403,7 +405,7 @@ visible = true
 emoji = "🏭️"
 name = "Satisfactory"
 component = ""
-label = "SML mod · todo"
+label = "SML Launcher · todo"
 commands = []
 proton_client = {}
 
@@ -412,7 +414,7 @@ visible = true
 emoji = " "
 name = "Slay the Spire"
 component = ""
-label = "mod · todo"
+label = "STS"
 commands = ["steam steam://rungameid/646570"]
 proton_client = {}
 
@@ -421,7 +423,7 @@ visible = true
 emoji = "󰘸 "
 name = "Slay the Spire II"
 component = ""
-label = "mod · todo"
+label = "STS2"
 commands = ["steam steam://rungameid/2868840"]
 proton_client = {}
 
@@ -438,7 +440,7 @@ visible = true
 emoji = "🤡"
 name = "SM64: Spicy Mycena 64"
 component = ""
-label = "BizHawk · todo"
+label = "SM64EX Launcher · todo"
 commands = []
 proton_client = {}
 
@@ -447,7 +449,7 @@ visible = true
 emoji = "🧑‍🌾"
 name = "Stardew Valley"
 component = ""
-label = "Stardrop mod · todo"
+label = "Stardrop · todo"
 commands = []
 proton_client = {}
 
@@ -456,7 +458,7 @@ visible = true
 emoji = "🏰"
 name = "Super Mario 64"
 component = ""
-label = "BizHawk · todo"
+label = "SM64EX Launcher · todo"
 commands = []
 proton_client = {}
 
@@ -465,6 +467,7 @@ visible = true
 emoji = "🧠"
 name = "Super Metroid"
 component = "SNI Client"
+label = "todo: what does this do"
 commands = []
 proton_client = {}
 
@@ -481,7 +484,7 @@ visible = true
 emoji = "🍗"
 name = "Team Fortress 2 Mann vs Machine"
 component = ""
-label = "mod · todo"
+label = "TF2"
 commands = ["steam steam://rungameid/440"]
 proton_client = {}
 
@@ -490,8 +493,8 @@ visible = true
 emoji = "⚒️"
 name = "Terraria"
 component = ""
-label = "tModLoader mod · todo"
-commands = []
+label = "tModLoader"
+commands = ["steam steam://rungameid/1281930"]
 proton_client = {}
 
 [[entries]]  # guessed name
@@ -541,8 +544,8 @@ visible = true
 emoji = "🔠"
 name = "Wordipelago"
 component = ""
-label = "browser"
-commands = []
+label = "Firefox"
+commands = ["firefox https://apworlds.com/wordipelago"]
 proton_client = {}
 
 # --------------------------------------------------------------- disabled ---

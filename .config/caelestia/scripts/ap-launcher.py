@@ -69,11 +69,52 @@ class Theme:
         return f"{ESC}[{38 if fg else 48};2;{r};{g};{b}m"
 
 
+def _char_width(c):
+    o = ord(c)
+    # Private use: nerd-font glyphs. Terminals give these one cell, but their
+    # east-asian width is "ambiguous" and the plane-15 ones sort above U+1F000,
+    # so both of the tests below would call them wide.
+    if 0xE000 <= o <= 0xF8FF or 0xF0000 <= o <= 0xFFFFD or 0x100000 <= o <= 0x10FFFD:
+        return 1
+    if unicodedata.east_asian_width(c) in "WF" or o >= 0x1F000:
+        return 2
+    return 1
+
+
 def display_len(s):
-    """Printed width, counting wide glyphs (emoji, CJK) as two columns."""
+    """Printed width in terminal columns.
+
+    Emoji are grapheme clusters, not characters: a ZWJ sequence (\U0001f9d1 ZWJ
+    \U0001f33e) draws in two columns, not four, and a variation selector turns a
+    one-column glyph into a two-column one without occupying a cell itself.
+    Counting per character overshoots those rows and shifts their right-hand
+    label left.
+    """
     plain = re.sub(r"\x1b\[[0-9;]*m", "", s)
-    return sum(2 if unicodedata.east_asian_width(c) in "WF" or c >= "\U0001f000" else 1
-               for c in plain)
+    total, prev, joined = 0, 0, False
+    for c in plain:
+        o = ord(c)
+        if o == 0x200D:                          # ZWJ: the next glyph joins this one
+            joined = True
+            continue
+        if o == 0xFE0F:                          # VS16: emoji presentation, so wide
+            if prev == 1:
+                total, prev = total + 1, 2
+            continue
+        if o == 0xFE0E:                          # VS15: text presentation, so narrow
+            if prev == 2:
+                total, prev = total - 1, 1
+            continue
+        if (0x1F3FB <= o <= 0x1F3FF                      # skin tone modifiers
+                or unicodedata.combining(c)
+                or unicodedata.category(c) in ("Mn", "Me", "Cf")):
+            continue
+        if joined:                               # part of the previous cluster
+            joined = False
+            continue
+        prev = _char_width(c)
+        total += prev
+    return total
 
 
 def load_config():
