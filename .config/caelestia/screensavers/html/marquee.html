@@ -1,0 +1,58 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Marquee</title>
+<canvas id="c"></canvas>
+<script src="saver.js"></script>
+<script>
+// "Marquee" -- the scrolling-text saver from Windows 95 through XP.
+//
+// One line of text scrolls right to left; when it clears the screen it comes
+// back at a fresh random height in a fresh colour, which is exactly what the
+// original did with its "Random" position and colour settings.
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W = 0, H = 0;
+
+const MESSAGES = [
+    "Windows XP",
+    "It is now safe to turn off your computer.",
+    "Hello from Hyprland",
+    "Press any key to continue...",
+];
+const COLORS = ['#ff3b30', '#34c759', '#0a84ff', '#ffd60a', '#ff9f0a', '#ffffff', '#ff2d95', '#5ac8fa'];
+const SPEED = 0.28;        // px per ms at 1080p, scaled below
+
+let text, color, x, y, fontPx, width;
+
+function reset() {
+    text = pick(MESSAGES);
+    color = pick(COLORS);
+    fontPx = Math.round(H * rand(0.10, 0.16));
+    ctx.font = `bold ${fontPx}px "Segoe UI", "DejaVu Sans", sans-serif`;
+    width = ctx.measureText(text).width;
+    x = W;
+    y = rand(fontPx, H - fontPx * 0.4);
+}
+
+fitCanvas(canvas, (w, h) => { W = w; H = h; if (text === undefined) reset(); });
+
+let last = performance.now();
+function frame(now) {
+    const dt = Math.min(64, now - last);
+    last = now;
+
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+
+    x -= SPEED * (H / 1080) * dt;
+    if (x + width < 0) reset();
+
+    ctx.font = `bold ${fontPx}px "Segoe UI", "DejaVu Sans", sans-serif`;
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = color;
+    ctx.fillText(text, x, y);
+
+    requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>

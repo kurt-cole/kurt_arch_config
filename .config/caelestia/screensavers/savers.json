@@ -1,0 +1,11 @@
+{
+  "_comment": "Pool for screensaver.py. `enabled: false` drops one from the shuffle. Any .scr dropped in scr/ is picked up automatically -- list it here only to disable it or to give it a nicer label.",
+  "savers": [
+    { "name": "pipes",          "label": "3D Pipes",        "type": "html", "file": "html/pipes.html",           "enabled": true },
+    { "name": "mystify",        "label": "Mystify",         "type": "html", "file": "html/mystify.html",         "enabled": true },
+    { "name": "ribbons",        "label": "Ribbons",         "type": "html", "file": "html/ribbons.html",         "enabled": true },
+    { "name": "starfield",      "label": "Starfield",       "type": "html", "file": "html/starfield.html",       "enabled": true },
+    { "name": "flying-tux",     "label": "Flying Tux",      "type": "html", "file": "html/flying-tux.html",      "enabled": true },
+    { "name": "marquee",        "label": "Marquee",         "type": "html", "file": "html/marquee.html",         "enabled": true }
+  ]
+}

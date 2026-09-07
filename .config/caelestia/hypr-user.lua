@@ -106,3 +106,21 @@ hl.window_rule({
     size   = "(monitor_w*0.6) (monitor_h*0.6)",
     center = true,
 })
+
+-- Screensaver. The caelestia shell owns the idle timer (general.idle.timeouts
+-- in shell.json calls screensaver.py start/stop); these binds are for trying it
+-- on demand. SUPER + SHIFT + Z behaves exactly like the idle trigger and so
+-- vanishes the moment you touch anything -- SUPER + SHIFT + ALT + Z is the one
+-- to use for actually looking at a saver, since it ignores input and toggles
+-- off on a second press (Escape or q close it too).
+hl.bind("SUPER + SHIFT + Z", hl.dsp.exec_cmd(scripts .. "/screensaver.py start"))
+hl.bind("SUPER + SHIFT + ALT + Z", hl.dsp.exec_cmd(scripts .. "/screensaver.py toggle --stay"))
+
+-- The saver windows are fullscreened onto every monitor by the script itself,
+-- so this rule only has to keep them from being animated or dimmed on the way.
+hl.window_rule({
+    match   = { class = "caelestia-screensaver" },
+    no_anim = true,
+    no_blur = true,
+    opaque  = true,
+})

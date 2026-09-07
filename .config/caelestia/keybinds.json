@@ -363,6 +363,14 @@
         [
           "CTRL + SUPER + ALT + R",
           "Restart shell"
+        ],
+        [
+          "SUPER + SHIFT + Z",
+          "Start the screensaver now (any input dismisses it, same as the idle trigger)"
+        ],
+        [
+          "SUPER + SHIFT + ALT + Z",
+          "Preview a random screensaver -- ignores input, press again or Esc/q to close"
         ]
       ]
     }

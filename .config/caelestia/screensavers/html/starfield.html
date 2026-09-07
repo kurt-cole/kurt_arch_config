@@ -1,0 +1,66 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Starfield</title>
+<canvas id="c"></canvas>
+<script src="saver.js"></script>
+<script>
+// "Starfield Simulation" / "Flying Through Space" -- Windows 3.1 through XP.
+//
+// Stars are points in a box ahead of the camera; each frame z decreases and the
+// point is projected. The streak comes from drawing the segment between the
+// previous and current projection, which the original faked with a smear.
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W = 0, H = 0, cx = 0, cy = 0, focal = 0;
+
+const COUNT = 420;
+const DEPTH = 1600;
+const SPEED = 0.62;        // depth units per ms
+
+const stars = [];
+function spawn(star, atFarPlane) {
+    star.x = rand(-1, 1) * DEPTH;
+    star.y = rand(-1, 1) * DEPTH;
+    star.z = atFarPlane ? DEPTH : rand(1, DEPTH);
+    star.pz = star.z;
+}
+for (let i = 0; i < COUNT; i++) { const s = {}; spawn(s, false); stars.push(s); }
+
+fitCanvas(canvas, (w, h) => {
+    W = w; H = h; cx = w / 2; cy = h / 2;
+    focal = Math.max(w, h) * 0.55;
+});
+
+let last = performance.now();
+function frame(now) {
+    const dt = Math.min(64, now - last);
+    last = now;
+
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+    ctx.lineCap = 'round';
+
+    for (const s of stars) {
+        s.pz = s.z;
+        s.z -= SPEED * dt;
+        if (s.z < 1) { spawn(s, true); continue; }
+
+        const k = focal / s.z, pk = focal / s.pz;
+        const x = cx + s.x * k, y = cy + s.y * k;
+        if (x < -50 || x > W + 50 || y < -50 || y > H + 50) { spawn(s, true); continue; }
+        const px = cx + s.x * pk, py = cy + s.y * pk;
+
+        // Near stars are bigger and brighter -- the only depth cue there is.
+        const t = 1 - s.z / DEPTH;
+        const size = Math.max(1.2, (H / 900) * (0.9 + t * 3.6));
+        ctx.strokeStyle = `rgba(255,255,255,${0.35 + t * 0.65})`;
+        ctx.lineWidth = size;
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+    }
+    requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>

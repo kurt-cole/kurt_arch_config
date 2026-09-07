@@ -1,0 +1,277 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>3D Pipes</title>
+<canvas id="c"></canvas>
+<script src="saver.js"></script>
+<script>
+// "3D Pipes" -- the Windows 95/NT/XP OpenGL saver.
+//
+// Pipes do a self-avoiding random walk on an integer lattice. Each step appends
+// a cylinder, each turn a ball joint. Rather than issuing a draw call per piece
+// (which gets to thousands), pieces are transformed on the CPU and appended to
+// one growing vertex buffer, so the whole scene is a single draw call.
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl2', { antialias: true, alpha: false })
+        || canvas.getContext('webgl', { antialias: true, alpha: false });
+
+const B = 6;               // lattice half-extent, so coords run -6..6
+const RADIUS = 0.32;
+const JOINT = 0.45;
+const PIPES = 4;           // pipes growing at once
+const MAX_PIECES = 850;    // then the screen clears and it starts over, as the original does
+const STEP_MS = 55;        // one lattice step per pipe per this many ms
+const TURN_CHANCE = 0.32;
+
+// ---------------------------------------------------------------- mat4 ------
+const M = {
+    perspective(fovy, aspect, near, far) {
+        const f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far);
+        return new Float32Array([
+            f / aspect, 0, 0, 0,
+            0, f, 0, 0,
+            0, 0, (far + near) * nf, -1,
+            0, 0, 2 * far * near * nf, 0]);
+    },
+    lookAt(eye, at, up) {
+        const z = norm(sub(eye, at));
+        const x = norm(cross(up, z));
+        const y = cross(z, x);
+        return new Float32Array([
+            x[0], y[0], z[0], 0,
+            x[1], y[1], z[1], 0,
+            x[2], y[2], z[2], 0,
+            -dot(x, eye), -dot(y, eye), -dot(z, eye), 1]);
+    }
+};
+const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const norm = a => { const l = Math.hypot(...a) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+
+// ------------------------------------------------------------- geometry -----
+// Both base meshes are triangle soups of {position, normal}, built once. The
+// cylinder runs along +Y from 0 to 1 with radius 1 so a single basis matrix
+// aims and scales it onto any lattice edge.
+function cylinderMesh(sides) {
+    const v = [];
+    for (let i = 0; i < sides; i++) {
+        const a0 = i / sides * Math.PI * 2, a1 = (i + 1) / sides * Math.PI * 2;
+        const c0 = [Math.cos(a0), 0, Math.sin(a0)], c1 = [Math.cos(a1), 0, Math.sin(a1)];
+        const p = (c, y) => [c[0], y, c[2], c[0], 0, c[2]];
+        v.push(...p(c0, 0), ...p(c1, 0), ...p(c1, 1));
+        v.push(...p(c0, 0), ...p(c1, 1), ...p(c0, 1));
+    }
+    return new Float32Array(v);
+}
+function sphereMesh(seg, rings) {
+    const v = [];
+    const at = (i, j) => {
+        const th = i / seg * Math.PI * 2, ph = j / rings * Math.PI;
+        const n = [Math.sin(ph) * Math.cos(th), Math.cos(ph), Math.sin(ph) * Math.sin(th)];
+        return [...n, ...n];
+    };
+    for (let i = 0; i < seg; i++) for (let j = 0; j < rings; j++) {
+        const a = at(i, j), b = at(i + 1, j), c = at(i + 1, j + 1), d = at(i, j + 1);
+        v.push(...a, ...b, ...c, ...a, ...c, ...d);
+    }
+    return new Float32Array(v);
+}
+const CYL = cylinderMesh(14);
+const SPH = sphereMesh(10, 6);
+
+// ------------------------------------------------------------- shaders ------
+const VS = `
+attribute vec3 aPos; attribute vec3 aNrm; attribute vec3 aCol;
+uniform mat4 uProj, uView;
+varying vec3 vNrm, vCol, vPos;
+void main() {
+    vNrm = aNrm; vCol = aCol; vPos = aPos;
+    gl_Position = uProj * uView * vec4(aPos, 1.0);
+}`;
+const FS = `
+precision mediump float;
+varying vec3 vNrm, vCol, vPos;
+uniform vec3 uEye;
+void main() {
+    vec3 n = normalize(vNrm);
+    vec3 l = normalize(vec3(0.4, 0.8, 0.6));
+    vec3 v = normalize(uEye - vPos);
+    float diff = max(dot(n, l), 0.0);
+    float spec = pow(max(dot(reflect(-l, n), v), 0.0), 32.0);
+    // Plastic-looking: a flat ambient floor plus a hot white highlight, which
+    // is roughly what the original's fixed-function material gave you.
+    gl_FragColor = vec4(vCol * (0.22 + 0.78 * diff) + vec3(0.9) * spec * 0.6, 1.0);
+}`;
+function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    return s;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+gl.linkProgram(prog);
+gl.useProgram(prog);
+const loc = {
+    pos: gl.getAttribLocation(prog, 'aPos'),
+    nrm: gl.getAttribLocation(prog, 'aNrm'),
+    col: gl.getAttribLocation(prog, 'aCol'),
+    proj: gl.getUniformLocation(prog, 'uProj'),
+    view: gl.getUniformLocation(prog, 'uView'),
+    eye: gl.getUniformLocation(prog, 'uEye'),
+};
+
+// --------------------------------------------------------------- buffer -----
+const FLOATS_PER_VERT = 9;
+const CAPACITY = 600000 * FLOATS_PER_VERT;           // enough vertices for MAX_PIECES
+const cpu = new Float32Array(CAPACITY);
+let used = 0;                                        // floats written
+const vbo = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+gl.bufferData(gl.ARRAY_BUFFER, cpu.byteLength, gl.DYNAMIC_DRAW);
+const stride = FLOATS_PER_VERT * 4;
+for (const [l, size, off] of [[loc.pos, 3, 0], [loc.nrm, 3, 12], [loc.col, 3, 24]]) {
+    gl.enableVertexAttribArray(l);
+    gl.vertexAttribPointer(l, size, gl.FLOAT, false, stride, off);
+}
+
+// Appends a base mesh transformed by an orthonormal basis (bx,by,bz), scaled by
+// `scale` and moved to `origin`. Normals get the basis without the scale.
+function append(mesh, origin, bx, by, bz, scale, color) {
+    const need = mesh.length / 6 * FLOATS_PER_VERT;
+    if (used + need > CAPACITY) return false;
+    const start = used;
+    for (let i = 0; i < mesh.length; i += 6) {
+        const px = mesh[i] * scale[0], py = mesh[i + 1] * scale[1], pz = mesh[i + 2] * scale[2];
+        cpu[used++] = origin[0] + bx[0] * px + by[0] * py + bz[0] * pz;
+        cpu[used++] = origin[1] + bx[1] * px + by[1] * py + bz[1] * pz;
+        cpu[used++] = origin[2] + bx[2] * px + by[2] * py + bz[2] * pz;
+        const nx = mesh[i + 3], ny = mesh[i + 4], nz = mesh[i + 5];
+        cpu[used++] = bx[0] * nx + by[0] * ny + bz[0] * nz;
+        cpu[used++] = bx[1] * nx + by[1] * ny + bz[1] * nz;
+        cpu[used++] = bx[2] * nx + by[2] * ny + bz[2] * nz;
+        cpu[used++] = color[0]; cpu[used++] = color[1]; cpu[used++] = color[2];
+    }
+    gl.bufferSubData(gl.ARRAY_BUFFER, start * 4, cpu.subarray(start, used));
+    return true;
+}
+
+// ----------------------------------------------------------------- walk -----
+const DIRS = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+const key = p => p.join(',');
+let occupied = new Set();
+let pipes = [];
+let pieces = 0;
+
+function hsl2rgb(h, s, l) {
+    const f = n => {
+        const k = (n + h / 30) % 12;
+        return l - s * Math.min(l, 1 - l) * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+    };
+    return [f(0), f(8), f(4)];
+}
+function freeCell() {
+    for (let tries = 0; tries < 200; tries++) {
+        const p = [randInt(-B, B), randInt(-B, B), randInt(-B, B)];
+        if (!occupied.has(key(p))) return p;
+    }
+    return null;
+}
+function newPipe() {
+    const p = freeCell();
+    if (!p) return null;
+    occupied.add(key(p));
+    return { pos: p, dir: pick(DIRS), color: hsl2rgb(rand(0, 360), rand(0.55, 0.95), rand(0.42, 0.62)) };
+}
+function restart() {
+    used = 0; pieces = 0;
+    occupied = new Set();
+    pipes = [];
+    for (let i = 0; i < PIPES; i++) { const p = newPipe(); if (p) pipes.push(p); }
+}
+
+// Orthonormal basis whose +Y is `d`; the other two axes are arbitrary but
+// consistent, which is all a symmetric pipe needs.
+function basisFor(d) {
+    const by = d;
+    const helper = Math.abs(by[1]) > 0.9 ? [1, 0, 0] : [0, 1, 0];
+    const bx = norm(cross(helper, by));
+    const bz = cross(by, bx);
+    return [bx, by, bz];
+}
+
+function grow(pipe) {
+    const options = DIRS.filter(d => {
+        if (d[0] === -pipe.dir[0] && d[1] === -pipe.dir[1] && d[2] === -pipe.dir[2]) return false;
+        const n = [pipe.pos[0] + d[0], pipe.pos[1] + d[1], pipe.pos[2] + d[2]];
+        if (n.some(c => c < -B || c > B)) return false;
+        return !occupied.has(key(n));
+    });
+    if (!options.length) return false;
+
+    const straight = options.find(d => d === pipe.dir);
+    let dir;
+    if (straight && Math.random() > TURN_CHANCE) {
+        dir = straight;
+    } else {
+        const turns = options.filter(d => d !== pipe.dir);
+        dir = turns.length ? pick(turns) : straight;
+    }
+
+    const turned = dir !== pipe.dir;
+    if (turned) {
+        const [bx, by, bz] = basisFor([0, 1, 0]);
+        if (!append(SPH, pipe.pos, bx, by, bz, [JOINT, JOINT, JOINT], pipe.color)) return false;
+        pieces++;
+    }
+    const [bx, by, bz] = basisFor(dir);
+    if (!append(CYL, pipe.pos, bx, by, bz, [RADIUS, 1, RADIUS], pipe.color)) return false;
+    pieces++;
+
+    pipe.dir = dir;
+    pipe.pos = [pipe.pos[0] + dir[0], pipe.pos[1] + dir[1], pipe.pos[2] + dir[2]];
+    occupied.add(key(pipe.pos));
+    return true;
+}
+
+// ----------------------------------------------------------------- loop -----
+let proj = M.perspective(Math.PI / 4, 1, 0.5, 200);
+fitCanvas(canvas, (w, h) => {
+    gl.viewport(0, 0, w, h);
+    proj = M.perspective(Math.PI / 4, w / h, 0.5, 200);
+});
+gl.enable(gl.DEPTH_TEST);
+gl.clearColor(0, 0, 0, 1);
+restart();
+
+let last = performance.now(), acc = 0, t = 0;
+function frame(now) {
+    const dt = Math.min(64, now - last);
+    last = now; acc += dt; t += dt;
+
+    while (acc >= STEP_MS) {
+        acc -= STEP_MS;
+        for (let i = 0; i < pipes.length; i++) {
+            if (!grow(pipes[i])) {
+                const p = newPipe();
+                if (p) pipes[i] = p;
+            }
+        }
+        if (pieces > MAX_PIECES) restart();
+    }
+
+    // Slow orbit, with a gentle bob so it never settles into one silhouette.
+    const R = B * 3.6;
+    const a = t * 0.00008;
+    const eye = [Math.cos(a) * R, Math.sin(t * 0.00005) * B * 1.6, Math.sin(a) * R];
+    gl.uniformMatrix4fv(loc.proj, false, proj);
+    gl.uniformMatrix4fv(loc.view, false, M.lookAt(eye, [0, 0, 0], [0, 1, 0]));
+    gl.uniform3fv(loc.eye, eye);
+
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLES, 0, used / FLOATS_PER_VERT);
+    requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>

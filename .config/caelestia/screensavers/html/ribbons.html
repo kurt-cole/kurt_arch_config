@@ -1,0 +1,103 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Ribbons</title>
+<canvas id="c"></canvas>
+<script src="saver.js"></script>
+<script>
+// "Ribbons" -- the Windows 7 saver.
+//
+// Each ribbon is a head that wanders with a slowly turning heading, trailing a
+// band of fixed width. Drawing the band as a strip of quads between successive
+// centre points, shaded by how edge-on the segment is, gives the twisting
+// satin look without any actual 3D.
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W = 0, H = 0;
+
+const RIBBONS = 5;
+const SEGMENTS = 170;      // points of history per ribbon
+const SPEED = 0.34;        // px per ms at 1080p
+const HUES = [200, 275, 330, 25, 145, 55];
+
+function makeRibbon(hue) {
+    return {
+        x: rand(0.2, 0.8), y: rand(0.2, 0.8),
+        heading: rand(0, Math.PI * 2),
+        turn: rand(-0.0016, 0.0016),
+        turnChange: rand(2000, 5000),   // ms until the turn rate is re-rolled
+        width: rand(0.05, 0.11),        // fraction of screen height
+        phase: rand(0, Math.PI * 2),
+        hue,
+        pts: []
+    };
+}
+const ribbons = HUES.slice(0, RIBBONS).map(makeRibbon);
+
+fitCanvas(canvas, (w, h) => { W = w; H = h; });
+
+function step(r, dt) {
+    r.turnChange -= dt;
+    if (r.turnChange <= 0) { r.turn = rand(-0.0018, 0.0018); r.turnChange = rand(2000, 5000); }
+    r.heading += r.turn * dt;
+    r.phase += dt * 0.0011;
+
+    const d = SPEED * dt / H;
+    r.x += Math.cos(r.heading) * d / (W / H);
+    r.y += Math.sin(r.heading) * d;
+
+    // Steer back in rather than bouncing -- a hard reflection looks like a
+    // billiard ball, and these are supposed to drift.
+    if (r.x < 0.05 || r.x > 0.95 || r.y < 0.05 || r.y > 0.95) {
+        const toCentre = Math.atan2(0.5 - r.y, 0.5 - r.x);
+        let diff = ((toCentre - r.heading + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+        r.heading += diff * 0.06;
+    }
+
+    r.pts.push({ x: r.x, y: r.y, phase: r.phase });
+    if (r.pts.length > SEGMENTS) r.pts.shift();
+}
+
+function draw(r) {
+    const pts = r.pts;
+    if (pts.length < 3) return;
+    const halfW = r.width * H / 2;
+
+    for (let i = 1; i < pts.length; i++) {
+        const a = pts[i - 1], b = pts[i];
+        const ax = a.x * W, ay = a.y * H, bx = b.x * W, by = b.y * H;
+        const dx = bx - ax, dy = by - ay;
+        const len = Math.hypot(dx, dy) || 1;
+        const nx = -dy / len, ny = dx / len;
+
+        // The twist: the band's half-width breathes along its length, and the
+        // shading tracks it, so it reads as a surface turning in the light.
+        const ta = Math.sin(a.phase * 2.1), tb = Math.sin(b.phase * 2.1);
+        const wa = halfW * (0.25 + 0.75 * Math.abs(ta));
+        const wb = halfW * (0.25 + 0.75 * Math.abs(tb));
+        const shade = 0.30 + 0.55 * Math.abs(tb);
+        const fade = i / pts.length;                 // tail dissolves into the black
+
+        ctx.fillStyle = `hsla(${r.hue + tb * 18} 85% ${shade * 100}% / ${fade * 0.95})`;
+        ctx.beginPath();
+        ctx.moveTo(ax + nx * wa, ay + ny * wa);
+        ctx.lineTo(bx + nx * wb, by + ny * wb);
+        ctx.lineTo(bx - nx * wb, by - ny * wb);
+        ctx.lineTo(ax - nx * wa, ay - ny * wa);
+        ctx.closePath();
+        ctx.fill();
+    }
+}
+
+let last = performance.now();
+function frame(now) {
+    const dt = Math.min(64, now - last);
+    last = now;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    for (const r of ribbons) { step(r, dt); draw(r); }
+    ctx.globalCompositeOperation = 'source-over';
+    requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
