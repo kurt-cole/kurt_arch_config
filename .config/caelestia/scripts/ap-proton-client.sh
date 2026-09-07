@@ -16,6 +16,9 @@
 #     anything. For clients that launch the game themselves, and for clients that
 #     talk to an injected DLL over loopback TCP rather than touching the game's
 #     memory -- that crosses the container boundary fine (Feeding Frenzy 2).
+#     appid may be 0 for a game Steam doesn't own at all (Cave Story's freeware
+#     build): nothing is waited for, and dll_overrides land in the client prefix,
+#     which is where the client starts the game.
 #
 # Requires STEAM_COMPAT_LAUNCHER_SERVICE=proton in Steam's environment (set for
 # the session in ~/.config/uwsm/env-hyprland), which makes pressure-vessel publish
@@ -36,7 +39,11 @@ LOG_DIR="$HOME/.cache/ap-launcher"
 TIMEOUT=180
 
 mkdir -p "$LOG_DIR"
-log="$LOG_DIR/inject-$appid.log"
+# appid 0 means "not a Steam game" -- the client launches the game itself, in the
+# client's own prefix (Cave Story). Name the log after the client instead.
+slug=$appid
+[ "$appid" = "0" ] && slug=$(printf '%s' "$client" | tr -c 'A-Za-z0-9' '-')
+log="$LOG_DIR/inject-$slug.log"
 say() { echo "$(date -Is) $*" >> "$log"; }
 : > "$log"
 
@@ -142,15 +149,21 @@ if [ "$how" = "standalone" ]; then
     if [ -d "$prefix/pfx" ]; then
         register_steam_url_handler "$prefix" "$proton"
     fi
-    # These belong to the GAME's prefix, where the game will load them.
+    # These belong to the prefix the GAME runs in, where it will load them. For a
+    # non-Steam game (appid 0) that is this same client prefix, since the client
+    # starts the game itself.
     if [ -n "$dll_overrides" ]; then
-        game_prefix="$HOME/.local/share/Steam/steamapps/compatdata/$appid"
+        if [ "$appid" = "0" ]; then
+            game_prefix="$prefix"
+        else
+            game_prefix="$HOME/.local/share/Steam/steamapps/compatdata/$appid"
+        fi
         if [ -d "$game_prefix/pfx" ]; then
             for d in $(printf '%s' "$dll_overrides" | tr ',' ' '); do
                 override_dll "$game_prefix" "$proton" "$d"
             done
         else
-            say "no prefix for $appid yet -- run the game once, then relaunch to set: $dll_overrides"
+            say "no prefix at $game_prefix yet -- launch once more to set: $dll_overrides"
         fi
     fi
     export STEAM_COMPAT_DATA_PATH="$prefix"

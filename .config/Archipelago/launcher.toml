@@ -73,8 +73,12 @@ proton_client = {}
 visible = true
 emoji = "🤖"
 name = "Cave Story"
-component = "Cave Story Client"
-proton_client = {}
+# The client launches Doukutsu.exe itself and talks to the randomizer's dinput.dll
+# proxy over loopback TCP, so it runs standalone in the shared ap-win prefix; the
+# game is the freeware build under cave-story-randomizer on F:, not a Steam app.
+component = ""
+commands = []
+proton_client = { appid = 0, client = "Cave Story Client", apworld = "cave_story.apworld", mode = "standalone", dll_overrides = ["dinput"] }
 
 [[entries]]  # guessed name
 visible = true
