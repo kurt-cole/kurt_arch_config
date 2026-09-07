@@ -73,6 +73,27 @@ if [ -z "$launch_client" ]; then
     exit 1
 fi
 
+# A bare Proton prefix has no steam:// handler -- Steam registers one only inside
+# its own container -- so a Windows client that launches its game with
+# os.startfile("steam://run/<appid>") dies there. Proton's own steam.exe forwards
+# the URL to the host Steam, so point the protocol at it. Idempotent.
+register_steam_url_handler() {
+    prefix_="$1"
+    proton_="$2"
+    grep -q 'Classes\\\\steam\\\\shell' "$prefix_/pfx/user.reg" 2>/dev/null && return 0
+    bat_="$LOG_DIR/register-steam-url.bat"
+    cat > "$bat_" <<'BAT'
+@echo off
+reg add "HKCU\Software\Classes\steam" /ve /d "URL:steam protocol" /f
+reg add "HKCU\Software\Classes\steam" /v "URL Protocol" /d "" /f
+reg add "HKCU\Software\Classes\steam\shell\open\command" /ve /d "\"C:\windows\system32\steam.exe\" \"%%1\"" /f
+BAT
+    say "registering the steam:// handler in the prefix"
+    STEAM_COMPAT_DATA_PATH="$prefix_" \
+    STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/Steam" \
+        "$proton_" run cmd /c "Z:$(printf '%s' "$bat_" | tr '/' '\\')" >> "$log" 2>&1
+}
+
 if [ "$how" = "standalone" ]; then
     say "standalone: starting $client in the prefix for $appid"
     prefix="$HOME/.local/share/Steam/steamapps/compatdata/$appid"
@@ -86,6 +107,7 @@ if [ "$how" = "standalone" ]; then
         exit 1
     fi
     say "using $proton with prefix $prefix"
+    [ -d "$prefix/pfx" ] && register_steam_url_handler "$prefix" "$proton"
     export STEAM_COMPAT_DATA_PATH="$prefix"
     export STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/Steam"
     export SteamAppId="$appid" SteamGameId="$appid"
