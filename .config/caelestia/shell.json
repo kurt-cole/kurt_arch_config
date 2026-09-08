@@ -7,20 +7,10 @@
     "dashboard": {
         "showOnHover": true
     },
-    "launcher": {
-        "favouriteApps": [
-            "firefox",
-            "foot",
-            "codium",
-            "steam"
-        ]
-    },
     "general": {
         "idle": {
-            "_comment": "Replaces caelestia's defaults (lock 180s, dpms off 300s, suspendThenHibernate 600s). Array actions are handed to Quickshell.execDetached by IdleMonitors.qml, which is how the screensaver hooks in.",
             "timeouts": [
                 {
-                    "timeout": 180,
                     "idleAction": [
                         "/home/barretglass/.config/caelestia/scripts/screensaver.py",
                         "start"
@@ -28,14 +18,23 @@
                     "returnAction": [
                         "/home/barretglass/.config/caelestia/scripts/screensaver.py",
                         "stop"
-                    ]
+                    ],
+                    "timeout": 180
                 },
                 {
-                    "timeout": 900,
                     "idleAction": "dpms off",
-                    "returnAction": "dpms on"
+                    "returnAction": "dpms on",
+                    "timeout": 900
                 }
             ]
         }
+    },
+    "launcher": {
+        "favouriteApps": [
+            "firefox",
+            "foot",
+            "codium",
+            "steam"
+        ]
     }
 }
