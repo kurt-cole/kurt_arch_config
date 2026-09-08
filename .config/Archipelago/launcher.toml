@@ -335,13 +335,16 @@ label = "Prism instance · todo"
 commands = []
 proton_client = {}
 
-[[entries]]  # TODO: make work
+[[entries]]
 visible = true
 emoji = "🌇"
 name = "Mirror's Edge"
-component = "Mirror's Edge Client"
+# The client reads the game's memory with pymem (MirrorsEdge.exe), so the Windows
+# client has to attach inside the game's pressure-vessel container.
+component = ""
+label = "Proton client"
 commands = ["steam steam://rungameid/17410"]
-proton_client = {}
+proton_client = { appid = 17410, client = "Mirror's Edge Client", apworld = "mirrors_edge.apworld" }
 
 [[entries]]  # no AP client found # TODO: prism
 visible = true
