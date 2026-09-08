@@ -191,22 +191,32 @@ label = "Haste (workshop mod)"
 commands = ["steam steam://rungameid/1796470"]
 proton_client = {}
 
-[[entries]]  # no AP client found
+# Lumafly must be the *Windows* build in Hollow Knight's own Proton prefix: it
+# picks the modding API from the host OS, and the Linux API ships a native
+# libunityscenerepacker.so plus a different Assembly-CSharp.dll, neither of
+# which a Proton-run Windows game can load. --no-appid keeps SteamAppId unset so
+# launching the game from Steam afterwards doesn't stall on WaitingPrevProcess.
+[[entries]]  # no AP client found -- mod loader only
 visible = true
 emoji = "🖤"
 name = "Hollow Knight"
 component = ""
-label = "Lumafly · todo"
-commands = ["steam steam://rungameid/367520"]
+label = "Lumafly (Proton)"
+commands = ["/home/barretglass/.config/caelestia/scripts/proton-run.sh --no-appid 367520 '/mnt/win/d/HK Modding/Lumafly.exe'"]
 proton_client = {}
 
-[[entries]]  # no AP client found
+# Cogfly is native Linux and Proton-aware: it detects the Windows game build and
+# sets WINEDLLOVERRIDES="winhttp=n,b" in Steam's launch options instead of using
+# the Linux run_bepinex.sh. Its profiles live on F: so they are shared with the
+# Windows install. Launch the game from Cogfly ("Launch with Steam" is on and is
+# mandatory under Proton -- standalone launch is blocked).
+[[entries]]  # no AP client found -- mod loader only
 visible = true
 emoji = "🪡"
 name = "Hollow Knight: Silksong"
 component = ""
-label = "Cogfly · todo"
-commands = ["steam steam://rungameid/1030300"]
+label = "Cogfly"
+commands = ["/games/Cogfly/Cogfly.AppImage"]
 proton_client = {}
 
 [[entries]]  # no AP client found

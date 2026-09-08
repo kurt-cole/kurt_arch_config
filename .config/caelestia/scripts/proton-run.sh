@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run an arbitrary Windows .exe under Proton, outside Steam.
 #
-#   proton-run.sh <appid> <exe> [args...]
+#   proton-run.sh [--no-appid] <appid> <exe> [args...]
 #
 # <appid>  the Steam game the exe belongs to: its prefix
 #          (~/.local/share/Steam/steamapps/compatdata/<appid>) is used and
@@ -10,6 +10,12 @@
 #          no SteamAppId is set.
 # <exe>    a Linux path to the .exe; it is run with its own directory as cwd,
 #          which is what mod loaders expect.
+#
+# --no-appid  use <appid>'s prefix but do NOT export SteamAppId. For a tool that
+#          only needs to see the game's prefix (a mod loader reading the saves in
+#          drive_c/.../AppData/LocalLow) and never runs the game itself. With
+#          SteamAppId set, Steam believes the game is already running and a later
+#          launch stalls at WaitingPrevProcess.
 #
 # For mod loaders and launchers (Nickel, SML, MCC) rather than AP clients --
 # ap-proton-client.sh is the one that knows about Archipelago. Nothing here
@@ -20,8 +26,14 @@
 # Logs to ~/.cache/ap-launcher/proton-run-<exe name>.log.
 set -u
 
-appid=${1:?usage: proton-run.sh <appid> <exe> [args...]}
-exe=${2:?usage: proton-run.sh <appid> <exe> [args...]}
+usage='usage: proton-run.sh [--no-appid] <appid> <exe> [args...]'
+set_appid=1
+if [ "${1:-}" = "--no-appid" ]; then
+    set_appid=0
+    shift
+fi
+appid=${1:?$usage}
+exe=${2:?$usage}
 shift 2
 
 LOG_DIR="$HOME/.cache/ap-launcher"
@@ -53,7 +65,7 @@ if [ "$appid" = "0" ]; then
     prefix="$HOME/.local/share/Steam/steamapps/compatdata/ap-win"
 else
     prefix="$HOME/.local/share/Steam/steamapps/compatdata/$appid"
-    export SteamAppId="$appid" SteamGameId="$appid"
+    [ "$set_appid" = 1 ] && export SteamAppId="$appid" SteamGameId="$appid"
 fi
 mkdir -p "$prefix"
 
