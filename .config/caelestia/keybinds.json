@@ -34,7 +34,7 @@
         ],
         [
           "SUPER + ;",
-          "Toggle the Archipelago quick launcher, or its open config editor (Enter launches, d debug client, e edit list)"
+          "Toggle the Archipelago quick launcher, or its open config editor (Enter launches, d launches with every command in its own terminal, e edit list)"
         ]
       ]
     },

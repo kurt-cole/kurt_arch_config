@@ -33,9 +33,11 @@
 # Blocks, not { } on several lines: TOML forbids a newline inside an inline
 # table, so a multi-line entry has to be an [[entries]] block.
 #
-# In the launcher: j/k or arrows move, / filters, Enter launches, d launches
-# with the Archipelago client in a terminal (the Linux equivalent of Windows'
-# ArchipelagoLauncherDebug), e opens this file in the editor, q/Esc closes.
+# In the launcher: j/k or arrows move, / filters, Enter launches, d launches in
+# debug mode -- every step of the launch (the AP client, the proton-client
+# injector, each command) runs in its own terminal that shows the command, its
+# output and its exit status, and stays open afterwards -- e opens this file in
+# the editor, q/Esc closes.
 #
 # Components marked "guessed name" were scraped out of a frozen world and may
 # be off -- check against the names in the real Archipelago Launcher.
@@ -459,8 +461,8 @@ visible = true
 emoji = "🤡"
 name = "SM64: Spicy Mycena 64"
 component = ""
-label = "SM64EX Launcher · todo"
-commands = []
+label = "SM64EX Launcher"
+commands = ["/games/SM64\\ Archipelago/SM64AP-Launcher-x86_64.AppImage"]
 proton_client = {}
 
 [[entries]]  # guessed name; also: Universal Tracker TODO: stardrop setup
@@ -477,8 +479,8 @@ visible = true
 emoji = "🏰"
 name = "Super Mario 64"
 component = ""
-label = "SM64EX Launcher · todo"
-commands = []
+label = "SM64EX Launcher"
+commands = ["/games/SM64\\ Archipelago/SM64AP-Launcher-x86_64.AppImage"]
 proton_client = {}
 
 [[entries]]  # guessed name # TODO: how this work?

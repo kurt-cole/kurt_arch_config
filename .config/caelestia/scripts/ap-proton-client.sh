@@ -44,7 +44,24 @@ mkdir -p "$LOG_DIR"
 slug=$appid
 [ "$appid" = "0" ] && slug=$(printf '%s' "$client" | tr -c 'A-Za-z0-9' '-')
 log="$LOG_DIR/inject-$slug.log"
-say() { echo "$(date -Is) $*" >> "$log"; }
+# When stdout is a terminal (the launcher's debug mode opens one per command),
+# mirror everything to it as well as to the log -- otherwise a debug window shows
+# an empty terminal while all the output goes to a file.
+verbose=0
+[ -t 1 ] && verbose=1
+run_logged() {  # run "$@", to the log and, when verbose, to the terminal too
+    if [ "$verbose" = 1 ]; then
+        "$@" 2>&1 | tee -a "$log"
+        return "${PIPESTATUS[0]}"
+    fi
+    "$@" >> "$log" 2>&1
+}
+say() {
+    line="$(date -Is) $*"
+    printf '%s\n' "$line" >> "$log"
+    [ "$verbose" = 1 ] && printf '%s\n' "$line"
+    return 0
+}
 : > "$log"
 
 exe="$AP_DIR/ArchipelagoLauncher.exe"
@@ -91,9 +108,11 @@ run_in_prefix() {
     prefix_="$1"
     proton_="$2"
     bat_="$3"
-    STEAM_COMPAT_DATA_PATH="$prefix_" \
-    STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/Steam" \
-        "$proton_" run "Z:$(printf '%s' "$bat_" | tr '/' '\\')" >> "$log" 2>&1
+    (
+        export STEAM_COMPAT_DATA_PATH="$prefix_"
+        export STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/Steam"
+        run_logged "$proton_" run "Z:$(printf '%s' "$bat_" | tr '/' '\\')"
+    )
 }
 
 register_steam_url_handler() {
@@ -169,7 +188,8 @@ if [ "$how" = "standalone" ]; then
     export STEAM_COMPAT_DATA_PATH="$prefix"
     export STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/Steam"
     export SteamAppId="$appid" SteamGameId="$appid"
-    exec "$proton" run "$exe" "$client" >> "$log" 2>&1
+    run_logged "$proton" run "$exe" "$client"
+    exit $?
 fi
 
 # --- attach mode ------------------------------------------------------------
@@ -203,4 +223,5 @@ done
 say "container up after ${waited}s, starting: $client"
 
 # Inside the container wine is on PATH with the game's WINEPREFIX already set.
-exec "$launch_client" --bus-name="$bus" -- wine "$exe" "$client" >> "$log" 2>&1
+run_logged "$launch_client" --bus-name="$bus" -- wine "$exe" "$client"
+exit $?

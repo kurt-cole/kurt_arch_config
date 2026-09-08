@@ -5,13 +5,15 @@ Content comes from ~/.config/Archipelago/launcher.toml -- entries with
 visible = true, in file order. Everything installed is listed in that file so
 new games only need visible flipped.
 
-Keys: j/k or arrows move, g/G jump, / filters, Enter launches, d launches with
-the Archipelago client in a terminal (Linux stand-in for Windows'
-ArchipelagoLauncherDebug), e opens the config in the editor, q/Esc quits.
+Keys: j/k or arrows move, g/G jump, / filters, Enter launches, d launches in
+debug mode -- every step (AP client, proton-client injector, each command) gets
+its own terminal showing the command, its output and its exit status, held open
+afterwards -- e opens the config in the editor, q/Esc quits.
 """
 import glob
 import os
 import re
+import shlex
 import shutil
 import signal
 import subprocess
@@ -173,22 +175,44 @@ class Launcher:
         return rows[self.cursor] if rows else None
 
     # -- launching -------------------------------------------------------
-    def start_proton_client(self, entry, debug=False):
-        """Start a Windows AP client inside the game's Proton container.
+    def proton_client_argv(self, entry, debug=False):
+        """The ap-proton-client.sh call for an entry, or None.
 
         Clients that read or patch game memory have to live in the same wine
-        session as the game; ap-proton-client.sh waits for the container to come
-        up and injects it there. Detached, so it outlives this TUI.
+        session as the game; that script waits for the container to come up and
+        injects the client there.
         """
         pc = entry.get("proton_client")
         if not pc:
-            return
+            return None
         script = os.path.join(HOME, ".config/caelestia/scripts/ap-proton-client.sh")
         overrides = pc.get("dll_overrides", [])
-        argv = [script, str(pc["appid"]), pc["client"], "debug" if debug else "",
+        return [script, str(pc["appid"]), pc["client"], "debug" if debug else "",
                 pc.get("apworld", ""), pc.get("mode", "attach"),
                 ",".join(overrides) if isinstance(overrides, list) else str(overrides)]
-        spawn(argv)
+
+    def debug_term(self, command, title=""):
+        """Run one command in its own terminal, echoing it and holding the window
+        open after it exits.
+
+        Debug mode has to show *everything* a launch does, so each step gets a
+        window: the AP client, the proton-client injector, and every entry
+        command. Without the hold, a command that fails immediately closes its
+        terminal before anything can be read.
+        """
+        term = list(self.settings.get("terminal") or ["foot"])
+        if title and "-T" in term:                 # retitle per window (foot's -T)
+            i = len(term) - 1 - term[::-1].index("-T")
+            if i + 1 < len(term):
+                term[i + 1] = title
+        body = "\n".join([
+            'printf "\\033[1m$ %s\\033[0m\\n\\n" ' + shlex.quote(command),
+            command,
+            "status=$?",
+            'printf "\\n\\033[2m[exited %s] press enter to close\\033[0m\\n" "$status"',
+            "read -r _",
+        ])
+        spawn([*term, "bash", "-c", body])
 
     def launch(self, debug=False):
         entry = self.current()
@@ -196,21 +220,34 @@ class Launcher:
             return True
         ap = archipelago_path(self.settings)
         component = entry.get("component", "")
-        self.start_proton_client(entry, debug)
+        name = entry.get("name", "Archipelago")
+        pc_argv = self.proton_client_argv(entry, debug)
+
+        if component and not ap:
+            self.status = "no Archipelago AppImage found"
+            return True
+        if not component and not entry.get("commands") and not entry.get("proton_client"):
+            self.status = f"{name} has nothing to launch"
+            return True
+
+        if debug:
+            # ap-proton-client.sh and proton-run.sh tee their log to stdout when
+            # it is a terminal, so a debug window shows their progress live
+            # instead of an empty screen with everything in ~/.cache/ap-launcher.
+            if pc_argv:
+                self.debug_term(shlex.join(pc_argv), f"{name} — proton client")
+            if component:
+                self.debug_term(shlex.join([ap, component]), f"{name} — {component}")
+            for command in entry.get("commands", []):
+                self.debug_term(command, f"{name} — command")
+            return False
+
+        if pc_argv:
+            spawn(pc_argv)
         if component:
-            if not ap:
-                self.status = "no Archipelago AppImage found"
-                return True
-            if debug:
-                term = self.settings.get("terminal") or ["foot"]
-                spawn([*term, ap, component])
-            else:
-                spawn([ap, component])
+            spawn([ap, component])
         for command in entry.get("commands", []):
             spawn(command, shell=True)
-        if not component and not entry.get("commands") and not entry.get("proton_client"):
-            self.status = f"{entry.get('name')} has nothing to launch"
-            return True
         return False  # launched -- close the launcher
 
     def edit(self):
