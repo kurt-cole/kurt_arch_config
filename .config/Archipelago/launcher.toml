@@ -221,13 +221,19 @@ label = "Cogfly"
 commands = ["/games/Cogfly/Cogfly.AppImage"]
 proton_client = {}
 
-[[entries]]  # no AP client found
+[[entries]]  # no AP client found -- the BepInEx mod talks to the server itself
 visible = true
 emoji = "🏇"
 name = "Horse Riding Classic"
+# BepInEx is installed by hand in the game folder, and its winhttp.dll doorstop
+# only loads if winhttp is overridden to native in the prefix -- a prefix rebuild
+# silently un-mods the game, so the override is re-checked on every launch.
 component = ""
-label = "mod · todo"
-commands = ["steam steam://rungameid/4384880"]
+label = "BepInEx mod"
+commands = [
+  "/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 4384880 winhttp",
+  "steam steam://rungameid/4384880",
+]
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: inscryption
