@@ -77,6 +77,7 @@ name = "Cave Story"
 # proxy over loopback TCP, so it runs standalone in the shared ap-win prefix; the
 # game is the freeware build under cave-story-randomizer on F:, not a Steam app.
 component = ""
+label = "Proton client"
 commands = []
 proton_client = { appid = 0, client = "Cave Story Client", apworld = "cave_story.apworld", mode = "standalone", dll_overrides = ["dinput"] }
 
@@ -97,13 +98,17 @@ label = "E33"
 commands = ["steam steam://rungameid/1903340"]
 proton_client = {}
 
-[[entries]]  # no AP client found TODO: nickel
+[[entries]]
 visible = true
 emoji = "🚀"
 name = "Cobalt Core"
+# Nickel is the mod loader, and the AP mod it loads talks to the server itself,
+# so there is no AP client at all. Nickel is a Windows .NET build, so it runs in
+# Cobalt Core's own Proton prefix (it starts CobaltCore.exe from there) --
+# do not also launch the game from Steam, or two wineservers land on one prefix.
 component = ""
-label = "Nickel · todo"
-commands = []
+label = "Nickel (Proton)"
+commands = ["/home/barretglass/.config/caelestia/scripts/proton-run.sh 2179850 /mnt/win/f/Nickel/NickelLauncher.exe"]
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: web browser/tampermonkey
@@ -279,8 +284,8 @@ proton_client = {}
 visible = true
 emoji = " "
 name = "Metroid Fusion"
-component = ""
-label = "TODO: what this do"
+component = "Open Patch"
+label = "Open patch file"
 commands = []
 proton_client = {}
 
@@ -288,8 +293,8 @@ proton_client = {}
 visible = true
 emoji = "👩‍🚀"
 name = "Metroid: Zero Mission"
-component = ""
-label = "TODO: what this do"
+component = "Open Patch"
+label = "Open patch file"
 commands = []
 proton_client = {}
 
@@ -470,8 +475,8 @@ proton_client = {}
 visible = true
 emoji = "🧠"
 name = "Super Metroid"
-component = "SNI Client"
-label = "todo: what does this do"
+component = "Open Patch"
+label = "Open patch file"
 commands = []
 proton_client = {}
 
@@ -687,8 +692,9 @@ entries = [
 ]
 
 [settings]
+# Extracted AppImage; AppRun is the same entry point the .AppImage ran.
 # The newest ~/Applications/Archipelago*.AppImage is used if this path is gone.
-archipelago = "/home/barretglass/Applications/Archipelago_0.6.7_linux-x86_64_30a01a0369579383beb81bc3ed6a95bf.AppImage"
+archipelago = "/home/barretglass/Applications/Archipelago-0.6.7/AppRun"
 terminal = ["foot", "-a", "ap-debug", "-T", "Archipelago (debug)"]
 editor = ["foot", "-a", "ap-config", "-T", "launcher.toml",
           "/home/barretglass/.config/caelestia/scripts/ap-edit.sh"]
