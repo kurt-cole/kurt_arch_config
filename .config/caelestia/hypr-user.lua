@@ -124,3 +124,14 @@ hl.window_rule({
     no_blur = true,
     opaque  = true,
 })
+
+-- Never warp the cursor. Hyprland otherwise yanks the pointer into whatever
+-- window gains focus, which is jarring on its own and is what makes a Steam
+-- notification snap the mouse to the centre of the window underneath it: the
+-- XWayland toast takes focus (caelestia sets misc:focus_on_activate), then
+-- focus returns and the pointer is dragged along.
+hl.config({
+    cursor = {
+        no_warps = true,
+    },
+})
