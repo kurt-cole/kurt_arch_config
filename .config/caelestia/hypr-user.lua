@@ -135,3 +135,38 @@ hl.config({
         no_warps = true,
     },
 })
+
+-- XWayland popup menus escaping a special workspace.
+--
+-- Steam's menus ("+ Add a game", the library right-click menus) are X11
+-- override-redirect windows (_NET_WM_WINDOW_TYPE_POPUP_MENU), and hyprland
+-- handles those on a short-circuit path that never runs window rules -- so no
+-- hl.window_rule can touch them. Worse, they *do* map onto the right special
+-- workspace and are reassigned to the monitor's regular workspace a moment
+-- afterwards, so even this hook sees the correct workspace and there is nothing
+-- to fix yet. The menu then sits invisible behind the pulled-up group and dies
+-- unnoticed when steam loses focus. Steam's managed windows (Friends List,
+-- Settings) are unaffected, which is what makes the failure look random.
+--
+-- Hence the deferred helper: it watches the new window for two seconds and puts
+-- it back whenever it drifts off. Moving one keeps its geometry, and it renders
+-- and clicks normally afterwards.
+--
+-- The "same class already on the pulled-up special workspace" test is
+-- deliberately narrow: with no group up (a steam notification toast, say)
+-- nothing matches and the window is left exactly where hyprland put it.
+hl.on("window.open", function(win)
+    if not win or not win.xwayland then return end
+
+    local special = hl.get_active_special_workspace()
+    if not special then return end
+
+    for _, other in ipairs(hl.get_windows() or {}) do
+        if other.address ~= win.address and other.class == win.class
+            and other.workspace and other.workspace.id == special.id then
+            hl.dispatch(hl.dsp.exec_cmd(
+                scripts .. "/popup-keeper.py " .. win.address .. " " .. special.name))
+            return
+        end
+    end
+end)
