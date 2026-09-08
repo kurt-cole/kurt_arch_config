@@ -37,6 +37,10 @@ AP_DIR="$HOME/Applications/Archipelago-win"
 WORLDS="$HOME/.local/share/Archipelago/worlds"
 LOG_DIR="$HOME/.cache/ap-launcher"
 TIMEOUT=180
+GRACE=20      # how long to hold out for a container name that is provably new
+SETTLE=15     # let the game finish starting before injecting into its container
+SURVIVED=30   # a client alive this long started fine; a quicker exit is a failure
+ATTEMPTS=3
 
 mkdir -p "$LOG_DIR"
 # appid 0 means "not a Steam game" -- the client launches the game itself, in the
@@ -207,21 +211,100 @@ if [ -n "${steam_pid:-}" ] &&
 fi
 
 bus="com.steampowered.App$appid"
-say "waiting for $bus"
 waited=0
-until busctl --user --no-pager list 2>/dev/null | grep -q "^$bus "; do
+
+give_up() {  # give_up <what>
+    say "gave up after ${waited}s: $1"
+    command -v notify-send >/dev/null && notify-send -u critical \
+        "Archipelago: no Proton client" \
+        "$client was not started: $1. See $log"
+    exit 1
+}
+
+# A container OUTLIVES the game process by a good while, so the bus name alone is
+# not proof that anything is running -- relaunching a game you just quit, the
+# stale container is still published and the client is injected into it a moment
+# before it dies (empty log, no client). Steam's reaper carries "AppId=<appid>"
+# on its command line for exactly as long as the game runs, so wait for a live
+# game first, and only then for its container.
+game_running() {
+    # Filter out this script's own pid and its parent, the trap that makes a
+    # -f pattern find the shell that is looking for it.
+    pgrep -f "SteamLaunch AppId=$appid " 2>/dev/null |
+        grep -qvE "^($$|$PPID)$"
+}
+
+# Note which containers are already published before waiting. pressure-vessel
+# owns both the well-known name and a per-instance one
+# (com.steampowered.App<appid>.Instance<pid>), so anything listed now belongs to
+# a run that is already over or on its way out; the new game's container is the
+# instance name that appears after this point.
+names() {  # every bus name this appid's containers own, well-known and per-instance
+    busctl --user --no-pager --list list 2>/dev/null |
+        awk -v b="$bus" '$1 == b || index($1, b ".Instance") == 1 { print $1 }'
+}
+stale=$(names)
+
+say "waiting for the game (AppId=$appid) to be running"
+until game_running; do
     sleep 2
     waited=$((waited + 2))
-    if [ "$waited" -ge "$TIMEOUT" ]; then
-        say "gave up after ${TIMEOUT}s waiting for the game's container"
-        command -v notify-send >/dev/null && notify-send -u critical \
-            "Archipelago: no Proton client" \
-            "$client was not started: the game's container never appeared. See $log"
-        exit 1
-    fi
+    [ "$waited" -ge "$TIMEOUT" ] && give_up "the game never started"
 done
-say "container up after ${waited}s, starting: $client"
+say "game running after ${waited}s, waiting for a fresh $bus container"
 
-# Inside the container wine is on PATH with the game's WINEPREFIX already set.
-run_logged "$launch_client" --bus-name="$bus" -- wine "$exe" "$client"
-exit $?
+# Wait for an instance name that was not there before, then prove it is usable by
+# running a trivial command in it -- a container that is tearing down still owns
+# its names but fails the probe.
+target=""
+since=0
+while :; do
+    for i in $(names); do
+        # After GRACE seconds the old container is long gone, so the well-known
+        # name is the new one's -- accept it then, in case this Steam build
+        # publishes no per-instance name at all.
+        if printf '%s\n' "$stale" | grep -qxF "$i"; then
+            [ "$since" -ge "$GRACE" ] || continue
+        fi
+        "$launch_client" --bus-name="$i" -- /bin/true >/dev/null 2>&1 || continue
+        target=$i
+        break
+    done
+    [ -n "$target" ] && break
+    game_running || give_up "the game exited before its container was usable"
+    sleep 2
+    waited=$((waited + 2))
+    since=$((since + 2))
+    [ "$waited" -ge "$TIMEOUT" ] && give_up "the game's container never appeared"
+done
+bus=$target
+say "container up after ${waited}s"
+
+# Do not inject the instant the container is usable. A game whose first process
+# re-execs during startup (Mirror's Edge does) makes the container tear down
+# everything it launched when that first process exits, and a client started in
+# that window is SIGTERMed a second later -- exit 143, and a zero-byte launcher
+# log with no clue in it. Let the game settle, then verify the client survives:
+# an early death by signal means we were still too soon, so try again.
+attempt=1
+while :; do
+    say "settling ${SETTLE}s before injecting (attempt $attempt/$ATTEMPTS)"
+    sleep "$SETTLE"
+    game_running || give_up "the game exited before the client could be started"
+    say "starting: $client"
+    started=$(date +%s)
+    # Inside the container wine is on PATH with the game's WINEPREFIX already set.
+    run_logged "$launch_client" --bus-name="$bus" -- wine "$exe" "$client"
+    rc=$?
+    ran=$(( $(date +%s) - started ))
+    say "client exited with status $rc after ${ran}s"
+    # A client that lived a while was working and has simply been closed.
+    [ "$ran" -ge "$SURVIVED" ] && exit "$rc"
+    [ "$rc" -eq 0 ] && exit 0
+    attempt=$((attempt + 1))
+    if [ "$attempt" -gt "$ATTEMPTS" ]; then
+        give_up "the client kept dying on startup (last status $rc)"
+    fi
+    game_running || give_up "the game exited before the client could be started"
+    say "client died in ${ran}s -- the game was probably still starting, retrying"
+done
