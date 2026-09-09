@@ -1,0 +1,14 @@
+[Unit]
+Description=Bluetooth pairing agent (BlueZ Agent1)
+Documentation=man:bt-agent(1)
+After=bluetooth.service
+Requires=bluetooth.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/bt-agent --capability=NoInputNoOutput
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=bluetooth.target

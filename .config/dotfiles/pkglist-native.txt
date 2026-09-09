@@ -3,6 +3,7 @@ base
 base-devel
 bat
 bluez
+bluez-tools
 bluez-utils
 btop
 cliphist
