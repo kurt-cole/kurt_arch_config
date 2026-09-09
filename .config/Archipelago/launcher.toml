@@ -135,7 +135,7 @@ visible = true
 emoji = "🐟️"
 name = "Feeding Frenzy 2"
 component = "Feeding Frenzy 2 Client"
-commands = ["steam steam://rungameid/3390"]
+commands = [] # ["steam steam://rungameid/3390"]
 # proton_client is parked until the apworld is updated -- see
 # ~/Projects/claude-scratchwork/ff2-linux-support.md. To re-enable, drop the {}
 # below and restore:
@@ -167,13 +167,17 @@ component = "Half-Life (Sven Co-op) Client"
 commands = ["steam steam://rungameid/225840"] # TODO: find the sven app id
 proton_client = {}
 
-[[entries]]  # no AP client found TODO: patch for linux or figure out running in proton
+# MCC-AP's own launcher.exe, in a terminal -- it prompts for the room info on
+# stdin. Needs the locally built /MT launcher and no-console DLL in
+# /games/HaloAP (the upstream release has neither) and starts MCC itself.
+# See scripts/halo-ap.sh and ~/Projects/claude-scratchwork/halo-mcc-ap.md.
+[[entries]]
 visible = true
 emoji = " "
 name = "Halo The Master Chief Collection"
 component = ""
-label = "MCC Launcher · todo"
-commands = []
+label = "MCC Launcher"
+commands = ["foot -a haloap -T 'HaloAP Launcher' /home/barretglass/.config/caelestia/scripts/halo-ap.sh"]
 proton_client = {}
 
 [[entries]]
@@ -409,7 +413,7 @@ emoji = "🧟‍♂️"
 name = "Pvz2Gardendless"
 component = ""
 label = "PVZ2 Modded"
-commands = []
+commands = ["~/pvzge_ap_build/PvZ\\ Gardendless\\ AP.AppImage"]
 proton_client = {}
 
 [[entries]]  # no AP client found # TODO: gale
