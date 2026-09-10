@@ -1,40 +1,29 @@
 {
-    "appearance": {
-        "transparency": {
-            "enabled": false
-        }
-    },
-    "dashboard": {
-        "showOnHover": true
-    },
-    "general": {
-        "idle": {
-            "timeouts": [
-                {
-                    "idleAction": [
-                        "/home/barretglass/.config/caelestia/scripts/screensaver.py",
-                        "start"
-                    ],
-                    "returnAction": [
-                        "/home/barretglass/.config/caelestia/scripts/screensaver.py",
-                        "stop"
-                    ],
-                    "timeout": 180
-                },
-                {
-                    "idleAction": "dpms off",
-                    "returnAction": "dpms on",
-                    "timeout": 900
-                }
-            ]
-        }
-    },
-    "launcher": {
-        "favouriteApps": [
-            "firefox",
-            "foot",
-            "codium",
-            "steam"
-        ]
+  "appearance": {
+    "transparency": {
+      "enabled": false
     }
+  },
+  "dashboard": {
+    "showOnHover": true
+  },
+  "general": {
+    "idle": {
+      "timeouts": [
+        {
+          "idleAction": "dpms off",
+          "returnAction": "dpms on",
+          "timeout": 900
+        }
+      ]
+    }
+  },
+  "launcher": {
+    "favouriteApps": [
+      "firefox",
+      "foot",
+      "codium",
+      "steam"
+    ]
+  }
 }
