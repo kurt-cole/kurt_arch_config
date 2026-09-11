@@ -107,6 +107,59 @@ hl.window_rule({
     center = true,
 })
 
+-- ...and the way *out* when something else opens it. misc.lua sets
+-- focus_on_activate = true, so an xdg-activation request (opening a PNG while
+-- the browser is hidden, a chat notification, a "reuse existing window" launch)
+-- focuses the hidden window -- and hyprland shows a focused window by pulling
+-- its workspace up. Purgatory then lands on screen with no toggle bound to it,
+-- and no way to dismiss it: SUPER + SHIFT + N cannot help either, because the
+-- picker scopes itself to the *current* workspace, which is now the purgatory,
+-- so it lists nothing.
+--
+-- An activation request means "look at this window", so treat it as the restore
+-- it already is: send the window home and follow it there. Anything still
+-- hidden stays hidden, and the purgatory is dismissed if it clung on.
+local PURG = "^special:purg%-"
+
+hl.on("window.active", function(win)
+    win = win or hl.get_active_window()
+    if not win or not win.address then return end
+
+    local ws = win.workspace and win.workspace.name or ""
+    if not ws:match(PURG) then return end
+
+    local name = ws:sub(#"special:purg-" + 1)
+    local home = name:match("^sp_(.+)$")
+    home = home and ("special:" .. home) or name
+
+    -- Dismiss before moving, not after: the activated window is focused, so the
+    -- monitor showing the purgatory is the focused one and toggle_special (which
+    -- only ever acts on the focused monitor) reaches it. Do it the other way
+    -- round and follow = true can carry focus to the *other* monitor -- if home
+    -- is itself a special workspace living there -- stranding an empty purgatory
+    -- on screen, which is the unrecoverable state this whole hook exists to
+    -- prevent.
+    local special = hl.get_active_special_workspace()
+    if special and special.name == ws then
+        hl.dispatch(hl.dsp.workspace.toggle_special(ws:sub(#"special:" + 1)))
+    end
+
+    hl.dispatch(hl.dsp.window.move({
+        window = "address:" .. win.address, workspace = home, follow = true,
+    }))
+
+    -- Belt and braces: if a purgatory is still up anywhere, focus that monitor
+    -- to dismiss it and hand focus back to the window we just restored.
+    for _, monitor in ipairs(hl.get_monitors() or {}) do
+        local shown = monitor.active_special_workspace and monitor.active_special_workspace.name
+        if shown == ws then
+            hl.dispatch(hl.dsp.focus({ monitor = monitor.name }))
+            hl.dispatch(hl.dsp.workspace.toggle_special(ws:sub(#"special:" + 1)))
+            hl.dispatch(hl.dsp.focus({ window = "address:" .. win.address }))
+        end
+    end
+end)
+
 -- Screensaver. The caelestia shell owns the idle timer (general.idle.timeouts
 -- in shell.json calls screensaver.py start/stop); these binds are for trying it
 -- on demand. SUPER + SHIFT + Z behaves exactly like the idle trigger and so

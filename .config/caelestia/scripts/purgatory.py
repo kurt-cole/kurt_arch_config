@@ -367,7 +367,14 @@ def main():
         return hide()
     # Safe to read here: the picker floats on the workspace it lists, and
     # mapping a floating window doesn't change which workspace is active.
-    return tui(current_workspace())
+    workspace = current_workspace()
+    # A purgatory can end up pulled up despite having no toggle, if something
+    # activates a window hidden on it (hypr-user.lua sends those home, but a
+    # stale one may still be on screen). Scoping to purg-sp_purg-<ws> would then
+    # list nothing at all -- list the purgatory we are standing in instead.
+    if workspace.startswith(PREFIX):
+        workspace = home_workspace(workspace)
+    return tui(workspace)
 
 
 if __name__ == "__main__":
