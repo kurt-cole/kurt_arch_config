@@ -61,6 +61,25 @@ for c in json.load(sys.stdin):
     done
 }
 
+# Azahar enumerates controllers once at startup and does not pick up a gamepad
+# that appears later. Sunshine only creates its virtual pad when a Moonlight
+# client connects, so launching Azahar first leaves it with no controller and
+# bindings that match nothing. Wait for the pad (or give up and run anyway).
+wait_for_gamepad() {
+    local waited=0
+    have_pad && return 0
+    msg "waiting for the Deck to connect (Moonlight -> Desktop); Ctrl-C to skip"
+    while [ $waited -lt ${GAMEPAD_WAIT:-180} ]; do
+        sleep 2; waited=$((waited + 2))
+        have_pad && { msg "gamepad detected after ${waited}s"; sleep 1; return 0; }
+    done
+    msg "no gamepad after ${waited}s -- starting without one"
+}
+
+have_pad() {
+    grep -lqi sunshine /sys/class/input/js*/device/name 2>/dev/null
+}
+
 msg() { printf '[azahar-deck] %s\n' "$*" >&2; }
 hj()  { hyprctl "$@" -j; }
 
@@ -126,9 +145,18 @@ echo "output_name = $HL" >> "$SUN_CONF"
 systemctl --user restart "$SUN_UNIT" >/dev/null 2>&1
 msg "sunshine streaming $HL -- connect Moonlight on the Deck"
 
+# --- wait for the Deck's gamepad, then launch Azahar -------------------------
+wait_for_gamepad
+
 # --- launch Azahar (XWayland: Qt's Wayland plugin can't do shared GL contexts)
-QT_QPA_PLATFORM=xcb azahar "$@" &
+# Azahar's own output goes to a log -- launched from the desktop entry it would
+# otherwise be discarded, and it is the only evidence if a launch ever hangs
+# before mapping a window (seen once, cause never established).
+AZ_LOG="${XDG_CACHE_HOME:-$HOME/.cache}/azahar-deck.log"
+: > "$AZ_LOG"
+QT_QPA_PLATFORM=xcb azahar "$@" >>"$AZ_LOG" 2>&1 &
 AZ=$!
+msg "azahar log: $AZ_LOG"
 
 # --- place the secondary window once it appears -----------------------------
 for _ in $(seq 1 60); do
