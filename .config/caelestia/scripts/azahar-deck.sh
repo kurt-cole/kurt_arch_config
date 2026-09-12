@@ -13,6 +13,7 @@ CFG="$HOME/.config/azahar-emu/qt-config.ini"
 SUN_CONF="$HOME/.config/sunshine/sunshine.conf"
 SUN_UNIT="app-dev.lizardbyte.app.Sunshine.service"
 HL=""
+WD=""
 
 # caelestia's shell does not survive monitor hotplug -- its per-screen bindings
 # go null and it logs "attempted to use dangling screen object" -- so it gets
@@ -22,6 +23,42 @@ restart_shell() {
     sleep 1
     setsid caelestia shell -d >/dev/null 2>&1 &
     sleep 4
+}
+
+# Fullscreen is what makes the window fill the output exactly -- caelestia
+# reserves 60px for its bar on every output, headless included, so a merely
+# tiled window lands inset at 1210x780. The dispatcher only acts on the focused
+# window and ignores a "window" argument, so focus, fullscreen, then hand focus
+# back to whatever had it.
+go_fullscreen() {
+    local addr=$1 prev
+    prev=$(hj activewindow | py 'import sys,json;print(json.load(sys.stdin).get("address",""))')
+    [ "$prev" = "$addr" ] && prev=""
+    hyprctl dispatch "hl.dsp.focus({ window = \"address:$addr\" })" >/dev/null
+    sleep 0.4
+    hyprctl dispatch 'hl.dsp.window.fullscreen({})' >/dev/null
+    sleep 0.4
+    [ -n "$prev" ] && hyprctl dispatch "hl.dsp.focus({ window = \"address:$prev\" })" >/dev/null
+}
+
+# A dialog mapping on the deck workspace knocks the window out of fullscreen
+# (same as a new window un-fullscreening whatever is already there), which
+# leaves caelestia's bar visible around the game on the Deck. Put it back.
+watchdog() {
+    while sleep 3; do
+        local state
+        state=$(hj clients | py '
+import sys,json
+for c in json.load(sys.stdin):
+    if "Secondary Window" in c["title"]:
+        print(c["address"], c["fullscreen"], c["workspace"]["name"]); break
+')
+        [ -n "$state" ] || continue
+        set -- $state
+        if [ "$2" = "0" ] && [ "$3" = "deck" ]; then
+            go_fullscreen "$1"
+        fi
+    done
 }
 
 msg() { printf '[azahar-deck] %s\n' "$*" >&2; }
@@ -65,6 +102,7 @@ restart_shell
 
 cleanup() {
     msg "tearing down"
+    [ -n "${WD:-}" ] && kill "$WD" 2>/dev/null
     [ -n "$HL" ] && hyprctl output remove "$HL" >/dev/null 2>&1
     while read -r n x y w h; do
         hyprctl eval "hl.monitor({ output = \"$n\", mode = \"preferred\", position = \"auto\", scale = 1 })" >/dev/null 2>&1
@@ -103,18 +141,12 @@ for c in json.load(sys.stdin):
         print(c["address"]); break
 ')
     [ -n "$ADDR" ] || continue
-    PREV=$(hj activewindow | py 'import sys,json;print(json.load(sys.stdin).get("address",""))')
     hyprctl dispatch "hl.dsp.window.move({ window = \"address:$ADDR\", workspace = \"name:deck\", follow = false })" >/dev/null
     sleep 0.5
-    # fullscreen ignores the reserved area caelestia's bar claims on every
-    # output; the dispatcher only acts on the focused window, so focus, then
-    # hand focus back to whatever had it.
-    hyprctl dispatch "hl.dsp.focus({ window = \"address:$ADDR\" })" >/dev/null
-    sleep 0.5
-    hyprctl dispatch 'hl.dsp.window.fullscreen({})' >/dev/null
-    sleep 0.5
-    [ -n "$PREV" ] && hyprctl dispatch "hl.dsp.focus({ window = \"address:$PREV\" })" >/dev/null
+    go_fullscreen "$ADDR"
     msg "bottom screen placed on $HL"
+    watchdog &
+    WD=$!
     break
 done
 
