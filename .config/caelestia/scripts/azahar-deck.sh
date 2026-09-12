@@ -121,7 +121,31 @@ for c in json.load(sys.stdin):
     done
 }
 
-have_pad() { grep -lqi sunshine /sys/class/input/js*/device/name 2>/dev/null; }
+# A Sunshine pad from the *previous* session can still be present when the
+# script starts -- the uinput device outlives the disconnect by a moment -- and
+# a bare existence check then skips the wait entirely and Azahar comes up with
+# no controller again. Require one that appeared after we started.
+START_TS=$(date +%s)
+have_pad() {
+    py '
+import os, sys, glob
+start = int(sys.argv[1])
+for js in glob.glob("/sys/class/input/js*"):
+    try:
+        name = open(os.path.join(js, "device", "name")).read()
+    except OSError:
+        continue
+    if "sunshine" not in name.lower():
+        continue
+    dev = "/dev/input/" + os.path.basename(js)
+    try:
+        if os.stat(dev).st_mtime >= start:
+            sys.exit(0)
+    except OSError:
+        continue
+sys.exit(1)
+' "$START_TS"
+}
 
 wait_for_gamepad() {
     local waited=0
