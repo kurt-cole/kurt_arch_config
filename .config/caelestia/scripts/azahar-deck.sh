@@ -32,6 +32,7 @@ SUN_UNIT="app-dev.lizardbyte.app.Sunshine.service"
 AZ_LOG="${XDG_CACHE_HOME:-$HOME/.cache}/azahar-deck.log"
 WD=""
 STARTED_OBS=0
+STARTED_SUN=0
 
 msg() { printf '[azahar-deck] %s\n' "$*" >&2; }
 hj()  { hyprctl "$@" -j; }
@@ -170,6 +171,12 @@ cleanup() {
     if [ "$STARTED_OBS" = 1 ]; then
         pkill -x obs 2>/dev/null        # SIGTERM so OBS shuts down clean and
     fi                                  # does not show its crash dialog next time
+    # Leaving Sunshine up would keep it streaming an output that is parked far
+    # away and invisible, so stop it again unless it was already running.
+    if [ "$STARTED_SUN" = 1 ]; then
+        systemctl --user stop "$SUN_UNIT" >/dev/null 2>&1
+        msg "sunshine stopped"
+    fi
 }
 trap cleanup EXIT INT TERM
 
@@ -189,9 +196,13 @@ if ! grep -qx "output_name = $HL" "$SUN_CONF"; then
     sed -i '/^output_name/d' "$SUN_CONF"
     echo "output_name = $HL" >> "$SUN_CONF"
     systemctl --user restart "$SUN_UNIT" >/dev/null 2>&1
+    STARTED_SUN=1
     msg "sunshine now streaming $HL"
 else
-    systemctl --user is-active --quiet "$SUN_UNIT" || systemctl --user start "$SUN_UNIT"
+    if ! systemctl --user is-active --quiet "$SUN_UNIT"; then
+        systemctl --user start "$SUN_UNIT"
+        STARTED_SUN=1
+    fi
     msg "sunshine already streaming $HL"
 fi
 
