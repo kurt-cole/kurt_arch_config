@@ -34,7 +34,10 @@ WD=""
 STARTED_OBS=0
 STARTED_SUN=0
 
-msg() { printf '[azahar-deck] %s\n' "$*" >&2; }
+SCRIPT_LOG="${XDG_CACHE_HOME:-$HOME/.cache}/azahar-deck-script.log"
+msg() {
+    printf '[%s] %s\n' "$(date +%H:%M:%S)" "$*" | tee -a "$SCRIPT_LOG" >&2
+}
 hj()  { hyprctl "$@" -j; }
 py()  { python3 -c "$1" "${@:2}"; }
 
@@ -126,6 +129,25 @@ for c in json.load(sys.stdin):
 # a bare existence check then skips the wait entirely and Azahar comes up with
 # no controller again. Require one that appeared after we started.
 START_TS=$(date +%s)
+# Sunshine otherwise creates sink-sunshine-* and makes it the *default* sink for
+# the whole session, so desktop audio disappears into the stream. Pointing
+# audio_sink at the real output's monitor makes it capture that instead, and it
+# stops touching the default. The default is read fresh each launch because it
+# changes (AirPods vs speakers).
+configure_audio_sink() {
+    local cur want
+    cur=$(pactl get-default-sink 2>/dev/null) || return 0
+    case "$cur" in
+        sink-sunshine*|"") return 0 ;;      # already hijacked or unknown; leave it
+    esac
+    want="audio_sink = ${cur}.monitor"
+    grep -qxF "$want" "$SUN_CONF" && return 1   # unchanged
+    sed -i '/^audio_sink/d' "$SUN_CONF"
+    echo "$want" >> "$SUN_CONF"
+    msg "audio capture pinned to ${cur}.monitor"
+    return 0                                    # changed -> needs a restart
+}
+
 have_pad() {
     py '
 import os, sys, glob
@@ -149,7 +171,10 @@ sys.exit(1)
 
 wait_for_gamepad() {
     local waited=0
-    have_pad && return 0
+    if have_pad; then
+        msg "gamepad already present at start -- not waiting"
+        return 0
+    fi
     msg "waiting for the Deck to connect (Moonlight -> Desktop); Ctrl-C to skip"
     while [ $waited -lt ${GAMEPAD_WAIT:-180} ]; do
         sleep 2; waited=$((waited + 2))
@@ -216,7 +241,9 @@ hyprctl eval "hl.workspace_rule({ workspace = \"name:deck\", monitor = \"$HL\", 
 # which with a persistent output is once per boot. The packaged unit allows only
 # 5 starts per 500s (overridden in a drop-in), so restarts are worth avoiding.
 mkdir -p "$(dirname "$SUN_CONF")"; touch "$SUN_CONF"
-if ! grep -qx "output_name = $HL" "$SUN_CONF"; then
+AUDIO_CHANGED=0
+configure_audio_sink && AUDIO_CHANGED=1
+if ! grep -qx "output_name = $HL" "$SUN_CONF" || [ "$AUDIO_CHANGED" = 1 ]; then
     sed -i '/^output_name/d' "$SUN_CONF"
     echo "output_name = $HL" >> "$SUN_CONF"
     systemctl --user restart "$SUN_UNIT" >/dev/null 2>&1
