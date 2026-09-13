@@ -13,7 +13,10 @@
       "feishin": { "enable": false },
       "applemusic": {
         "enable": true,
-        "match": [{ "class": "firefox", "title": "Music - Web Player" }],
+        "match": [
+          { "class": "firefox", "title": "Music - Web Player" },
+          { "class": "firefox", "title": " - Apple Music — Mozilla Firefox" }
+        ],
         "command": ["firefox", "--new-window", "https://music.apple.com"],
         "move": true
       }
