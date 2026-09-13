@@ -9,9 +9,12 @@
 #   - It streams the persistent HEADLESS output (see azahar-deck.sh), left
 #     PARKED far away -- an empty 1280x800 screen costs libx264 next to nothing,
 #     where streaming DP-1 would mean encoding the game itself while playing it.
-#   - keyboard, mouse, touch and audio are disabled. Only the virtual pad is
-#     created. With mouse input off, a Deck touch or trackpad can't warp the
-#     cursor onto the parked output and strand it there.
+#   - Pad, mouse and keyboard stay on (trackpad-as-mouse via Steam Input on the
+#     Deck); native touch and audio are off. Relative motion moves the desktop
+#     cursor normally, but an ABSOLUTE event (a touchscreen tap in Moonlight's
+#     absolute touch mode) maps into the streamed output -- the parked one,
+#     which no pointer motion can leave. A watchdog unit bound to the stream
+#     (deck-controller-cursor.service) puts the cursor back on DP-1 if it does.
 #   - One Moonlight app, "Controller", so there is nothing else to pick.
 #
 # Same Sunshine binary and same appdata dir (~/.config/sunshine), so pairing,
@@ -21,6 +24,7 @@
 set -uo pipefail
 
 UNIT="deck-controller.service"
+CURSOR_UNIT="deck-controller-cursor.service"
 SUN_UNIT="app-dev.lizardbyte.app.Sunshine.service"
 SUN_DIR="$HOME/.config/sunshine"
 MAIN_CONF="$SUN_DIR/sunshine.conf"
@@ -69,8 +73,6 @@ write_config() {
         echo "# Edit sunshine.conf or the script, not this file."
         grep -vE '^[[:space:]]*(#|$)|^[[:space:]]*(output_name|audio_sink|keyboard|mouse|native_pen_touch|stream_audio|file_apps|log_path)[[:space:]]*=' "$MAIN_CONF"
         echo "output_name = $HL"
-        echo "keyboard = disabled"
-        echo "mouse = disabled"
         echo "native_pen_touch = disabled"
         echo "stream_audio = disabled"
         echo "file_apps = $APPS"
@@ -109,6 +111,9 @@ enable() {
         notify "Failed" "systemd-run could not start Sunshine"
         return 1
     fi
+    systemd-run --user --unit="$CURSOR_UNIT" --collect \
+        -p BindsTo="$UNIT" -p After="$UNIT" \
+        "$(realpath "$0")" watch-cursor >/dev/null 2>&1
     sleep 2
     if systemctl --user is-active --quiet "$UNIT"; then
         notify "Enabled" "On the Deck: Moonlight -> this PC -> Controller"
@@ -127,7 +132,30 @@ disable() {
     fi
 }
 
+# Runs for the life of the stream. Two hyprctl reads per half second; the
+# monitor rects are re-read each time since the headless output can move
+# (azahar-deck.sh) and a stale rect would yank the cursor off a real screen.
+watch_cursor() {
+    while sleep 0.5; do
+        { hyprctl cursorpos; hj monitors; } | py '
+import sys, json, subprocess
+x, y = (int(v) for v in sys.stdin.readline().split(","))
+mons = json.loads(sys.stdin.read())
+real = [m for m in mons if not m["name"].startswith("HEADLESS")]
+for m in mons:
+    if m["name"].startswith("HEADLESS") and real and \
+       m["x"] <= x < m["x"] + m["width"] and m["y"] <= y < m["y"] + m["height"]:
+        r = real[0]
+        cx, cy = r["x"] + r["width"] // 2, r["y"] + r["height"] // 2
+        subprocess.run(["hyprctl", "dispatch",
+            "hl.dsp.cursor.move({ x = %d, y = %d })" % (cx, cy)],
+            stdout=subprocess.DEVNULL)
+'
+    done
+}
+
 case "${1:-toggle}" in
+    watch-cursor) watch_cursor ;;
     enable)  enable ;;
     disable) disable ;;
     toggle)  if systemctl --user is-active --quiet "$UNIT"; then disable; else enable; fi ;;
