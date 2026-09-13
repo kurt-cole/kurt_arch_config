@@ -175,6 +175,28 @@ for c in json.load(sys.stdin):
     fi
 }
 
+# The windowed projector (restored on start via OBS's "save projectors on exit")
+# is what Discord shares. Send it to purgatory -- the same
+# special:purg-<workspace> that SUPER + N uses, so SUPER + SHIFT + N can bring it
+# back -- where Discord keeps capturing it.
+hide_projector() {
+    local addr ws
+    for _ in $(seq 1 30); do
+        sleep 1
+        read -r addr ws < <(hj clients | py 'import sys,json
+for c in json.load(sys.stdin):
+    if c["class"] == "obs" and "Projector" in c["title"]:
+        print(c["address"], c["workspace"]["name"]); break')
+        [ -n "${addr:-}" ] || continue
+        case "$ws" in special:purg-*) return 0 ;; esac
+        ws=${ws/special:/sp_}
+        hyprctl dispatch "hl.dsp.window.move({ window = \"address:$addr\", workspace = \"special:purg-${ws//[^A-Za-z0-9_-]/_}\", follow = false })" >/dev/null
+        msg "obs projector sent to purgatory"
+        return 0
+    done
+    msg "no obs projector appeared -- left alone"
+}
+
 # Touch input warps the cursor onto the headless output, so it can still be
 # sitting there when the session ends. Parking the output far away with the
 # cursor on it would strand the pointer on a screen that has no neighbour and
@@ -256,6 +278,7 @@ if ! pgrep -x obs >/dev/null; then
         >/dev/null 2>&1 &
     STARTED_OBS=1
     msg "obs started (minimised to tray)"
+    hide_projector &
 fi
 
 wait_for_tap
