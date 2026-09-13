@@ -381,6 +381,14 @@ component = "New Super Mario Bros Wii Client"
 commands = []
 proton_client = {}
 
+[[entries]]
+visible = true
+emoji = "📖"
+name = "Options Creator"
+component = "Options Creator"
+commands = []
+proton_client = {}
+
 [[entries]]  # no AP client found
 visible = true
 emoji = "⛰️"
@@ -556,13 +564,16 @@ component = "Undertale Client"
 commands = []
 proton_client = {}
 
-[[entries]]  # no AP client found TODO: gale
+[[entries]]  # Gale mod, no AP client
 visible = true
 emoji = "😤"
 name = "Unfair Flips"
 component = ""
-label = "Gale mod · todo"
-commands = []
+label = "Gale mod"
+# one command, not two: ap-launcher spawns each command concurrently
+commands = [
+  "/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 3925760 winhttp && env WEBKIT_DISABLE_DMABUF_RENDERER=1 gale --game unfair-flips --profile Default --launch --no-gui",
+]
 proton_client = {}
 
 [[entries]]
