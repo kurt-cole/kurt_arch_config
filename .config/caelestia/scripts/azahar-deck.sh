@@ -124,11 +124,6 @@ for c in json.load(sys.stdin):
     done
 }
 
-# A Sunshine pad from the *previous* session can still be present when the
-# script starts -- the uinput device outlives the disconnect by a moment -- and
-# a bare existence check then skips the wait entirely and Azahar comes up with
-# no controller again. Require one that appeared after we started.
-START_TS=$(date +%s)
 # Sunshine otherwise creates sink-sunshine-* and makes it the *default* sink for
 # the whole session, so desktop audio disappears into the stream. Pointing
 # audio_sink at the real output's monitor makes it capture that instead, and it
@@ -148,39 +143,36 @@ configure_audio_sink() {
     return 0                                    # changed -> needs a restart
 }
 
-have_pad() {
-    py '
-import os, sys, glob
-start = int(sys.argv[1])
-for js in glob.glob("/sys/class/input/js*"):
-    try:
-        name = open(os.path.join(js, "device", "name")).read()
-    except OSError:
-        continue
-    if "sunshine" not in name.lower():
-        continue
-    dev = "/dev/input/" + os.path.basename(js)
-    try:
-        if os.stat(dev).st_mtime >= start:
-            sys.exit(0)
-    except OSError:
-        continue
-sys.exit(1)
-' "$START_TS"
-}
-
-wait_for_gamepad() {
-    local waited=0
-    if have_pad; then
-        msg "gamepad already present at start -- not waiting"
-        return 0
-    fi
-    msg "waiting for the Deck to connect (Moonlight -> Desktop); Ctrl-C to skip"
-    while [ $waited -lt ${GAMEPAD_WAIT:-180} ]; do
-        sleep 2; waited=$((waited + 2))
-        have_pad && { msg "gamepad detected after ${waited}s"; sleep 1; return 0; }
+# Azahar enumerates controllers once, at startup, and Sunshine's virtual pad
+# only exists once Moonlight has connected. Auto-detecting that proved
+# unreliable -- a pad from the previous session lingers after a disconnect, and
+# after a reboot Sunshine presented a DualSense ("Wireless Controller") instead
+# of its named Xbox pad -- so ask instead: a fullscreen "tap to start" window on
+# the Deck's screen, tapped once Moonlight is connected. Closing it aborts.
+wait_for_tap() {
+    local pid addr
+    python3 "$(dirname "$0")/azahar-deck-prompt.py" &
+    pid=$!
+    for _ in $(seq 1 20); do
+        sleep 0.5
+        addr=$(hj clients | py 'import sys,json
+for c in json.load(sys.stdin):
+    if c["class"] == "azahar-deck-prompt":
+        print(c["address"]); break')
+        [ -n "$addr" ] && break
     done
-    msg "no gamepad after ${waited}s -- starting without one"
+    if [ -n "$addr" ]; then
+        hyprctl dispatch "hl.dsp.window.move({ window = \"address:$addr\", workspace = \"name:deck\", follow = false })" >/dev/null
+        sleep 0.5
+        go_fullscreen "$addr"
+    fi
+    msg "waiting for a tap on the Deck (Moonlight -> Desktop)"
+    if wait "$pid"; then
+        msg "tapped -- starting azahar"
+    else
+        msg "prompt closed -- aborting"
+        exit 0
+    fi
 }
 
 # Touch input warps the cursor onto the headless output, so it can still be
@@ -266,7 +258,7 @@ if ! pgrep -x obs >/dev/null; then
     msg "obs started (minimised to tray)"
 fi
 
-wait_for_gamepad
+wait_for_tap
 
 : > "$AZ_LOG"
 QT_QPA_PLATFORM=xcb azahar "$@" >>"$AZ_LOG" 2>&1 &
