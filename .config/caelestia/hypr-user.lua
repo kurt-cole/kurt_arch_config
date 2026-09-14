@@ -26,6 +26,12 @@ end
 -- checklist TUI lives on the todo special workspace (SUPER + R)
 hl.window_rule({ match = { class = "checklist" }, workspace = "special:todo" })
 
+-- The Deck's headless output (azahar-deck.sh / deck-controller.sh) must not take
+-- a numbered workspace. A new output grabs the first free id, so it stole 4, and
+-- SUPER + 4/5 then focused the parked, invisible screen. The scripts also claim
+-- name:deck right after creating it, in case the output gets another number.
+hl.workspace_rule({ workspace = "name:deck", monitor = "HEADLESS-1", default = true })
+
 -- 2/3 + 1/3 column splits. Focus-independent: the bind names which side gets
 -- the 1/3, whatever window happens to live there.
 local split = os.getenv("HOME") .. "/.config/caelestia/scripts/hypr-split.py"

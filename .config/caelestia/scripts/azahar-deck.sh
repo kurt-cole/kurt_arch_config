@@ -66,6 +66,18 @@ place_headless() {   # $1 = position, e.g. "0x1440" or "$PARK"
     sleep 0.5
 }
 
+# A new output takes the first free numbered workspace (it stole 4, leaving
+# SUPER + 4/5 focusing an invisible screen). Move it onto name:deck so the
+# number is released, then hand focus back.
+claim_deck_workspace() {
+    local prev
+    prev=$(hyprctl activeworkspace -j | py 'import sys,json; print(json.load(sys.stdin)["name"])')
+    hyprctl eval "hl.workspace_rule({ workspace = \"name:deck\", monitor = \"$HL\", default = true })" >/dev/null
+    hyprctl dispatch 'hl.dsp.focus({ workspace = "name:deck" })' >/dev/null
+    sleep 0.3
+    hyprctl dispatch "hl.dsp.focus({ workspace = \"$prev\" })" >/dev/null
+}
+
 # Create the headless output only if there is not one already, then bring it
 # alongside the desktop for this session.
 ensure_headless() {
@@ -83,6 +95,7 @@ ensure_headless() {
     HL=$(headless_name)
     [ -n "$HL" ] || { msg "failed to create headless output"; return 1; }
     place_headless "0x$(below_y)"
+    claim_deck_workspace
     msg "created headless output $HL at 0x$(below_y) ($MODE)"
     restart_shell                      # only on creation, never again
 }

@@ -43,6 +43,18 @@ n=[m["name"] for m in json.load(sys.stdin) if m["name"].startswith("HEADLESS")]
 print(n[0] if n else "")'
 }
 
+# A new output takes the first free numbered workspace (it stole 4, leaving
+# SUPER + 4/5 focusing an invisible screen). Move it onto name:deck so the
+# number is released, then hand focus back.
+claim_deck_workspace() {
+    local prev
+    prev=$(hj activeworkspace | py 'import sys,json; print(json.load(sys.stdin)["name"])')
+    hyprctl eval "hl.workspace_rule({ workspace = \"name:deck\", monitor = \"$HL\", default = true })" >/dev/null
+    hyprctl dispatch 'hl.dsp.focus({ workspace = "name:deck" })' >/dev/null
+    sleep 0.3
+    hyprctl dispatch "hl.dsp.focus({ workspace = \"$prev\" })" >/dev/null
+}
+
 # Creating an output is a hotplug, which caelestia's shell does not survive, so
 # this restarts the shell -- but only the first time per boot. Afterwards the
 # output is reused, here and by azahar-deck.sh.
@@ -60,6 +72,7 @@ for m in json.load(sys.stdin):
     HL=$(headless_name)
     [ -n "$HL" ] || return 1
     hyprctl eval "hl.monitor({ output = \"$HL\", mode = \"$MODE\", position = \"$PARK\", scale = 1 })" >/dev/null
+    claim_deck_workspace
     pkill -x qs 2>/dev/null
     sleep 1
     setsid caelestia shell -d >/dev/null 2>&1 &
