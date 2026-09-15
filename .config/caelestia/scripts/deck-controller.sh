@@ -61,11 +61,12 @@ claim_deck_workspace() {
 ensure_headless() {
     HL=$(headless_name)
     [ -n "$HL" ] && return 0
-    # "auto" positions pack by x regardless of y; pin the real monitors first.
+    # "auto" positions pack by x regardless of y; pin the real monitors first,
+    # at their current mode ("preferred" would drop them back to 60Hz).
     hj monitors | py 'import sys,json
 for m in json.load(sys.stdin):
-    print(m["name"], m["x"], m["y"])' | while read -r n x y; do
-        hyprctl eval "hl.monitor({ output = \"$n\", mode = \"preferred\", position = \"${x}x${y}\", scale = 1 })" >/dev/null
+    print(m["name"], m["x"], m["y"], "%dx%d@%.2f" % (m["width"], m["height"], m["refreshRate"]))' | while read -r n x y mode; do
+        hyprctl eval "hl.monitor({ output = \"$n\", mode = \"$mode\", position = \"${x}x${y}\", scale = 1 })" >/dev/null
     done
     hyprctl output create headless >/dev/null
     sleep 1

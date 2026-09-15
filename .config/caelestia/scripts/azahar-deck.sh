@@ -58,7 +58,7 @@ real_monitors() {
     hj monitors | py 'import sys,json
 for m in json.load(sys.stdin):
     if not m["name"].startswith("HEADLESS"):
-        print(m["name"], m["x"], m["y"], m["width"], m["height"])'
+        print(m["name"], m["x"], m["y"], m["width"], m["height"], "%.2f" % m["refreshRate"])'
 }
 
 place_headless() {   # $1 = position, e.g. "0x1440" or "$PARK"
@@ -102,9 +102,10 @@ ensure_headless() {
 
 # The real monitors use position "auto", which packs by x regardless of y, so
 # an output placed at 0x1440 still shifts DP-1 sideways unless they are pinned.
+# Keep the current mode too: "preferred" would drop them back to 60Hz.
 pin_monitors() {
-    while read -r n x y w h; do
-        hyprctl eval "hl.monitor({ output = \"$n\", mode = \"preferred\", position = \"${x}x${y}\", scale = 1 })" >/dev/null
+    while read -r n x y w h r; do
+        hyprctl eval "hl.monitor({ output = \"$n\", mode = \"${w}x${h}@${r}\", position = \"${x}x${y}\", scale = 1 })" >/dev/null
     done < <(real_monitors)
 }
 

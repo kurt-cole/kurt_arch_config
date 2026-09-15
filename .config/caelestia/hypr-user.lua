@@ -23,6 +23,11 @@ for key, shortcut in pairs({ XF86Tools = "M", XF86Launch5 = "D" }) do
         { locked = true })
 end
 
+-- Both Acer B277U E panels do 48-100Hz (EDID range limits), but "preferred"
+-- in caelestia's default monitor conf picks the 59.95Hz DTD.
+hl.monitor({ output = "DP-1", mode = "2560x1440@100", position = "0x0",    scale = 1 })
+hl.monitor({ output = "DP-2", mode = "2560x1440@100", position = "2560x0", scale = 1 })
+
 -- checklist TUI lives on the todo special workspace (SUPER + R)
 hl.window_rule({ match = { class = "checklist" }, workspace = "special:todo" })
 
