@@ -290,7 +290,7 @@ emoji = "🪩"
 name = "Marble It Up! Ultra"
 component = ""
 label = "MIUU"
-commands = ["steam steam://rungameid/864060"]
+commands = ["/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 864060 winhttp && steam steam://rungameid/864060"]
 proton_client = {}
 
 [[entries]]  # TODO: ryujinx
