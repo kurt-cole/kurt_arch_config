@@ -31,10 +31,16 @@
         "qml": true
     },
     "[c]": {
-        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+        "editor.formatOnSave": false,
+        "editor.formatOnPaste": false,
+        "editor.formatOnType": false
     },
     "[cpp]": {
-        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+        "editor.formatOnSave": false,
+        "editor.formatOnPaste": false,
+        "editor.formatOnType": false
     },
     "doxdocgen.generic.boolReturnsTrueFalse": false,
     "terminal.integrated.enableMultiLinePasteWarning": "never",
@@ -47,5 +53,8 @@
     "editor.inlayHints.enabled": "off",
     "qt-qml.qmlls.customExePath": "/usr/bin/qmlls6",
     "qt-qml.doNotAskForQmllsDownload": true,
-    "claudeCode.preferredLocation": "panel"
+    "claudeCode.preferredLocation": "panel",
+    "explorer.confirmPasteNative": false,
+    "clangd.detectExtensionConflicts": false,
+    "claudeCode.hideOnboarding": true
 }

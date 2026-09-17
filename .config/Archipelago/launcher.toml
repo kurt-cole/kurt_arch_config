@@ -62,6 +62,16 @@ label = "Firefox"
 commands = ["firefox https://galdiuz.github.io/archipeladoku/"]
 proton_client = {}
 
+[[entries]]  # no AP client found #TODO: web link
+visible = true
+emoji = "🏝️"
+name = "Archipelago Launcher"
+component = ""
+label = "default launcher"
+commands = [""]
+proton_client = {}
+
+
 [[entries]]  # no AP client found TODO: mods?
 visible = true
 emoji = "🃏"
@@ -97,7 +107,7 @@ emoji = "🖼️"
 name = "Clair Obscur Expedition 33"
 component = ""
 label = "E33"
-commands = ["steam steam://rungameid/1903340"]
+commands = ["/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 1903340 dwmapi && steam steam://rungameid/1903340"]
 proton_client = {}
 
 [[entries]]
@@ -422,6 +432,15 @@ name = "Pvz2Gardendless"
 component = ""
 label = "PVZ2 Modded"
 commands = ["~/pvzge_ap_build/PvZ\\ Gardendless\\ AP.AppImage"]
+proton_client = {}
+
+[[entries]]  # TODO: make work
+visible = true
+emoji = "🧟‍♂️"
+name = "Pvz2Gardendless Installer"
+component = "PvZ2 Gardendless Installer"
+label = "PVZ2 Modded"
+commands = [""]
 proton_client = {}
 
 [[entries]]  # no AP client found # TODO: gale

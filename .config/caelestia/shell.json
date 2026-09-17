@@ -1,29 +1,62 @@
 {
-  "appearance": {
-    "transparency": {
-      "enabled": false
-    }
-  },
-  "dashboard": {
-    "showOnHover": true
-  },
-  "general": {
-    "idle": {
-      "timeouts": [
-        {
-          "idleAction": "dpms off",
-          "returnAction": "dpms on",
-          "timeout": 900
+    "appearance": {
+        "transparency": {
+            "enabled": false
         }
-      ]
+    },
+    "dashboard": {
+        "showOnHover": true
+    },
+    "general": {
+        "idle": {
+            "timeouts": [
+                {
+                    "idleAction": "dpms off",
+                    "returnAction": "dpms on",
+                    "timeout": 900
+                }
+            ]
+        }
+    },
+    "launcher": {
+        "favouriteApps": [
+            "firefox",
+            "foot",
+            "codium",
+            "steam"
+        ]
+    },
+    "utilities": {
+        "enabled": true,
+        "quickToggles": [
+            {
+                "enabled": false,
+                "id": "wifi"
+            },
+            {
+                "enabled": true,
+                "id": "bluetooth"
+            },
+            {
+                "enabled": true,
+                "id": "mic"
+            },
+            {
+                "enabled": true,
+                "id": "settings"
+            },
+            {
+                "enabled": true,
+                "id": "gameMode"
+            },
+            {
+                "enabled": true,
+                "id": "dnd"
+            },
+            {
+                "enabled": false,
+                "id": "vpn"
+            }
+        ]
     }
-  },
-  "launcher": {
-    "favouriteApps": [
-      "firefox",
-      "foot",
-      "codium",
-      "steam"
-    ]
-  }
 }

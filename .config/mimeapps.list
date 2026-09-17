@@ -3,8 +3,18 @@ x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 application/x-compressed-tar=userapp-7z x %f -aou-L61WU3.desktop
 application/x-tar=userapp-7z e-XTEQU3.desktop
 application/x-7z-compressed=userapp-7z x %f -aou-L61WU3.desktop
+application/zip=userapp-7z x %f -aou-L61WU3.desktop
+application/x-archipelago-apworld=archipelago-apworld.desktop
+x-scheme-handler/ror2mm=gale-handler.desktop
+x-scheme-handler/gale=gale-handler.desktop
+x-scheme-handler/discord-1345366770436800533=discord-1345366770436800533.desktop
+application/octet-stream=appimagekit_4a9e05b58ed9f1554b333319467c14e8-Archipelago.desktop
 
 [Added Associations]
 application/x-compressed-tar=userapp-7z x %f -aou-L61WU3.desktop;userapp-7z-X808U3.desktop;userapp-7z e-XTEQU3.desktop;
 application/x-tar=userapp-7z x %f -aou-L61WU3.desktop;userapp-7z e-XTEQU3.desktop;
 application/x-7z-compressed=userapp-7z x %f -aou-L61WU3.desktop;
+application/zip=appimagekit_4a9e05b58ed9f1554b333319467c14e8-Archipelago.desktop;userapp-7z x %f -aou-L61WU3.desktop;userapp-7z e-XTEQU3.desktop;
+application/x-archipelago-apworld=archipelago-apworld.desktop;
+application/json=codium.desktop;
+application/octet-stream=appimagekit_4a9e05b58ed9f1554b333319467c14e8-Archipelago.desktop;
