@@ -1,3 +1,6 @@
+appimagelauncher
+argagg
+azahar
 bizhawk-bin
 bottles
 caelestia-cli
@@ -5,6 +8,7 @@ caelestia-firefox-theme
 caelestia-shell
 darkly-bin
 equibop-bin
+gale
 heroic-games-launcher-bin
 lib32-nvidia-580xx-utils
 nvidia-580xx-dkms
@@ -15,9 +19,13 @@ paru-bin-debug
 paru-debug
 protonup-qt
 pwvucontrol
+python-gevent-eventemitter
+python-setuptools-reproducible
 qtengine
+sunshine-bin
 via-bin
 vintagestory
 vscodium-bin
 vscodium-bin-marketplace
+xwin
 zen-browser-bin
