@@ -11,6 +11,7 @@ its own terminal showing the command, its output and its exit status, held open
 afterwards -- e opens the config in the editor, q/Esc quits.
 
 Gamepads (via gamepad.py, if python-evdev is installed): D-pad up/down moves,
+left/right jumps to the previous/next starting letter (h/l on the keyboard),
 DualSense X / Xbox A launches. Presses only count while this window is focused.
 """
 import glob
@@ -309,7 +310,7 @@ class Launcher:
         for _ in range(max(0, blanks)):
             out.append(f"{ESC}[K\r\n")
 
-        hint = self.status or "enter launch · d debug · e config · / filter · q quit"
+        hint = self.status or "enter launch · h/l letter · d debug · e config · / filter · q quit"
         colour = self.t.accent2 if self.status else self.t.dim
         status = f"{self.t.bar_bg}{colour} {hint}"
         out.append(f"{status}{' ' * max(0, width - display_len(status))}{RESET}")
@@ -353,11 +354,38 @@ class Launcher:
             self.cursor = min(max(0, len(rows) - 1), self.cursor + page)
         elif ch == f"{ESC}5":
             self.cursor = max(0, self.cursor - page)
+        elif ch in ("h", "l") and rows:
+            self.cursor = letter_jump(rows, self.cursor, ch == "l")
         elif ch == "g":
             self.cursor = 0
         elif ch == "G":
             self.cursor = max(0, len(rows) - 1)
         return True
+
+
+def initial(entry):
+    name = entry.get("name", "")
+    return next((c.upper() for c in name if c.isalnum()), "")
+
+
+def letter_jump(rows, cursor, forward):
+    """Row index of the first entry of the next (or previous) starting letter."""
+    letter = initial(rows[cursor])
+    if forward:
+        i = cursor
+        while i < len(rows) and initial(rows[i]) == letter:
+            i += 1
+        return i if i < len(rows) else cursor
+    i = cursor
+    while i > 0 and initial(rows[i - 1]) == letter:  # start of this letter
+        i -= 1
+    if i == 0:
+        return 0
+    prev = initial(rows[i - 1])
+    i -= 1
+    while i > 0 and initial(rows[i - 1]) == prev:    # start of the previous one
+        i -= 1
+    return i
 
 
 def read_key():
@@ -379,7 +407,7 @@ def focused():
         return False
 
 
-PAD_KEYS = {"up": "k", "down": "j", "south": "\r"}
+PAD_KEYS = {"up": "k", "down": "j", "left": "h", "right": "l", "south": "\r"}
 
 
 def main():

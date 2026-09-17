@@ -8,8 +8,8 @@ Steam still see every press.
 Pads need no special group: systemd's 70-uaccess.rules gives the logged-in user
 an ACL on every ID_INPUT_JOYSTICK node.
 
-Events come out as names: "up", "down", "south" (DualSense X / Xbox A),
-"mode" (PS / Xbox guide button). Held D-pad directions repeat.
+Events come out as names: "up", "down", "left", "right", "south" (DualSense X /
+Xbox A), "mode" (PS / Xbox guide button). Held D-pad directions repeat.
 """
 import time
 
@@ -25,14 +25,17 @@ BUTTONS = {
     e.BTN_MODE: "mode",
     e.BTN_DPAD_UP: "up",      # hid-steam and some other drivers use buttons
     e.BTN_DPAD_DOWN: "down",  # for the D-pad instead of a hat
+    e.BTN_DPAD_LEFT: "left",
+    e.BTN_DPAD_RIGHT: "right",
 }
+HATS = {e.ABS_HAT0Y: ("up", "down"), e.ABS_HAT0X: ("left", "right")}
 
 
 class Gamepads:
     def __init__(self):
         self.devices = {}      # path -> InputDevice
         self.last_scan = 0.0
-        self.held = {}         # path -> (direction, next repeat time)
+        self.held = {}         # (path, hat) -> (direction, next repeat time)
         self.rescan()
 
     def rescan(self):
@@ -80,28 +83,30 @@ class Gamepads:
                     out.append(name)
 
         now = time.monotonic()
-        for path, (direction, due) in list(self.held.items()):
+        for held, (direction, due) in list(self.held.items()):
             if now >= due:
                 out.append(direction)
-                self.held[path] = (direction, now + REPEAT_RATE)
+                self.held[held] = (direction, now + REPEAT_RATE)
         return out
 
     def translate(self, path, ev):
-        if ev.type == e.EV_ABS and ev.code == e.ABS_HAT0Y:
+        if ev.type == e.EV_ABS and ev.code in HATS:
+            held = (path, ev.code)
             if ev.value == 0:
-                self.held.pop(path, None)
+                self.held.pop(held, None)
                 return None
-            direction = "up" if ev.value < 0 else "down"
-            self.held[path] = (direction, time.monotonic() + REPEAT_DELAY)
+            direction = HATS[ev.code][ev.value > 0]
+            self.held[held] = (direction, time.monotonic() + REPEAT_DELAY)
             return direction
         if ev.type == e.EV_KEY and ev.code in BUTTONS:
             name = BUTTONS[ev.code]
-            if name in ("up", "down"):
+            if name in ("up", "down", "left", "right"):
+                held = (path, ev.code)
                 if ev.value == 0:
-                    self.held.pop(path, None)
+                    self.held.pop(held, None)
                     return None
                 if ev.value == 1:
-                    self.held[path] = (name, time.monotonic() + REPEAT_DELAY)
+                    self.held[held] = (name, time.monotonic() + REPEAT_DELAY)
                     return name
                 return None  # kernel autorepeat (2) -- we do our own
             return name if ev.value == 1 else None
@@ -109,7 +114,8 @@ class Gamepads:
 
     def drop(self, path):
         dev = self.devices.pop(path, None)
-        self.held.pop(path, None)
+        for held in [h for h in self.held if h[0] == path]:
+            del self.held[held]
         if dev:
             try:
                 dev.close()
