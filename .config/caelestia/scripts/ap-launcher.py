@@ -9,10 +9,15 @@ Keys: j/k or arrows move, g/G jump, / filters, Enter launches, d launches in
 debug mode -- every step (AP client, proton-client injector, each command) gets
 its own terminal showing the command, its output and its exit status, held open
 afterwards -- e opens the config in the editor, q/Esc quits.
+
+Gamepads (via gamepad.py, if python-evdev is installed): D-pad up/down moves,
+DualSense X / Xbox A launches. Presses only count while this window is focused.
 """
 import glob
+import json
 import os
 import re
+import select
 import shlex
 import shutil
 import signal
@@ -22,6 +27,12 @@ import termios
 import tomllib
 import tty
 import unicodedata
+
+try:
+    sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+    from gamepad import Gamepads
+except ImportError:  # no python-evdev: keyboard only
+    Gamepads = None
 
 HOME = os.path.expanduser("~")
 CONFIG = os.environ.get("AP_LAUNCHER_CONFIG",
@@ -350,17 +361,25 @@ class Launcher:
 
 
 def read_key():
-    ch = sys.stdin.read(1)
-    if ch != ESC:
-        return ch
-    os.set_blocking(sys.stdin.fileno(), False)
+    data = os.read(sys.stdin.fileno(), 32).decode(errors="replace")
+    if not data.startswith(ESC):
+        return list(data)
+    if len(data) == 1:
+        return [ESC]
+    return [ESC + data[-1]]  # final byte identifies the key (A/B/5/6/...)
+
+
+def focused():
+    """Is this launcher the focused window? Pads are global, so ask hyprland."""
     try:
-        rest = sys.stdin.read(8) or ""
-    finally:
-        os.set_blocking(sys.stdin.fileno(), True)
-    if not rest:
-        return ESC
-    return ESC + rest[-1]  # final byte identifies the key (A/B/5/6/...)
+        out = subprocess.run(["hyprctl", "activewindow", "-j"],
+                             capture_output=True, text=True, timeout=1).stdout
+        return json.loads(out or "{}").get("class") == "ap-launcher"
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        return False
+
+
+PAD_KEYS = {"up": "k", "down": "j", "south": "\r"}
 
 
 def main():
@@ -380,15 +399,33 @@ def main():
     signal.signal(signal.SIGWINCH, lambda *_: app.draw())
     try:
         tty.setraw(fd)
+        pads = Gamepads() if Gamepads else None
         app.draw()
-        while True:
+        running = True
+        while running:
+            watch = [fd] + (pads.fds() if pads else [])
+            wait = pads.timeout(1.0) if pads else None
             try:
-                ch = read_key()
-            except InterruptedError:  # resize woke up the read
+                ready, _, _ = select.select(watch, [], [], wait)
+            except InterruptedError:  # resize woke up the select
                 continue
-            if not ch or not app.key(ch):
-                break
-            app.draw()
+
+            keys = []
+            if fd in ready:
+                keys = read_key()
+                if not keys:  # stdin closed
+                    break
+            if pads:
+                events = [PAD_KEYS[ev] for ev in pads.read(ready) if ev in PAD_KEYS]
+                if events and not app.searching and focused():
+                    keys += events
+
+            for ch in keys:
+                if not app.key(ch):
+                    running = False
+                    break
+            if keys and running:
+                app.draw()
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, saved)
         sys.stdout.write(f"{ESC}[?25h{ESC}[?1049l")
