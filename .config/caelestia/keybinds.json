@@ -34,7 +34,7 @@
         ],
         [
           "SUPER + ;",
-          "Toggle the Archipelago quick launcher, or its open config editor (Enter launches, d launches with every command in its own terminal, e edit list)"
+          "Toggle the Archipelago quick launcher, or its open config editor (Enter or F launches, c pins to the top of the list and x unpins, d launches with every command in its own terminal, e edit list)"
         ],
         [
           "PAD PS / Guide",

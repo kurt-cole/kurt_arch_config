@@ -5,10 +5,16 @@ Content comes from ~/.config/Archipelago/launcher.toml -- entries with
 visible = true, in file order. Everything installed is listed in that file so
 new games only need visible flipped.
 
-Keys: j/k or arrows move, g/G jump, / filters, Enter launches, d launches in
-debug mode -- every step (AP client, proton-client injector, each command) gets
+Keys: j/k or arrows move, g/G jump, / filters, Enter (or F) launches, d launches
+in debug mode -- every step (AP client, proton-client injector, each command) gets
 its own terminal showing the command, its output and its exit status, held open
-afterwards -- e opens the config in the editor, q/Esc quits.
+afterwards -- c pins the entry and x unpins it, e opens the config in the editor,
+q/Esc quits.
+
+Pins are shortcuts repeated in a section at the top of the list, above a
+dividing line; the entry stays in the main list too. They live in
+launcher-pins.json beside the config, so the TUI never has to rewrite the
+hand-maintained launcher.toml (which would cost its comments and layout).
 
 Gamepads (via gamepad.py, if python-evdev is installed): D-pad up/down moves,
 left/right jumps to the previous/next starting letter (h/l on the keyboard),
@@ -38,6 +44,7 @@ except ImportError:  # no python-evdev: keyboard only
 HOME = os.path.expanduser("~")
 CONFIG = os.environ.get("AP_LAUNCHER_CONFIG",
                         os.path.join(HOME, ".config/Archipelago/launcher.toml"))
+PINS = os.path.join(os.path.dirname(CONFIG), "launcher-pins.json")
 SCHEME = os.path.join(HOME, ".config/hypr/scheme/current.lua")
 
 FALLBACK = {
@@ -142,6 +149,31 @@ def load_config():
     return settings, entries
 
 
+def entry_key(entry):
+    """Stable identity for the pins file: the display name."""
+    return entry.get("name", "")
+
+
+def load_pins():
+    try:
+        with open(PINS) as f:
+            data = json.load(f)
+        return [k for k in data.get("pinned", []) if isinstance(k, str)]
+    except (OSError, ValueError):
+        return []
+
+
+def save_pins(pinned):
+    try:
+        os.makedirs(os.path.dirname(PINS), exist_ok=True)
+        with open(PINS, "w") as f:
+            json.dump({"pinned": pinned}, f, indent=2)
+            f.write("\n")
+        return ""
+    except OSError as err:
+        return f"could not save pins: {err}"
+
+
 def archipelago_path(settings):
     """The configured AppImage, falling back to the newest one installed."""
     path = os.path.expanduser(settings.get("archipelago", ""))
@@ -174,6 +206,7 @@ class Launcher:
         self.cursor = 0
         self.top = 0
         self.status = ""
+        self.pins = load_pins()
 
     # -- content ---------------------------------------------------------
     def visible(self):
@@ -182,9 +215,59 @@ class Launcher:
                 if not needle or needle in e.get("name", "").lower()
                 or needle in label_of(e).lower()]
 
+    def rows(self):
+        """Display rows: the pinned shortcuts, a separator, then every entry.
+
+        A pinned entry appears twice on purpose -- the pin is a shortcut, not a
+        move. Separator rows carry no entry and the cursor is never left on one.
+        """
+        matched = self.visible()
+        by_key = {entry_key(e): e for e in matched}
+        pinned = [by_key[k] for k in self.pins if k in by_key]
+        rows = [("pin", e) for e in pinned]
+        if pinned:
+            rows.append(("sep", None))
+        return rows + [("entry", e) for e in matched]
+
     def current(self):
-        rows = self.visible()
-        return rows[self.cursor] if rows else None
+        rows = self.rows()
+        return rows[self.cursor][1] if 0 <= self.cursor < len(rows) else None
+
+    def clamp(self, rows):
+        """Keep the cursor in range and off the separator."""
+        self.cursor = max(0, min(self.cursor, max(0, len(rows) - 1)))
+        if rows and rows[self.cursor][0] == "sep":
+            self.cursor = self.cursor + 1 if self.cursor + 1 < len(rows) else self.cursor - 1
+
+    # -- pinning ---------------------------------------------------------
+    def pin(self, pinned=True):
+        entry = self.current()
+        if not entry:
+            return True
+        was = self.rows()[self.cursor][0]
+        key = entry_key(entry)
+        if not key:
+            self.status = "this entry has no name to pin"
+            return True
+        if pinned and key not in self.pins:
+            self.pins.append(key)
+        elif not pinned and key in self.pins:
+            self.pins.remove(key)
+        else:
+            self.status = f"{key} is {'already pinned' if pinned else 'not pinned'}"
+            return True
+        # Keep the cursor on the row it was on: pinning from the main list
+        # shouldn't yank the cursor up into the pin section, and unpinning a
+        # shortcut leaves it on that entry down in the list.
+        rows = self.rows()
+        for want in ((was, "entry") if was == "pin" else (was,)):
+            match = next((i for i, (kind, e) in enumerate(rows)
+                          if e is entry and kind == want), None)
+            if match is not None:
+                self.cursor = match
+                break
+        self.status = save_pins(self.pins) or f"{'pinned' if pinned else 'unpinned'} {key}"
+        return True
 
     # -- launching -------------------------------------------------------
     def proton_client_argv(self, entry, debug=False):
@@ -270,9 +353,9 @@ class Launcher:
     # -- drawing ---------------------------------------------------------
     def draw(self):
         width, height = shutil.get_terminal_size((80, 24))
-        rows = self.visible()
+        rows = self.rows()
         view = max(1, height - 4)
-        self.cursor = max(0, min(self.cursor, max(0, len(rows) - 1)))
+        self.clamp(rows)
         self.top = max(min(self.top, self.cursor), self.cursor - view + 1, 0)
 
         out = [f"{ESC}[H{ESC}[2J", self.t.bg]
@@ -280,7 +363,7 @@ class Launcher:
         title = " Archipelago "
         if self.filter or self.searching:
             title = f" Archipelago · /{self.filter} "
-        count = f"{len(rows)}/{len(self.entries)} "
+        count = f"{len(self.visible())}/{len(self.entries)} "
         pad = " " * max(0, width - len(title) - len(count))
         out.append(f"{self.t.bar_bg}{self.t.accent}{BOLD}{title}{RESET}"
                    f"{self.t.bar_bg}{pad}{self.t.dim}{count}{RESET}{self.t.bg}\r\n")
@@ -292,7 +375,10 @@ class Launcher:
             out.append(f"\r\n  {self.t.dim}{hint}{RESET}{ESC}[K\r\n")
             blanks = view - 2
         else:
-            for i, entry in enumerate(rows[self.top:self.top + view], self.top):
+            for i, (kind, entry) in enumerate(rows[self.top:self.top + view], self.top):
+                if kind == "sep":
+                    out.append(f"{self.t.faint}{'─' * width}{RESET}{self.t.bg}{ESC}[K\r\n")
+                    continue
                 left = f" {entry.get('emoji', ' ')}  {entry.get('name', '?')}"
                 note = label_of(entry)
                 gap = width - display_len(left) - display_len(note) - 2
@@ -310,7 +396,8 @@ class Launcher:
         for _ in range(max(0, blanks)):
             out.append(f"{ESC}[K\r\n")
 
-        hint = self.status or "enter launch · h/l letter · d debug · e config · / filter · q quit"
+        hint = self.status or ("enter launch · c/x pin · h/l letter · d debug "
+                               "· e config · / filter · q quit")
         colour = self.t.accent2 if self.status else self.t.dim
         status = f"{self.t.bar_bg}{colour} {hint}"
         out.append(f"{status}{' ' * max(0, width - display_len(status))}{RESET}")
@@ -321,7 +408,7 @@ class Launcher:
     # -- input -----------------------------------------------------------
     def key(self, ch):
         self.status = ""
-        rows = self.visible()
+        rows = self.rows()
         _, height = shutil.get_terminal_size((80, 24))
         page = max(1, height - 6)
 
@@ -338,8 +425,12 @@ class Launcher:
 
         if ch in ("q", "\x03", ESC):
             return False
-        if ch in ("\r", "\n"):
+        if ch in ("\r", "\n", "F"):
             return self.launch()
+        if ch == "c":
+            return self.pin(True)
+        if ch == "x":
+            return self.pin(False)
         if ch == "d":
             return self.launch(debug=True)
         if ch == "e":
@@ -347,20 +438,30 @@ class Launcher:
         if ch == "/":
             self.searching, self.filter, self.cursor = True, "", 0
         elif ch in ("j", f"{ESC}B"):
-            self.cursor = min(max(0, len(rows) - 1), self.cursor + 1)
+            self.step(rows, 1)
         elif ch in ("k", f"{ESC}A"):
-            self.cursor = max(0, self.cursor - 1)
+            self.step(rows, -1)
         elif ch == f"{ESC}6":
-            self.cursor = min(max(0, len(rows) - 1), self.cursor + page)
+            self.step(rows, page)
         elif ch == f"{ESC}5":
-            self.cursor = max(0, self.cursor - page)
+            self.step(rows, -page)
         elif ch in ("h", "l") and rows:
             self.cursor = letter_jump(rows, self.cursor, ch == "l")
         elif ch == "g":
             self.cursor = 0
         elif ch == "G":
             self.cursor = max(0, len(rows) - 1)
+        self.clamp(rows)
         return True
+
+    def step(self, rows, delta):
+        """Move by delta rows, hopping the separator rather than landing on it."""
+        target = max(0, min(max(0, len(rows) - 1), self.cursor + delta))
+        if rows and rows[target][0] == "sep":
+            nudge = 1 if delta > 0 else -1
+            if 0 <= target + nudge < len(rows):
+                target += nudge
+        self.cursor = target
 
 
 def initial(entry):
@@ -369,7 +470,22 @@ def initial(entry):
 
 
 def letter_jump(rows, cursor, forward):
-    """Row index of the first entry of the next (or previous) starting letter."""
+    """Row index of the first entry of the next (or previous) starting letter.
+
+    Letters only make sense in the main list, which is sorted the way the config
+    is; the pin section is short and arbitrary, so a jump from a pin lands on
+    that entry's letter neighbour down in the list.
+    """
+    main = [i for i, (kind, _) in enumerate(rows) if kind == "entry"]
+    if not main:
+        return cursor
+    entry = rows[cursor][1]
+    here = next((n for n, i in enumerate(main) if rows[i][1] is entry), 0)
+    entries = [rows[i][1] for i in main]
+    return main[_letter_jump(entries, here, forward)]
+
+
+def _letter_jump(rows, cursor, forward):
     letter = initial(rows[cursor])
     if forward:
         i = cursor
