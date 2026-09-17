@@ -1,0 +1,12 @@
+#!/bin/sh
+# Debian-style x-terminal-emulator shim over foot. Archipelago's Launcher only
+# opens console components (Generate, Host, ...) in a terminal if it finds
+# x-terminal-emulator/konsole/gnome-terminal/xterm on PATH; it calls
+# `x-terminal-emulator -e "<shell-quoted command>"`. Without this they ran
+# silently in the background.
+if [ "$1" = "-e" ]; then
+    shift
+    if [ $# -eq 1 ]; then set -- sh -c "$1"; fi
+fi
+[ $# -eq 0 ] && exec foot
+exec foot -a x-terminal-emulator sh -c '"$@"; status=$?; printf "\n[exited with %s] press Enter to close" "$status"; read _' sh "$@"
