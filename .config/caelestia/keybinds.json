@@ -369,14 +369,6 @@
           "Restart shell"
         ],
         [
-          "SUPER + SHIFT + Z",
-          "Start the screensaver now (any input dismisses it, same as the idle trigger)"
-        ],
-        [
-          "SUPER + SHIFT + ALT + Z",
-          "Preview a random screensaver -- ignores input, press again or Esc/q to close"
-        ],
-        [
           "SUPER + ]",
           "Toggle the caps lock -> Super rebind (caps becomes a plain Escape; physical Super + ] turns it back on)"
         ]
