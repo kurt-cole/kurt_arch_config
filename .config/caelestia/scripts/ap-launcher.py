@@ -2,8 +2,8 @@
 """A quick-launch TUI for Archipelago games, themed from the caelestia scheme.
 
 Content comes from ~/.config/Archipelago/launcher.toml -- entries with
-visible = true, in file order. Everything installed is listed in that file so
-new games only need visible flipped.
+visible = true, listed alphabetically (both sections are, always). Everything
+installed is listed in that file so new games only need visible flipped.
 
 Keys: j/k or arrows move, g/G jump, / filters, Enter (or F) launches, d launches
 in debug mode -- every step (AP client, proton-client injector, each command) gets
@@ -192,6 +192,12 @@ def spawn(argv, shell=False):
     )
 
 
+def sort_key(entry):
+    """Alphabetical by display name, ignoring case and any leading punctuation."""
+    name = entry.get("name", "")
+    return (re.sub(r"^[^0-9a-z]+", "", name.casefold()), name.casefold())
+
+
 def label_of(entry):
     """Right-hand column text: explicit `label`, else the component name."""
     return entry.get("label") or entry.get("component", "")
@@ -211,19 +217,21 @@ class Launcher:
     # -- content ---------------------------------------------------------
     def visible(self):
         needle = self.filter.lower()
-        return [e for e in self.entries
-                if not needle or needle in e.get("name", "").lower()
-                or needle in label_of(e).lower()]
+        return sorted((e for e in self.entries
+                       if not needle or needle in e.get("name", "").lower()
+                       or needle in label_of(e).lower()), key=sort_key)
 
     def rows(self):
         """Display rows: the pinned shortcuts, a separator, then every entry.
 
         A pinned entry appears twice on purpose -- the pin is a shortcut, not a
-        move. Separator rows carry no entry and the cursor is never left on one.
+        move. Both sections are alphabetical, so a pin never changes where an
+        entry sits; the pins file's order is irrelevant to the display.
+        Separator rows carry no entry and the cursor is never left on one.
         """
         matched = self.visible()
         by_key = {entry_key(e): e for e in matched}
-        pinned = [by_key[k] for k in self.pins if k in by_key]
+        pinned = sorted((by_key[k] for k in self.pins if k in by_key), key=sort_key)
         rows = [("pin", e) for e in pinned]
         if pinned:
             rows.append(("sep", None))
@@ -472,9 +480,9 @@ def initial(entry):
 def letter_jump(rows, cursor, forward):
     """Row index of the first entry of the next (or previous) starting letter.
 
-    Letters only make sense in the main list, which is sorted the way the config
-    is; the pin section is short and arbitrary, so a jump from a pin lands on
-    that entry's letter neighbour down in the list.
+    Letters only make sense in the main list, which holds every entry; the pin
+    section is a short subset, so a jump from a pin lands on that entry's letter
+    neighbour down in the list.
     """
     main = [i for i, (kind, _) in enumerate(rows) if kind == "entry"]
     if not main:
