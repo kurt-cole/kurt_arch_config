@@ -107,7 +107,7 @@ emoji = "🖼️"
 name = "Clair Obscur Expedition 33"
 component = ""
 label = "E33"
-commands = ["/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 1903340 dwmapi && steam steam://rungameid/1903340"]
+commands = ["/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 1903340 dwmapi && steam -applaunch 1903340 -dx11"]
 proton_client = {}
 
 [[entries]]
