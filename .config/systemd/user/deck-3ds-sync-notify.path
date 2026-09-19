@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch for 3DS save sync events from the Steam Deck
+
+[Path]
+PathChanged=%h/.local/share/azahar-emu/sdmc/.deck-3ds-sync-event
+
+[Install]
+WantedBy=default.target
