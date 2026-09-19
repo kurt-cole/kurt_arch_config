@@ -297,6 +297,8 @@ fi
 
 wait_for_tap
 
+"$(dirname "$0")/deck-3ds-sync.sh" launch   # the Deck is awake: it is streaming
+
 : > "$AZ_LOG"
 QT_QPA_PLATFORM=xcb azahar "$@" >>"$AZ_LOG" 2>&1 &
 AZ=$!
@@ -319,3 +321,4 @@ for c in json.load(sys.stdin):
 done
 
 wait $AZ
+"$(dirname "$0")/deck-3ds-sync.sh" exit
