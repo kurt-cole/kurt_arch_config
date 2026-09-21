@@ -120,6 +120,7 @@ hl.bind("SUPER + SHIFT + N", hl.dsp.exec_cmd(
 hl.window_rule({
     match  = { class = "purgatory" },
     float  = true,
+    pin    = true,   -- same special-workspace draw-order bug as ap-launcher
     size   = "(monitor_w*0.6) (monitor_h*0.6)",
     center = true,
 })
