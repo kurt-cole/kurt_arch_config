@@ -25,6 +25,7 @@ import sys
 import time
 
 WS = "special:communication"
+MONITOR = "DP-2"  # always lives here, whichever monitor has focus
 SCRIPTS = os.path.expanduser("~/.config/caelestia/scripts")
 LOCK = os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "comm-layout.lock")
 WAIT = 90     # the tracker alone takes ~17s to map while it loads worlds
@@ -89,6 +90,11 @@ def main():
     except BlockingIOError:
         return
 
+    # Before anything lands on it: a rule-placed window goes wherever the
+    # workspace currently lives, which may be the wrong monitor.
+    lua("hl.dispatch(hl.dsp.workspace.move({ workspace = %s, monitor = %s }))"
+        % (json.dumps(WS), json.dumps(MONITOR)))
+
     cl = clients()
     found = {}
     for name in ("discord", "tracker"):
@@ -113,8 +119,8 @@ def main():
     if launched:
         time.sleep(SETTLE)
 
-    lua('dofile(%s)(%s, %s, %s, %s)' % tuple(
-        json.dumps(x) for x in (SCRIPTS + "/comm-layout.lua", WS, found["left"], found["discord"], found["tracker"])))
+    lua('dofile(%s)(%s, %s, %s, %s, %s)' % tuple(json.dumps(x) for x in (
+        SCRIPTS + "/comm-layout.lua", WS, MONITOR, found["left"], found["discord"], found["tracker"])))
 
 
 if __name__ == "__main__":
