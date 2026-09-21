@@ -83,9 +83,15 @@ hl.bind("SUPER + apostrophe", hl.dsp.exec_cmd(
 -- lands on the workspace underneath, and it closes itself on launch. The key
 -- toggles: pressing it again closes the window instead of stacking a second one.
 local scripts = os.getenv("HOME") .. "/.config/caelestia/scripts"
+-- Pinned because a plain float on a special workspace is drawn *behind* that
+-- workspace's tiled windows whenever the other monitor also has a special
+-- workspace up (hyprland 0.56 bug: steam up on DP-1 buried the TUI under
+-- discord on DP-2). Pinned windows are drawn above special workspaces. Side
+-- effect: a pinned window follows keyboard focus to the other monitor.
 hl.window_rule({
     match  = { class = "ap-launcher" },
     float  = true,
+    pin    = true,
     size   = "(monitor_w*0.6) (monitor_h*0.6)",
     center = true,
 })
