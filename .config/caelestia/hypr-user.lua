@@ -227,3 +227,28 @@ hl.on("window.open", function(win)
         end
     end
 end)
+
+-- Communication layout (SUPER + [): left 2/3 = whatever third window is on
+-- special:communication (firefox if none), right = discord over the Universal
+-- Tracker. comm-layout.py starts whatever is missing and waits for it to draw.
+--
+-- These catch-rules are off except while that script waits on a launch: they
+-- send the new window straight to the workspace without taking focus. A
+-- pid-based exec_cmd rule can't do it for firefox -- a running firefox opens
+-- the new window from its old process. Globals so the script can reach them
+-- through `hyprctl dispatch`.
+local function comm_catch(match)
+    local rule = hl.window_rule({
+        match            = match,
+        workspace        = "special:communication silent",
+        no_initial_focus = true,
+    })
+    rule:set_enabled(false)
+    return rule
+end
+comm_layout_rules = {
+    discord = comm_catch({ class = "discord" }),
+    tracker = comm_catch({ class = "ArchipelagoLauncher", title = "^Tracker" }),
+    firefox = comm_catch({ class = "firefox" }),
+}
+hl.bind("SUPER + bracketleft", hl.dsp.exec_cmd(scripts .. "/comm-layout.py"))

@@ -91,6 +91,10 @@
           "Split 2/3 left, 1/3 right"
         ],
         [
+          "SUPER + [",
+          "Communication layout: 2/3 left window (firefox if none), discord over tracker; opens what's missing"
+        ],
+        [
           "SUPER + arrows",
           "Focus window in direction"
         ],
