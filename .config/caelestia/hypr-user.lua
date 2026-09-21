@@ -248,7 +248,9 @@ local function comm_catch(match)
 end
 comm_layout_rules = {
     discord = comm_catch({ class = "discord" }),
-    tracker = comm_catch({ class = "ArchipelagoLauncher", title = "^Tracker" }),
+    -- class only: it's an XWayland window with no title yet when rules run, so
+    -- a title match silently misses and it opens on the focused monitor.
+    tracker = comm_catch({ class = "ArchipelagoLauncher" }),
     firefox = comm_catch({ class = "firefox" }),
 }
 hl.bind("SUPER + bracketleft", hl.dsp.exec_cmd(scripts .. "/comm-layout.py"))
