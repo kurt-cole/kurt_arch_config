@@ -71,6 +71,14 @@ label = "default launcher"
 commands = [""]
 proton_client = {}
 
+[[entries]]  # no AP client found #TODO: web link
+visible = true
+emoji = "⚙️"
+name = "Generate"
+component = "Generate"
+label = "Archipelago Generate"
+commands = [""]
+proton_client = {}
 
 [[entries]]  # no AP client found TODO: mods?
 visible = true
@@ -107,7 +115,7 @@ emoji = "🖼️"
 name = "Clair Obscur Expedition 33"
 component = ""
 label = "E33"
-commands = ["/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 1903340 dwmapi && steam -applaunch 1903340 -dx11"]
+commands = ["/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 1903340 dwmapi && steam -applaunch 1903340"]
 proton_client = {}
 
 [[entries]]

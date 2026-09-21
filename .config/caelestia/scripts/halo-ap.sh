@@ -44,6 +44,9 @@ die() { echo "halo-ap: $*" >&2; echo; echo "press enter to close"; read -r _; ex
 [ -x "$PROTON" ]                  || die "Proton Hotfix not found at $PROTON"
 [ -f "$HALOAP/HaloAP_launcher.exe" ] || die "missing $HALOAP/HaloAP_launcher.exe"
 [ -d "$BIN" ]                     || die "MCC not found at $BIN"
+# MCC is started outside Steam (see above), so it needs the Steam client
+# already running -- without it MCC exits silently a few seconds after launch.
+pgrep -x steam >/dev/null         || die "Steam is not running -- start Steam first"
 mkdir -p "$LOG_DIR"
 
 # A previous run that was force-killed leaves the mod files in place; the game

@@ -10,6 +10,7 @@ x-scheme-handler/gale=gale-handler.desktop
 x-scheme-handler/discord-1345366770436800533=discord-1345366770436800533.desktop
 application/octet-stream=appimagekit_4a9e05b58ed9f1554b333319467c14e8-Archipelago.desktop
 inode/directory=thunar.desktop
+application/x-archipelago-multidata=archipelago-server.desktop
 
 [Added Associations]
 application/x-compressed-tar=userapp-7z x %f -aou-L61WU3.desktop;userapp-7z-X808U3.desktop;userapp-7z e-XTEQU3.desktop;
@@ -20,3 +21,6 @@ application/x-archipelago-apworld=archipelago-apworld.desktop;
 application/json=codium.desktop;
 application/octet-stream=appimagekit_4a9e05b58ed9f1554b333319467c14e8-Archipelago.desktop;
 application/x-bat=codium.desktop;
+image/png=firefox.desktop;krita_png.desktop;
+text/x-python=codium.desktop;
+text/x-patch=codium.desktop;
