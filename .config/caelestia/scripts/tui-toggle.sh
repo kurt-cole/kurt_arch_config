@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Toggle one of the floating TUIs (ap-launcher, purgatory): close it if it is
+# Toggle one of the floating TUIs (ap-launcher, purgatory, cheatsheet): close it if it is
 # already up, otherwise run the command that spawns it.
 #
 # These float over the current workspace rather than living on a special one, so

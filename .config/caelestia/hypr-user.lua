@@ -63,15 +63,19 @@ hl.window_rule({
     move  = col_left,
 })
 
--- Keybind cheatsheet: right 1/3, on its own special workspace (SUPER + `)
+-- Keybind cheatsheet (SUPER + `): a pinned float in the right 1/3 of the
+-- current workspace, toggled like the ap-launcher / purgatory TUIs below.
+-- Pinned for the same special-workspace draw-order bug.
 hl.window_rule({
-    match     = { class = "cheatsheet" },
-    workspace = "special:cheatsheet",
-    float     = true,
-    size      = col_size,
-    move      = col_right,
+    match = { class = "cheatsheet" },
+    float = true,
+    pin   = true,
+    size  = col_size,
+    move  = col_right,
 })
-hl.bind("SUPER + grave", fn.toggle("cheatsheet"))
+hl.bind("SUPER + grave", hl.dsp.exec_cmd(
+    os.getenv("HOME") .. "/.config/caelestia/scripts/tui-toggle.sh cheatsheet " ..
+    "foot -a cheatsheet -T cheatsheet " .. os.getenv("HOME") .. "/.config/caelestia/scripts/cheatsheet.py"))
 
 -- Claude Code in the scratchwork project
 hl.bind("SUPER + apostrophe", hl.dsp.exec_cmd(

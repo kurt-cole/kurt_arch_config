@@ -30,13 +30,6 @@
         "move": true
       }
     },
-    "cheatsheet": {
-      "cheatsheet": {
-        "enable": true,
-        "match": [{ "class": "cheatsheet", "title": "cheatsheet", "workspace": { "name": "special:cheatsheet" } }],
-        "command": ["foot", "-a", "cheatsheet", "-T", "cheatsheet", "fish", "-C", "exec /home/barretglass/.config/caelestia/scripts/cheatsheet.py"]
-      }
-    },
     "todo": {
       "todoist": { "enable": false },
       "checklist": {
