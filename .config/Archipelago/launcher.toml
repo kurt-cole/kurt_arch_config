@@ -174,7 +174,7 @@ visible = true
 emoji = "󰘧 "
 name = "Half-Life"
 component = "Half-Life Client"
-commands = ["steam steam://rungameid/70 -game hlap"]
+commands = ["steam -applaunch 70 -game hlap"]
 proton_client = {}
 
 [[entries]]  # TODO: auto-patch script and launch?
