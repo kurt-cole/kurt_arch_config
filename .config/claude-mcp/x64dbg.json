@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "x64dbg": {
+      "command": "/home/barretglass/.local/bin/x64dbg-automate-mcp",
+      "env": { "X64DBG_PATH": "/home/barretglass/Applications/x64dbg/release/x64/x64dbg.exe" }
+    }
+  }
+}
