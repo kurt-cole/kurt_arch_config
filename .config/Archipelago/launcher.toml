@@ -68,7 +68,7 @@ emoji = "🏝️"
 name = "Archipelago Launcher"
 component = ""
 label = "default launcher"
-commands = [""]
+commands = ["/home/barretglass/Applications/Archipelago-0.6.7/AppRun"]
 proton_client = {}
 
 [[entries]]  # no AP client found #TODO: web link

@@ -325,11 +325,14 @@ class Launcher:
         component = entry.get("component", "")
         name = entry.get("name", "Archipelago")
         pc_argv = self.proton_client_argv(entry, debug)
+        # `commands = [""]` is a placeholder, not a command -- skip blanks so it
+        # hits the "nothing to launch" status instead of silently doing nothing.
+        commands = [c for c in entry.get("commands", []) if c.strip()]
 
         if component and not ap:
             self.status = "no Archipelago AppImage found"
             return True
-        if not component and not entry.get("commands") and not entry.get("proton_client"):
+        if not component and not commands and not entry.get("proton_client"):
             self.status = f"{name} has nothing to launch"
             return True
 
@@ -341,7 +344,7 @@ class Launcher:
                 self.debug_term(shlex.join(pc_argv), f"{name} — proton client")
             if component:
                 self.debug_term(shlex.join([ap, component]), f"{name} — {component}")
-            for command in entry.get("commands", []):
+            for command in commands:
                 self.debug_term(command, f"{name} — command")
             return False
 
@@ -349,7 +352,7 @@ class Launcher:
             spawn(pc_argv)
         if component:
             spawn([ap, component])
-        for command in entry.get("commands", []):
+        for command in commands:
             spawn(command, shell=True)
         return False  # launched -- close the launcher
 
