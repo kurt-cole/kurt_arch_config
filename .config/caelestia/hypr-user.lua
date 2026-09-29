@@ -254,3 +254,8 @@ comm_layout_rules = {
     firefox = comm_catch({ class = "firefox" }),
 }
 hl.bind("SUPER + bracketleft", hl.dsp.exec_cmd(scripts .. "/comm-layout.py"))
+
+-- Autoclicker (scripts/autoclicker.py): F8 toggles clicking, or opens the
+-- window if it isn't running. Small floating, pinned window so it stays reachable.
+hl.bind("F8", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/caelestia/scripts/autoclicker.py toggle"))
+hl.window_rule({ match = { class = "^[Aa]utoclicker$" }, float = true, pin = true })
