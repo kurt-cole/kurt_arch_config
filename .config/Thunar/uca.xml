@@ -12,4 +12,15 @@
 	<startup-notify/>
 	<directories/>
 </action>
+<action>
+	<icon>archive-extract</icon>
+	<name>Extract and delete archive</name>
+	<submenu></submenu>
+	<unique-id>1759363200000000-1</unique-id>
+	<command>/home/barretglass/.config/caelestia/scripts/extract-delete.sh %F</command>
+	<description>Extract into a folder named after the archive, then trash the archive</description>
+	<range></range>
+	<patterns>*.zip;*.7z;*.rar;*.tar;*.tar.*;*.tgz;*.tbz;*.tbz2;*.txz;*.tzst;*.gz;*.bz2;*.xz;*.zst;*.cbz;*.cbr;*.cb7;*.jar;*.iso;*.ZIP;*.7Z;*.RAR</patterns>
+	<other-files/>
+</action>
 </actions>
