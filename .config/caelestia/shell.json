@@ -15,7 +15,8 @@
                     "returnAction": "dpms on",
                     "timeout": 900
                 }
-            ]
+            ],
+            "lockBeforeSleep": false
         }
     },
     "launcher": {
