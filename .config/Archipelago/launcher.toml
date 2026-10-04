@@ -68,7 +68,7 @@ emoji = "🏝️"
 name = "Archipelago Launcher"
 component = ""
 label = "default launcher"
-commands = ["/home/barretglass/Applications/Archipelago-0.6.7/AppRun"]
+commands = ["/home/barretglass/Applications/Archipelago/AppRun"]
 proton_client = {}
 
 [[entries]]  # no AP client found #TODO: web link
@@ -755,9 +755,10 @@ entries = [
 ]
 
 [settings]
-# Extracted AppImage; AppRun is the same entry point the .AppImage ran.
+# Extracted AppImage (~/Applications/Archipelago is a symlink to the current
+# Archipelago-X.Y.Z AppDir); AppRun is the same entry point the .AppImage ran.
 # The newest ~/Applications/Archipelago*.AppImage is used if this path is gone.
-archipelago = "/home/barretglass/Applications/Archipelago-0.6.7/AppRun"
+archipelago = "/home/barretglass/Applications/Archipelago/AppRun"
 terminal = ["foot", "-a", "ap-debug", "-T", "Archipelago (debug)"]
 editor = ["foot", "-a", "ap-config", "-T", "launcher.toml",
           "/home/barretglass/.config/caelestia/scripts/ap-edit.sh"]

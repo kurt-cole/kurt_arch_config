@@ -38,7 +38,7 @@ APPS = {
     },
     "tracker": {
         "match": lambda c: c["class"] == "ArchipelagoLauncher" and c["title"].startswith("Tracker"),
-        "command": os.path.expanduser('~/Applications/Archipelago-0.6.7/AppRun "Universal Tracker"'),
+        "command": os.path.expanduser('~/Applications/Archipelago/AppRun "Universal Tracker"'),
     },
     "firefox": {
         "match": lambda c: c["class"] == "firefox",

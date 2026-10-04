@@ -6,7 +6,7 @@
 # The frozen ArchipelagoServer binary is used directly rather than
 # `AppRun <file>`: the Launcher would identify the Host component and re-launch
 # it through x-terminal-emulator, which is an extra hop for the same result.
-AP_DIR="$HOME/Applications/Archipelago-0.6.7/opt/Archipelago"
+AP_DIR="$HOME/Applications/Archipelago/opt/Archipelago"
 [ -x "$AP_DIR/ArchipelagoServer" ] || {
     notify-send "Archipelago" "ArchipelagoServer not found in $AP_DIR"
     exit 1
