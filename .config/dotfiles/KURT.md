@@ -23,8 +23,7 @@ to fill in.
    in there; get names from `hyprctl monitors -j`).
 6. Pick extras from `pkglist-extras.txt`.
 7. Run `claude` once to sign in; after that **Super + '** opens it.
-8. `config push` sends your commits to the `kurt-arch` branch (the bootstrap clones
-   it with that upstream), never to Barret's `main`.
+8. `config remote set-url origin <your own repo>` so you aren't committing to Barret's.
 
 ## What bootstrap.sh does
 

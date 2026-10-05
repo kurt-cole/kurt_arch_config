@@ -112,5 +112,5 @@ Done. Still to do by hand (see ~/.config/dotfiles/KURT.md):
   3. Pin your monitor modes in ~/.config/caelestia/hypr-user.lua (hyprctl monitors -j)
   4. Optional apps: ~/.config/dotfiles/pkglist-extras.txt
   5. Run `claude` once to sign in (after that, Super + ' opens it)
-  6. `config push` sends your changes to the kurt-arch branch
+  6. Point the dotfiles at your own repo:  config remote set-url origin <your repo>
 MSG
