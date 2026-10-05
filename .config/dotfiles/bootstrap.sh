@@ -48,6 +48,10 @@ step "Dotfiles ($BRANCH)"
 if [ ! -d "$GITDIR" ]; then
     git clone --bare --branch "$BRANCH" "$REPO" "$GITDIR"
     cfg config status.showUntrackedFiles no
+    # A bare clone sets no upstream; without this, `config push`/`pull` fail.
+    cfg config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+    cfg config "branch.$BRANCH.remote" origin
+    cfg config "branch.$BRANCH.merge" "refs/heads/$BRANCH"
     backup="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
     # Move aside anything the checkout would clobber (caelestia install just
     # wrote fish/foot/btop/... configs; ours replace them).
@@ -73,6 +77,9 @@ mkdir -p "$HOME/Projects" "$HOME/Applications"
 
 step "Packages (core set)"
 bash "$HOME/.config/dotfiles/install-packages.sh"
+
+step "Claude Code (Super + ' opens it)"
+command -v claude >/dev/null || [ -x "$HOME/.local/bin/claude" ] || curl -fsSL https://claude.ai/install.sh | bash
 
 step "System files: greetd login, keyd (caps = super/esc), bluetooth agent"
 sudo install -Dm644 "$HOME/.config/dotfiles/etc/greetd/config.toml" /etc/greetd/config.toml
@@ -104,5 +111,6 @@ Done. Still to do by hand (see ~/.config/dotfiles/KURT.md):
   2. Reboot -> log in through tuigreet -> Hyprland starts
   3. Pin your monitor modes in ~/.config/caelestia/hypr-user.lua (hyprctl monitors -j)
   4. Optional apps: ~/.config/dotfiles/pkglist-extras.txt
-  5. Point the dotfiles at your own repo:  config remote set-url origin <your repo>
+  5. Run `claude` once to sign in (after that, Super + ' opens it)
+  6. `config push` sends your changes to the kurt-arch branch
 MSG

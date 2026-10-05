@@ -22,7 +22,9 @@ to fill in.
 5. Pin monitor modes in `~/.config/caelestia/hypr-user.lua` (there's an example
    in there; get names from `hyprctl monitors -j`).
 6. Pick extras from `pkglist-extras.txt`.
-7. `config remote set-url origin <your own repo>` so you aren't committing to Barret's.
+7. Run `claude` once to sign in; after that **Super + '** opens it.
+8. `config push` sends your commits to the `kurt-arch` branch (the bootstrap clones
+   it with that upstream), never to Barret's `main`.
 
 ## What bootstrap.sh does
 
@@ -31,6 +33,7 @@ to fill in.
 - clones this branch as a bare repo at `~/.dotfiles.git`, work tree `$HOME`, and
   checks it out over caelestia's defaults (anything replaced goes to `~/.dotfiles-backup/`)
 - installs the core package lists (`pkglist-native.txt`, `pkglist-aur.txt`)
+- installs Claude Code (native installer, `~/.local/bin/claude`)
 - installs `/etc` files: greetd (tuigreet -> `uwsm start hyprland.desktop`),
   keyd, and the bt-agent service. It enables NetworkManager, bluetooth,
   bt-agent, keyd and greetd.
