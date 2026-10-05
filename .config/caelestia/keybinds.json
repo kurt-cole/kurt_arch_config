@@ -30,7 +30,7 @@
         ],
         [
           "SUPER + '",
-          "Claude Code (~/Projects/claude-scratchwork)"
+          "Claude Code"
         ],
         [
           "SUPER + ;",
@@ -71,7 +71,7 @@
         ],
         [
           "SUPER + R",
-          "Todo (checklist)"
+          "Todo (empty until you enable an app in cli.json)"
         ],
         [
           "SUPER + S",

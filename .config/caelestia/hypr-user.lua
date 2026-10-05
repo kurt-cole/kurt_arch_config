@@ -23,19 +23,14 @@ for key, shortcut in pairs({ XF86Tools = "M", XF86Launch5 = "D" }) do
         { locked = true })
 end
 
--- Both Acer B277U E panels do 48-100Hz (EDID range limits), but "preferred"
--- in caelestia's default monitor conf picks the 59.95Hz DTD.
-hl.monitor({ output = "DP-1", mode = "2560x1440@100", position = "0x0",    scale = 1 })
-hl.monitor({ output = "DP-2", mode = "2560x1440@100", position = "2560x0", scale = 1 })
+-- Monitor modes. caelestia's default is mode = "preferred", which often picks
+-- 60Hz on high-refresh panels. Pin each output to its real mode here; names
+-- come from `hyprctl monitors -j`. Example for two 1440p panels side by side:
+-- hl.monitor({ output = "DP-1", mode = "2560x1440@144", position = "0x0",    scale = 1 })
+-- hl.monitor({ output = "DP-2", mode = "2560x1440@144", position = "2560x0", scale = 1 })
 
 -- checklist TUI lives on the todo special workspace (SUPER + R)
 hl.window_rule({ match = { class = "checklist" }, workspace = "special:todo" })
-
--- The Deck's headless output (azahar-deck.sh / deck-controller.sh) must not take
--- a numbered workspace. A new output grabs the first free id, so it stole 4, and
--- SUPER + 4/5 then focused the parked, invisible screen. The scripts also claim
--- name:deck right after creating it, in case the output gets another number.
-hl.workspace_rule({ workspace = "name:deck", monitor = "HEADLESS-1", default = true })
 
 -- 2/3 + 1/3 column splits. Focus-independent: the bind names which side gets
 -- the 1/3, whatever window happens to live there.
@@ -77,9 +72,8 @@ hl.bind("SUPER + grave", hl.dsp.exec_cmd(
     os.getenv("HOME") .. "/.config/caelestia/scripts/tui-toggle.sh cheatsheet " ..
     "foot -a cheatsheet -T cheatsheet " .. os.getenv("HOME") .. "/.config/caelestia/scripts/cheatsheet.py"))
 
--- Claude Code in the scratchwork project
-hl.bind("SUPER + apostrophe", hl.dsp.exec_cmd(
-    "foot -a claude -T claude fish -C 'cd ~/Projects/claude-scratchwork; exec claude'"))
+-- Claude Code in a terminal
+hl.bind("SUPER + apostrophe", hl.dsp.exec_cmd("foot -a claude -T claude fish -C 'exec claude'"))
 
 -- Archipelago quick launcher (SUPER + ;): a floating 60% centred TUI listing
 -- the games flipped on in ~/.config/Archipelago/launcher.toml. Deliberately not
@@ -89,8 +83,8 @@ hl.bind("SUPER + apostrophe", hl.dsp.exec_cmd(
 local scripts = os.getenv("HOME") .. "/.config/caelestia/scripts"
 -- Pinned because a plain float on a special workspace is drawn *behind* that
 -- workspace's tiled windows whenever the other monitor also has a special
--- workspace up (hyprland 0.56 bug: steam up on DP-1 buried the TUI under
--- discord on DP-2). Pinned windows are drawn above special workspaces. Side
+-- workspace up (hyprland 0.56 bug: steam up on one monitor buried the TUI
+-- under discord on the other). Pinned windows are drawn above special workspaces. Side
 -- effect: a pinned window follows keyboard focus to the other monitor.
 hl.window_rule({
     match  = { class = "ap-launcher" },

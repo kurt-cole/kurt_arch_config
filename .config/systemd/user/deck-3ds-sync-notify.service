@@ -1,6 +1,0 @@
-[Unit]
-Description=Notify about a 3DS save sync done by the Steam Deck
-
-[Service]
-Type=oneshot
-ExecStart=%h/.config/caelestia/scripts/deck-3ds-sync-notify.sh

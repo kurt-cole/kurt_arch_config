@@ -1,0 +1,85 @@
+# Optional packages from Barret's machine. Not installed by install-packages.sh;
+# pick what you want and install with:  paru -S --needed <pkgs>
+# (Lines starting with # are ignored by: grep -v '^#' pkglist-extras.txt | paru -S --needed -)
+
+# Apps / games / emulators
+azahar
+bizhawk-bin
+bottles
+cifs-utils
+desmume
+efibootmgr
+equibop-bin
+evtest
+gale
+heroic-games-launcher-bin
+krita
+libresprite
+linux-lts
+linux-lts-headers
+lutris
+ntfs-3g
+ntfsprogs
+obs-studio
+protontricks
+protonup-qt
+smbclient
+solaar
+sunshine-bin
+tailscale
+umu-launcher
+via-bin
+vintagestory
+vscodium-bin-marketplace
+wev
+ydotool
+zen-browser-bin
+
+# Dev toolchains and build deps (were used for local builds)
+appstream-glib
+argagg
+asar
+autoconf-archive
+blueprint-compiler
+boost
+cargo-tauri
+catch2
+cli11
+dotnet-runtime-6.0
+doxygen
+extra-cmake-modules
+ffmpeg4.4
+frameworkintegration
+gendesk
+go
+hyprwayland-scanner
+icoutils
+libmalcontent
+meson
+npm
+ostree
+pnpm
+python-argcomplete
+python-build
+python-capstone
+python-gevent-eventemitter
+python-hatch
+python-hatch-vcs
+python-installer
+python-pyelftools
+python-pytest
+python-setuptools-reproducible
+python-vcrpy
+qt5-tools
+rapidjson
+spirv-headers
+texinfo
+vulkan-headers
+
+# Hardware-specific -- DO NOT copy blindly. Barret has an Intel CPU + NVIDIA GTX 1080
+# (nvidia-580xx is the legacy Pascal branch). Pick the right ones for YOUR machine:
+#   Intel CPU: intel-ucode        AMD CPU: amd-ucode
+#   Intel iGPU: intel-media-driver vulkan-intel
+#   AMD GPU:   mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver
+#   NVIDIA (Turing/RTX 20xx or newer): nvidia-open-dkms nvidia-utils lib32-nvidia-utils
+#   NVIDIA Pascal/Maxwell (GTX 10xx/9xx): nvidia-580xx-dkms (AUR) + lib32-nvidia-580xx-utils

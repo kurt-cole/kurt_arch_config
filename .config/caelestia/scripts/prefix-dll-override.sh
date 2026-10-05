@@ -76,7 +76,7 @@ if [ -z "$missing" ]; then
 fi
 
 proton=""
-for p in /mnt/win/f/SteamLibrary/steamapps/common/Proton*/proton \
+for p in $(sed -n 's/.*"path"[[:space:]]*"\(.*\)"/\1/p' "$HOME/.local/share/Steam/steamapps/libraryfolders.vdf" 2>/dev/null | sed 's|$|/steamapps/common/Proton*/proton|') \
          "$HOME"/.local/share/Steam/steamapps/common/Proton*/proton; do
     [ -x "$p" ] && proton="$p"
 done

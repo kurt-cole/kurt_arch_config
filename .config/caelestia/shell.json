@@ -23,11 +23,7 @@
         "favouriteApps": [
             "firefox",
             "foot",
-            "appimagekit_4a9e05b58ed9f1554b333319467c14e8-Archipelago",
-            "azahar-deck",
-            "org.flameshot.Flameshot",
-            "deck-controller-enable",
-            "deck-controller-disable"
+            "org.flameshot.Flameshot"
         ]
     },
     "utilities": {

@@ -1,5 +1,9 @@
 # Archipelago quick launcher  --  SUPER + ;
 #
+# NOTE (kurt-arch): this is Barret's game list with every entry hidden. Flip
+# visible = true on the ones you play; paths under /mnt/win, /games etc. are
+# Barret's and need pointing at your own installs.
+#
 # Two sections:
 #   [[entries]]  the games you actually play, one block each, in launcher order
 #   [disabled]   everything else installed, one line each -- flip visible = true
@@ -45,7 +49,7 @@
 # ---------------------------------------------------------------- enabled ---
 
 [[entries]]
-visible = true
+visible = false
 emoji = "🐇"
 name = "ANIMAL WELL"
 component = ""
@@ -54,7 +58,7 @@ commands = ["steam steam://rungameid/813230"]
 proton_client = { appid = 813230, client = "ANIMAL WELL Client", apworld = "animal_well.apworld" }
 
 [[entries]]  # no AP client found #TODO: web link
-visible = true
+visible = false
 emoji = "🔢"
 name = "Archipeladoku"
 component = ""
@@ -63,16 +67,16 @@ commands = ["firefox https://galdiuz.github.io/archipeladoku/"]
 proton_client = {}
 
 [[entries]]  # no AP client found #TODO: web link
-visible = true
+visible = false
 emoji = "🏝️"
 name = "Archipelago Launcher"
 component = ""
 label = "default launcher"
-commands = ["/home/barretglass/Applications/Archipelago/AppRun"]
+commands = ["$HOME/Applications/Archipelago/AppRun"]
 proton_client = {}
 
 [[entries]]  # no AP client found #TODO: web link
-visible = true
+visible = false
 emoji = "⚙️"
 name = "Generate"
 component = "Generate"
@@ -81,7 +85,7 @@ commands = [""]
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: mods?
-visible = true
+visible = false
 emoji = "🃏"
 name = "Balatro"
 component = ""
@@ -90,7 +94,7 @@ commands = ["steam steam://rungameid/2379780"]
 proton_client = {}
 
 [[entries]]
-visible = true
+visible = false
 emoji = "🤖"
 name = "Cave Story"
 # The client launches Doukutsu.exe itself and talks to the randomizer's dinput.dll
@@ -102,7 +106,7 @@ commands = []
 proton_client = { appid = 0, client = "Cave Story Client", apworld = "cave_story.apworld", mode = "standalone", dll_overrides = ["dinput"] }
 
 [[entries]]  # guessed name
-visible = true
+visible = false
 emoji = "󰛡 "
 name = "Civilization VI"
 component = "Civ6 Client"
@@ -110,16 +114,16 @@ commands = ["steam steam://rungameid/289070"]
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: does the mod work?
-visible = true
+visible = false
 emoji = "🖼️"
 name = "Clair Obscur Expedition 33"
 component = ""
 label = "E33"
-commands = ["/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 1903340 dwmapi && steam -applaunch 1903340"]
+commands = ["$HOME/.config/caelestia/scripts/prefix-dll-override.sh 1903340 dwmapi && steam -applaunch 1903340"]
 proton_client = {}
 
 [[entries]]
-visible = true
+visible = false
 emoji = "🚀"
 name = "Cobalt Core"
 # Nickel is the mod loader, and the AP mod it loads talks to the server itself,
@@ -128,11 +132,11 @@ name = "Cobalt Core"
 # do not also launch the game from Steam, or two wineservers land on one prefix.
 component = ""
 label = "Nickel (Proton)"
-commands = ["/home/barretglass/.config/caelestia/scripts/proton-run.sh 2179850 /mnt/win/f/Nickel/NickelLauncher.exe"]
+commands = ["$HOME/.config/caelestia/scripts/proton-run.sh 2179850 /mnt/win/f/Nickel/NickelLauncher.exe"]
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: web browser/tampermonkey
-visible = true
+visible = false
 emoji = "🍪"
 name = "Cookie Clicker"
 component = ""
@@ -141,7 +145,7 @@ commands = ["firefox https://orteil.dashnet.org/cookieclicker/"]
 proton_client = {}
 
 [[entries]]  # TODO: update and also patched DR game
-visible = true
+visible = false
 emoji = "♥️"
 name = "DELTARUNE"
 component = "DELTARUNE Client"
@@ -149,7 +153,7 @@ commands = []
 proton_client = {}
 
 [[entries]]
-visible = true
+visible = false
 emoji = "🐟️"
 name = "Feeding Frenzy 2"
 component = "Feeding Frenzy 2 Client"
@@ -161,7 +165,7 @@ commands = [] # ["steam steam://rungameid/3390"]
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: gale
-visible = true
+visible = false
 emoji = "🐈️"
 name = "Garfield Kart - Furious Racing"
 component = ""
@@ -170,7 +174,7 @@ commands = []
 proton_client = {}
 
 [[entries]]
-visible = true
+visible = false
 emoji = "󰘧 "
 name = "Half-Life"
 component = "Half-Life Client"
@@ -178,7 +182,7 @@ commands = ["steam -applaunch 70 -game hlap"]
 proton_client = {}
 
 [[entries]]  # TODO: auto-patch script and launch?
-visible = true
+visible = false
 emoji = "👨‍🔬"
 name = "Half-Life (Sven Co-op)"
 component = "Half-Life (Sven Co-op) Client"
@@ -190,16 +194,16 @@ proton_client = {}
 # /games/HaloAP (the upstream release has neither) and starts MCC itself.
 # See scripts/halo-ap.sh and ~/Projects/claude-scratchwork/halo-mcc-ap.md.
 [[entries]]
-visible = true
+visible = false
 emoji = " "
 name = "Halo The Master Chief Collection"
 component = ""
 label = "MCC Launcher"
-commands = ["foot -a haloap -T 'HaloAP Launcher' /home/barretglass/.config/caelestia/scripts/halo-ap.sh"]
+commands = ["foot -a haloap -T 'HaloAP Launcher' $HOME/.config/caelestia/scripts/halo-ap.sh"]
 proton_client = {}
 
 [[entries]]
-visible = true
+visible = false
 emoji = "🔤"
 name = "Hangman"
 component = "Hangman Client"
@@ -207,7 +211,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found
-visible = true
+visible = false
 emoji = "👟"
 name = "Haste"
 component = ""
@@ -221,12 +225,12 @@ proton_client = {}
 # which a Proton-run Windows game can load. --no-appid keeps SteamAppId unset so
 # launching the game from Steam afterwards doesn't stall on WaitingPrevProcess.
 [[entries]]  # no AP client found -- mod loader only
-visible = true
+visible = false
 emoji = "🖤"
 name = "Hollow Knight"
 component = ""
 label = "Lumafly (Proton)"
-commands = ["/home/barretglass/.config/caelestia/scripts/proton-run.sh --no-appid 367520 '/mnt/win/d/HK Modding/Lumafly.exe'"]
+commands = ["$HOME/.config/caelestia/scripts/proton-run.sh --no-appid 367520 '/mnt/win/d/HK Modding/Lumafly.exe'"]
 proton_client = {}
 
 # Cogfly is native Linux and Proton-aware: it detects the Windows game build and
@@ -235,7 +239,7 @@ proton_client = {}
 # Windows install. Launch the game from Cogfly ("Launch with Steam" is on and is
 # mandatory under Proton -- standalone launch is blocked).
 [[entries]]  # no AP client found -- mod loader only
-visible = true
+visible = false
 emoji = "🪡"
 name = "Hollow Knight: Silksong"
 component = ""
@@ -244,7 +248,7 @@ commands = ["/games/Cogfly/Cogfly.AppImage"]
 proton_client = {}
 
 [[entries]]  # no AP client found -- the BepInEx mod talks to the server itself
-visible = true
+visible = false
 emoji = "🏇"
 name = "Horse Riding Classic"
 # BepInEx is installed by hand in the game folder, and its winhttp.dll doorstop
@@ -253,13 +257,13 @@ name = "Horse Riding Classic"
 component = ""
 label = "BepInEx mod"
 commands = [
-  "/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 4384880 winhttp",
+  "$HOME/.config/caelestia/scripts/prefix-dll-override.sh 4384880 winhttp",
   "steam steam://rungameid/4384880",
 ]
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: inscryption
-visible = true
+visible = false
 emoji = "📷️"
 name = "Inscryption"
 component = ""
@@ -268,7 +272,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: inscryption
-visible = true
+visible = false
 emoji = "📸"
 name = "Inscryption Beta"
 component = ""
@@ -277,7 +281,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: figure this whole situation out
-visible = true
+visible = false
 emoji = "🪙"
 name = "Johnny Upgrade"
 component = ""
@@ -286,7 +290,7 @@ commands = ["firefox coolmath-games.com/0-johnny-upgrade"]
 proton_client = {}
 
 [[entries]]  # TODO: does this work? probably have to proton the client?
-visible = true
+visible = false
 emoji = " "
 name = "Lego Star Wars: The Complete Saga"
 component = "Lego Star Wars: The Complete Saga Client"
@@ -294,7 +298,7 @@ commands = ["steam steam://rungameid/32440"]
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: gale
-visible = true
+visible = false
 emoji = "🪏"
 name = "Lethal Company"
 component = ""
@@ -303,16 +307,16 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: mod works?
-visible = true
+visible = false
 emoji = "🪩"
 name = "Marble It Up! Ultra"
 component = ""
 label = "MIUU"
-commands = ["/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 864060 winhttp && steam steam://rungameid/864060"]
+commands = ["$HOME/.config/caelestia/scripts/prefix-dll-override.sh 864060 winhttp && steam steam://rungameid/864060"]
 proton_client = {}
 
 [[entries]]  # TODO: ryujinx
-visible = true
+visible = false
 emoji = "🦃"
 name = "Metroid Dread"
 component = "Dread Client"
@@ -321,7 +325,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found # TODO: what to do ab this?
-visible = true
+visible = false
 emoji = " "
 name = "Metroid Fusion"
 component = "Open Patch"
@@ -330,7 +334,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found # TODO: what to do ab this?
-visible = true
+visible = false
 emoji = "👩‍🚀"
 name = "Metroid: Zero Mission"
 component = "Open Patch"
@@ -339,7 +343,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # TODO: mc
-visible = true
+visible = false
 emoji = " "
 name = "Minecraft"
 component = "Minecraft Client"
@@ -347,7 +351,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # TODO: mc
-visible = true
+visible = false
 emoji = "🕳️"
 name = "Minecraft Dig"
 component = "Minecraft Dig Client"
@@ -355,7 +359,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: mc prism?
-visible = true
+visible = false
 emoji = " "
 name = "Minecraft Fabric"
 component = ""
@@ -364,7 +368,7 @@ commands = []
 proton_client = {}
 
 [[entries]]
-visible = true
+visible = false
 emoji = "🌇"
 name = "Mirror's Edge"
 # The client reads the game's memory with pymem (MirrorsEdge.exe), so the Windows
@@ -375,7 +379,7 @@ commands = ["steam steam://rungameid/17410"]
 proton_client = { appid = 17410, client = "Mirror's Edge Client", apworld = "mirrors_edge.apworld" }
 
 [[entries]]  # no AP client found # TODO: prism
-visible = true
+visible = false
 emoji = "󰆩 "
 name = "Modded Minecraft"
 component = ""
@@ -384,7 +388,7 @@ commands = []
 proton_client = {}
 
 [[entries]]
-visible = true
+visible = false
 emoji = "🍄"
 name = "New Super Mario Bros. DS"
 component = "NSMBDS Client"
@@ -392,7 +396,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # TODO: anything?
-visible = true
+visible = false
 emoji = "󰻀 "
 name = "NSMBW"
 component = "New Super Mario Bros Wii Client"
@@ -400,7 +404,7 @@ commands = []
 proton_client = {}
 
 [[entries]]
-visible = true
+visible = false
 emoji = "📖"
 name = "Options Creator"
 component = "Options Creator"
@@ -408,7 +412,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found
-visible = true
+visible = false
 emoji = "⛰️"
 name = "PEAK"
 component = ""
@@ -417,7 +421,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found # TODO: install
-visible = true
+visible = false
 emoji = "🌻"
 name = "Plants vs. Zombies Replanted"
 component = ""
@@ -426,7 +430,7 @@ commands = ["steam steam://rungameid/3654560"]
 proton_client = {}
 
 [[entries]]  # TODO: install modded
-visible = true
+visible = false
 emoji = "🍋"
 name = "Portal 2"
 component = "Portal 2 Client"
@@ -434,7 +438,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # TODO: make work
-visible = true
+visible = false
 emoji = "🧟‍♂️"
 name = "Pvz2Gardendless"
 component = ""
@@ -443,7 +447,7 @@ commands = ["~/pvzge_ap_build/PvZ\\ Gardendless\\ AP.AppImage"]
 proton_client = {}
 
 [[entries]]  # TODO: make work
-visible = true
+visible = false
 emoji = "🧟‍♂️"
 name = "Pvz2Gardendless Installer"
 component = "PvZ2 Gardendless Installer"
@@ -452,7 +456,7 @@ commands = [""]
 proton_client = {}
 
 [[entries]]  # no AP client found # TODO: gale
-visible = true
+visible = false
 emoji = "󱚠 "
 name = "R.E.P.O"
 component = ""
@@ -461,7 +465,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found # TODO: gale
-visible = true
+visible = false
 emoji = "🌧️"
 name = "Risk of Rain 2"
 component = ""
@@ -470,7 +474,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found # TODO: SML setup
-visible = true
+visible = false
 emoji = "🏭️"
 name = "Satisfactory"
 component = ""
@@ -479,7 +483,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found
-visible = true
+visible = false
 emoji = " "
 name = "Slay the Spire"
 component = ""
@@ -488,7 +492,7 @@ commands = ["steam steam://rungameid/646570"]
 proton_client = {}
 
 [[entries]]  # no AP client found
-visible = true
+visible = false
 emoji = "󰘸 "
 name = "Slay the Spire II"
 component = ""
@@ -497,7 +501,7 @@ commands = ["steam steam://rungameid/2868840"]
 proton_client = {}
 
 [[entries]]
-visible = true
+visible = false
 emoji = "🕰️"
 name = "Slow Release"
 component = "Slow Release Client"
@@ -505,7 +509,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found
-visible = true
+visible = false
 emoji = "🤡"
 name = "SM64: Spicy Mycena 64"
 component = ""
@@ -514,7 +518,7 @@ commands = ["/games/SM64\\ Archipelago/SM64AP-Launcher-x86_64.AppImage"]
 proton_client = {}
 
 [[entries]]  # guessed name; also: Universal Tracker TODO: stardrop setup
-visible = true
+visible = false
 emoji = "🧑‍🌾"
 name = "Stardew Valley"
 component = ""
@@ -523,7 +527,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: install/compile build
-visible = true
+visible = false
 emoji = "🏰"
 name = "Super Mario 64"
 component = ""
@@ -532,7 +536,7 @@ commands = ["/games/SM64\\ Archipelago/SM64AP-Launcher-x86_64.AppImage"]
 proton_client = {}
 
 [[entries]]  # guessed name # TODO: how this work?
-visible = true
+visible = false
 emoji = "🧠"
 name = "Super Metroid"
 component = "Open Patch"
@@ -541,7 +545,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # TODO: fix the linux probs
-visible = true
+visible = false
 emoji = " "
 name = "Taskipelago"
 component = "Taskipelago Client"
@@ -549,7 +553,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found
-visible = true
+visible = false
 emoji = "🍗"
 name = "Team Fortress 2 Mann vs Machine"
 component = ""
@@ -558,7 +562,7 @@ commands = ["steam steam://rungameid/440"]
 proton_client = {}
 
 [[entries]]  # no AP client found # TODO: update
-visible = true
+visible = false
 emoji = "⚒️"
 name = "Terraria"
 component = ""
@@ -567,7 +571,7 @@ commands = ["steam steam://rungameid/1281930"]
 proton_client = {}
 
 [[entries]]  # guessed name
-visible = true
+visible = false
 emoji = "🥷"
 name = "The Messenger"
 component = "Messenger Client"
@@ -575,7 +579,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: install
-visible = true
+visible = false
 emoji = "📣"
 name = "Toontown"
 component = ""
@@ -584,7 +588,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # guessed name # TODO: Patch
-visible = true
+visible = false
 emoji = "🌼"
 name = "Undertale"
 component = "Undertale Client"
@@ -592,19 +596,19 @@ commands = []
 proton_client = {}
 
 [[entries]]  # Gale mod, no AP client
-visible = true
+visible = false
 emoji = "😤"
 name = "Unfair Flips"
 component = ""
 label = "Gale mod"
 # one command, not two: ap-launcher spawns each command concurrently
 commands = [
-  "/home/barretglass/.config/caelestia/scripts/prefix-dll-override.sh 3925760 winhttp && env WEBKIT_DISABLE_DMABUF_RENDERER=1 gale --game unfair-flips --profile Default --launch --no-gui",
+  "$HOME/.config/caelestia/scripts/prefix-dll-override.sh 3925760 winhttp && env WEBKIT_DISABLE_DMABUF_RENDERER=1 gale --game unfair-flips --profile Default --launch --no-gui",
 ]
 proton_client = {}
 
 [[entries]]
-visible = true
+visible = false
 emoji = "📋️"
 name = "Universal Tracker"
 component = "Universal Tracker"
@@ -612,7 +616,7 @@ commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found TODO: web link
-visible = true
+visible = false
 emoji = "🔠"
 name = "Wordipelago"
 component = ""
@@ -758,7 +762,7 @@ entries = [
 # Extracted AppImage (~/Applications/Archipelago is a symlink to the current
 # Archipelago-X.Y.Z AppDir); AppRun is the same entry point the .AppImage ran.
 # The newest ~/Applications/Archipelago*.AppImage is used if this path is gone.
-archipelago = "/home/barretglass/Applications/Archipelago/AppRun"
+archipelago = "$HOME/Applications/Archipelago/AppRun"
 terminal = ["foot", "-a", "ap-debug", "-T", "Archipelago (debug)"]
 editor = ["foot", "-a", "ap-config", "-T", "launcher.toml",
-          "/home/barretglass/.config/caelestia/scripts/ap-edit.sh"]
+          "$HOME/.config/caelestia/scripts/ap-edit.sh"]

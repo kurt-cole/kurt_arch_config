@@ -24,6 +24,8 @@ there so a stray `config add -A` cannot sweep them in.
 
 ## Restoring on a fresh install
 
+On the `kurt-arch` branch, use `bootstrap.sh` (see `KURT.md`). By hand:
+
     pacman -S --needed git fish
     git clone --bare <remote> ~/.dotfiles.git
     alias config='git --git-dir=$HOME/.dotfiles.git --work-tree=$HOME'

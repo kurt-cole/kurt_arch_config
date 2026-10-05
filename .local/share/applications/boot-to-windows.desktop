@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Boot to Windows
-Comment=Reboot directly into Windows
-Exec=/bin/sh -c "pkexec efibootmgr --bootnext 0000 && systemctl reboot"
-Icon=windows-boot
-Terminal=false
-Categories=System;

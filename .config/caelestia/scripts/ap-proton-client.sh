@@ -91,7 +91,7 @@ fi
 
 launch_client=""
 for c in \
-    /mnt/win/f/SteamLibrary/steamapps/common/SteamLinuxRuntime_4/pressure-vessel/bin/steam-runtime-launch-client \
+    $(sed -n 's/.*"path"[[:space:]]*"\(.*\)"/\1/p' "$HOME/.local/share/Steam/steamapps/libraryfolders.vdf" 2>/dev/null | sed 's|$|/steamapps/common/SteamLinuxRuntime_*/pressure-vessel/bin/steam-runtime-launch-client|') \
     "$HOME"/.local/share/Steam/steamapps/common/SteamLinuxRuntime_*/pressure-vessel/bin/steam-runtime-launch-client \
     "$HOME"/.local/share/Steam/ubuntu12_32/steam-runtime/amd64/usr/bin/steam-runtime-launch-client
 do
@@ -160,7 +160,7 @@ if [ "$how" = "standalone" ]; then
     prefix="$HOME/.local/share/Steam/steamapps/compatdata/ap-win"
     mkdir -p "$prefix"
     proton=""
-    for p in /mnt/win/f/SteamLibrary/steamapps/common/Proton*/proton \
+    for p in $(sed -n 's/.*"path"[[:space:]]*"\(.*\)"/\1/p' "$HOME/.local/share/Steam/steamapps/libraryfolders.vdf" 2>/dev/null | sed 's|$|/steamapps/common/Proton*/proton|') \
              "$HOME"/.local/share/Steam/steamapps/common/Proton*/proton; do
         [ -x "$p" ] && proton="$p"
     done

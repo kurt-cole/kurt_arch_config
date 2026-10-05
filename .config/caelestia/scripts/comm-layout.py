@@ -25,7 +25,6 @@ import sys
 import time
 
 WS = "special:communication"
-MONITOR = "DP-2"  # always lives here, whichever monitor has focus
 SCRIPTS = os.path.expanduser("~/.config/caelestia/scripts")
 LOCK = os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "comm-layout.lock")
 WAIT = 90     # the tracker alone takes ~17s to map while it loads worlds
@@ -54,6 +53,15 @@ def hyprctl(*args):
 def lua(expr):
     """Run a lua statement inside hyprland (dispatch wraps it in hl.dispatch)."""
     return hyprctl("dispatch", "(function() %s return hl.dsp.no_op() end)()" % expr)
+
+
+def pick_monitor():
+    """$COMM_MONITOR, else the right-most monitor -- it always lives there,
+    whichever monitor has focus."""
+    if os.environ.get("COMM_MONITOR"):
+        return os.environ["COMM_MONITOR"]
+    mons = json.loads(hyprctl("monitors", "-j"))
+    return max(mons, key=lambda m: m["x"])["name"]
 
 
 def clients():
@@ -93,7 +101,7 @@ def main():
     # Before anything lands on it: a rule-placed window goes wherever the
     # workspace currently lives, which may be the wrong monitor.
     lua("hl.dispatch(hl.dsp.workspace.move({ workspace = %s, monitor = %s }))"
-        % (json.dumps(WS), json.dumps(MONITOR)))
+        % (json.dumps(WS), json.dumps(pick_monitor())))
 
     cl = clients()
     found = {}
@@ -120,7 +128,7 @@ def main():
         time.sleep(SETTLE)
 
     lua('dofile(%s)(%s, %s, %s, %s, %s)' % tuple(json.dumps(x) for x in (
-        SCRIPTS + "/comm-layout.lua", WS, MONITOR, found["left"], found["discord"], found["tracker"])))
+        SCRIPTS + "/comm-layout.lua", WS, pick_monitor(), found["left"], found["discord"], found["tracker"])))
 
 
 if __name__ == "__main__":

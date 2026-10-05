@@ -3,39 +3,90 @@
     "audio": {
       "pavucontrol": {
         "enable": true,
-        "match": [{ "class": "org.pulseaudio.pavucontrol" }],
-        "command": ["pavucontrol"],
+        "match": [
+          {
+            "class": "org.pulseaudio.pavucontrol"
+          }
+        ],
+        "command": [
+          "pavucontrol"
+        ],
         "move": true
       }
     },
     "music": {
-      "spotify": { "enable": false },
-      "feishin": { "enable": false },
+      "spotify": {
+        "enable": false
+      },
+      "feishin": {
+        "enable": false
+      },
       "applemusic": {
         "enable": true,
         "match": [
-          { "class": "firefox", "title": "Music - Web Player" },
-          { "class": "firefox", "title": " - Apple Music — Mozilla Firefox" },
-          { "class": "firefox", "workspace": { "name": "special:music" } }
+          {
+            "class": "firefox",
+            "title": "Music - Web Player"
+          },
+          {
+            "class": "firefox",
+            "title": " - Apple Music \u2014 Mozilla Firefox"
+          },
+          {
+            "class": "firefox",
+            "workspace": {
+              "name": "special:music"
+            }
+          }
         ],
-        "command": ["firefox", "--new-window", "https://music.apple.com"],
+        "command": [
+          "firefox",
+          "--new-window",
+          "https://music.apple.com"
+        ],
         "move": true
       }
     },
     "steam": {
       "steam": {
         "enable": true,
-        "match": [{ "class": "steam", "initial_title": "Steam" }],
-        "command": ["steam"],
+        "match": [
+          {
+            "class": "steam",
+            "initial_title": "Steam"
+          }
+        ],
+        "command": [
+          "steam"
+        ],
         "move": true
       }
     },
     "todo": {
-      "todoist": { "enable": false },
+      "todoist": {
+        "enable": false
+      },
       "checklist": {
-        "enable": true,
-        "match": [{ "class": "checklist", "title": "checklist", "workspace": { "name": "special:todo" } }],
-        "command": ["foot", "-a", "checklist", "-T", "checklist", "fish", "-C", "exec checklist"]
+        "enable": false,
+        "match": [
+          {
+            "class": "checklist",
+            "title": "checklist",
+            "workspace": {
+              "name": "special:todo"
+            }
+          }
+        ],
+        "command": [
+          "foot",
+          "-a",
+          "checklist",
+          "-T",
+          "checklist",
+          "fish",
+          "-C",
+          "exec checklist"
+        ]
       }
     }
   }
