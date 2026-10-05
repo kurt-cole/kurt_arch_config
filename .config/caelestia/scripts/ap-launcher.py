@@ -176,7 +176,7 @@ def save_pins(pinned):
 
 def archipelago_path(settings):
     """The configured AppImage, falling back to the newest one installed."""
-    path = os.path.expanduser(settings.get("archipelago", ""))
+    path = os.path.expandvars(os.path.expanduser(settings.get("archipelago", "")))
     if path and os.path.exists(path):
         return path
     found = sorted(glob.glob(os.path.join(HOME, "Applications/Archipelago*.AppImage")))
@@ -357,7 +357,7 @@ class Launcher:
         return False  # launched -- close the launcher
 
     def edit(self):
-        editor = self.settings.get("editor") or ["foot", "nvim"]
+        editor = [os.path.expandvars(a) for a in (self.settings.get("editor") or ["foot", "nvim"])]
         spawn([*editor, CONFIG])
         return False
 
