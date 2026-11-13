@@ -37,7 +37,7 @@
 # Blocks, not { } on several lines: TOML forbids a newline inside an inline
 # table, so a multi-line entry has to be an [[entries]] block.
 #
-# In the launcher: j/k or arrows move, / filters, Enter launches, d launches in
+#= In the launcher: j/k or arrows move, / filters, Enter launches, d launches in
 # debug mode -- every step of the launch (the AP client, the proton-client
 # injector, each command) runs in its own terminal that shows the command, its
 # output and its exit status, and stays open afterwards -- e opens this file in
@@ -57,8 +57,8 @@ label = "Proton client"
 commands = ["steam steam://rungameid/813230"]
 proton_client = { appid = 813230, client = "ANIMAL WELL Client", apworld = "animal_well.apworld" }
 
-[[entries]]  # no AP client found #TODO: web link
-visible = false
+[[entries]]
+visible = true
 emoji = "🔢"
 name = "Archipeladoku"
 component = ""
@@ -66,13 +66,30 @@ label = "Firefox"
 commands = ["firefox https://galdiuz.github.io/archipeladoku/"]
 proton_client = {}
 
+[[entries]]
+visible = true
+emoji = "🔴"
+name = "Pokepelago"
+component = ""
+label = "Firefox"
+commands = ["firefox https://pokepelago.ap-pie.com/"]
+proton_client = {}
+
 [[entries]]  # no AP client found #TODO: web link
-visible = false
+visible = true
 emoji = "🏝️"
 name = "Archipelago Launcher"
 component = ""
 label = "default launcher"
 commands = ["$HOME/Applications/Archipelago/AppRun"]
+proton_client = {}
+
+[[entries]]
+visible = true
+emoji = "💬"
+name = "Text Client"
+component = "Text Client"
+commands = []
 proton_client = {}
 
 [[entries]]  # no AP client found #TODO: web link
@@ -164,6 +181,30 @@ commands = [] # ["steam steam://rungameid/3390"]
 #   proton_client = { appid = 3390, client = "Feeding Frenzy 2 Client", apworld = "feeding_frenzy_2.apworld", mode = "standalone", dll_overrides = ["dsound"] }
 proton_client = {}
 
+# The Steam install's "Ultimate Custom Night.exe" has been replaced with the
+# patched build (the client's /patch output, ~/UCN/UCN Archipelago.exe), so it
+# launches straight from Steam. The Linux client cannot find
+# %APPDATA% by itself: the launch puts "/set_path <MMFApplications>" on the
+# clipboard -- paste it into the client before connecting.
+[[entries]]
+visible = true
+emoji = "🐻"
+name = "FNAF Ultimate Custom Night"
+component = ""
+label = "Game only"
+commands = ["steam steam://rungameid/871720"]
+proton_client = {}
+
+# Just the AP client. The save path is remembered in host.yaml (ucn_options);
+# the clipboard copy is a fallback if it ever needs re-setting.
+[[entries]]
+visible = true
+emoji = "🐻"
+name = "FNAF UCN Client"
+component = "FNAF UCN Client"
+commands = ["wl-copy \"/set_path $HOME/.local/share/Steam/steamapps/compatdata/871720/pfx/drive_c/users/steamuser/AppData/Roaming/MMFApplications\""]
+proton_client = {}
+
 [[entries]]  # no AP client found TODO: gale
 visible = false
 emoji = "🐈️"
@@ -201,6 +242,7 @@ component = ""
 label = "MCC Launcher"
 commands = ["foot -a haloap -T 'HaloAP Launcher' $HOME/.config/caelestia/scripts/halo-ap.sh"]
 proton_client = {}
+
 
 [[entries]]
 visible = false
@@ -261,7 +303,6 @@ commands = [
   "steam steam://rungameid/4384880",
 ]
 proton_client = {}
-
 [[entries]]  # no AP client found TODO: inscryption
 visible = false
 emoji = "📷️"
@@ -437,17 +478,25 @@ component = "Portal 2 Client"
 commands = []
 proton_client = {}
 
+[[entries]] #TODO: will work
+visible = true
+emoji = "🗾"
+name = "Poptracker"
+component = ""
+commands = ["/home/kurt/.local/share/Archipelago/poptracker/poptracker"]
+proton_client = {}
+
 [[entries]]  # TODO: make work
-visible = false
+visible = true
 emoji = "🧟‍♂️"
 name = "Pvz2Gardendless"
 component = ""
 label = "PVZ2 Modded"
-commands = ["~/pvzge_ap_build/PvZ\\ Gardendless\\ AP.AppImage"]
+commands = ["/mnt/D/Games/PvZ\\ Gardendless\\ AP.sh"]
 proton_client = {}
 
 [[entries]]  # TODO: make work
-visible = false
+visible = true
 emoji = "🧟‍♂️"
 name = "Pvz2Gardendless Installer"
 component = "PvZ2 Gardendless Installer"
@@ -501,7 +550,7 @@ commands = ["steam steam://rungameid/2868840"]
 proton_client = {}
 
 [[entries]]
-visible = false
+visible = true
 emoji = "🕰️"
 name = "Slow Release"
 component = "Slow Release Client"
@@ -515,6 +564,15 @@ name = "SM64: Spicy Mycena 64"
 component = ""
 label = "SM64EX Launcher"
 commands = ["/games/SM64\\ Archipelago/SM64AP-Launcher-x86_64.AppImage"]
+proton_client = {}
+
+[[entries]]  # no AP client found -- the SA2B Archipelago mod talks to the server itself
+visible = true
+emoji = "🦔"
+name = "Sonic Adventure 2 Battle"
+component = ""
+label = "mod"
+commands = ["steam steam://rungameid/213610"]
 proton_client = {}
 
 [[entries]]  # guessed name; also: Universal Tracker TODO: stardrop setup
@@ -608,7 +666,7 @@ commands = [
 proton_client = {}
 
 [[entries]]
-visible = false
+visible = true
 emoji = "📋️"
 name = "Universal Tracker"
 component = "Universal Tracker"
@@ -715,7 +773,6 @@ entries = [
   { visible = false, emoji = "🎮", name = "Pokemon Mystery Dungeon Explorers of Sky", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Pokemon Platinum", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Pokemon Red and Blue", component = "BizHawk Client", commands = [] },  # guessed name
-  { visible = false, emoji = "🎮", name = "Pokepelago", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Psychonauts", component = "Psychonauts Client", commands = [] },
   { visible = false, emoji = "🎮", name = "Raft", component = "", commands = [] },  # no AP client found # TODO: this is horrifying
   { visible = false, emoji = "🎮", name = "Refunct", component = "", commands = [] },  # no AP client found
@@ -732,7 +789,6 @@ entries = [
   { visible = false, emoji = "🎮", name = "SMBWonder", component = "SMBW Client", commands = [] },
   { visible = false, emoji = "🎮", name = "SMZ3", component = "SNI Client", commands = [] },  # guessed name
   { visible = false, emoji = "🎮", name = "Sonic Advance 2", component = "", commands = [] },  # no AP client found
-  { visible = false, emoji = "🎮", name = "Sonic Adventure 2 Battle", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Sonic Adventure DX", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Sonic Battle", component = "", commands = [] },  # no AP client found
   { visible = false, emoji = "🎮", name = "Sonic Heroes", component = "", commands = [] },  # no AP client found

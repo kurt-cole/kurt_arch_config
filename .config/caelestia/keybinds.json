@@ -43,6 +43,10 @@
         [
           "F8",
           "Autoclicker: toggle clicking (opens its window if closed)"
+        ],
+        [
+          "CTRL + SUPER + T",
+          "TikTok downloader"
         ]
       ]
     },
@@ -363,6 +367,10 @@
         [
           "SUPER + SHIFT + L",
           "Sleep"
+        ],
+        [
+          "SUPER + /",
+          "Suspend"
         ],
         [
           "CTRL + ALT + Delete",

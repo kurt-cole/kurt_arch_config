@@ -26,8 +26,8 @@ end
 -- Monitor modes. caelestia's default is mode = "preferred", which often picks
 -- 60Hz on high-refresh panels. Pin each output to its real mode here; names
 -- come from `hyprctl monitors -j`. Example for two 1440p panels side by side:
--- hl.monitor({ output = "DP-1", mode = "2560x1440@144", position = "0x0",    scale = 1 })
--- hl.monitor({ output = "DP-2", mode = "2560x1440@144", position = "2560x0", scale = 1 })
+hl.monitor({ output = "DP-1", mode = "2560x1440@360", position = "0x0",    scale = 1 })
+hl.monitor({ output = "DP-2", mode = "2560x1440@99.95", position = "2560x0", scale = 1 })
 
 -- checklist TUI lives on the todo special workspace (SUPER + R)
 hl.window_rule({ match = { class = "checklist" }, workspace = "special:todo" })
@@ -73,7 +73,7 @@ hl.bind("SUPER + grave", hl.dsp.exec_cmd(
     "foot -a cheatsheet -T cheatsheet " .. os.getenv("HOME") .. "/.config/caelestia/scripts/cheatsheet.py"))
 
 -- Claude Code in a terminal
-hl.bind("SUPER + apostrophe", hl.dsp.exec_cmd("foot -a claude -T claude fish -C 'exec claude'"))
+hl.bind("SUPER + apostrophe", hl.dsp.exec_cmd("foot -a claude -T claude -D /home/kurt/Projects/Coding-Projects fish -C 'exec claude'"))
 
 -- Archipelago quick launcher (SUPER + ;): a floating 60% centred TUI listing
 -- the games flipped on in ~/.config/Archipelago/launcher.toml. Deliberately not
@@ -253,3 +253,32 @@ hl.bind("SUPER + bracketleft", hl.dsp.exec_cmd(scripts .. "/comm-layout.py"))
 -- window if it isn't running. Small floating, pinned window so it stays reachable.
 hl.bind("F8", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/caelestia/scripts/autoclicker.py toggle"))
 hl.window_rule({ match = { class = "^[Aa]utoclicker$" }, float = true, pin = true })
+
+-- Suspend (same as the session menu's sleep button).
+hl.bind("SUPER + slash", hl.dsp.exec_cmd("systemctl suspend"))
+
+-- Image viewer (Loupe): A / D flip to the previous / next picture, alongside
+-- the arrow keys. Loupe has no custom keybinds, so these send Left / Right to
+-- it -- and they are only enabled while Loupe is focused, so A and D type
+-- normally everywhere else.
+local loupe_binds = {}
+for key, arrow in pairs({ A = "Left", D = "Right" }) do
+    local b = hl.bind(key, hl.dsp.send_shortcut({ mods = "", key = arrow, window = "class:^(org.gnome.Loupe)$" }),
+        { repeating = true })
+    b:set_enabled(false)
+    loupe_binds[#loupe_binds + 1] = b
+end
+hl.on("window.active", function(win)
+    win = win or hl.get_active_window()
+    local on = win ~= nil and win.class == "org.gnome.Loupe"
+    for _, b in ipairs(loupe_binds) do b:set_enabled(on) end
+end)
+
+-- Second monitor (DP-2) starts on workspace 10 (SUPER + 0) instead of the next
+-- free one, and workspace 10 always opens there.
+hl.workspace_rule({ workspace = "10", monitor = "DP-2", default = true })
+
+-- TikTok downloader (CTRL + SUPER + T): small floating window, paste a link.
+hl.window_rule({ match = { class = "^[Tt]iktok-dl$" }, float = true, center = true })
+hl.bind("CTRL + SUPER + T", hl.dsp.exec_cmd(
+    "/usr/bin/python3 " .. os.getenv("HOME") .. "/Projects/Coding-Projects/TikTok-Downloader/tiktok_dl.py"))

@@ -3,7 +3,9 @@
 
 Content comes from ~/.config/Archipelago/launcher.toml -- entries with
 visible = true, listed alphabetically (both sections are, always). Everything
-installed is listed in that file so new games only need visible flipped.
+installed is listed in that file so new games only need visible flipped. Every
+AP patch file in ~/.local/share/Archipelago/output is added too (see
+patch_entries), so an active slot launches straight from the list.
 
 Keys: j/k or arrows move, g/G jump, / filters, Enter (or F) launches, d launches
 in debug mode -- every step (AP client, proton-client injector, each command) gets
@@ -34,6 +36,7 @@ import termios
 import tomllib
 import tty
 import unicodedata
+import zipfile
 
 try:
     sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
@@ -146,7 +149,48 @@ def load_config():
     # rest, so flipping visible = true down there works without moving anything.
     listed = list(data.get("entries", [])) + list(data.get("disabled", {}).get("entries", []))
     entries = [e for e in listed if e.get("visible")]
-    return settings, entries
+    return settings, entries + patch_entries(settings, listed)
+
+
+def patch_entries(settings, listed):
+    """One entry per AP patch file in the output folder, read fresh each launch.
+
+    Picks up output/<multiworld>/AP_<seed>_P<n>_<slot>.ap* (and loose ones in
+    output/ itself) and names them "<multiworld> - <slot>". Subfolders such as
+    Finished/ are not searched, so moving a patch there drops it from the list.
+    Launching hands the file to Archipelago, which opens the right client and
+    patches/starts the game exactly as double-clicking the patch would.
+    """
+    root = os.path.expandvars(os.path.expanduser(
+        settings.get("output_dir", "~/.local/share/Archipelago/output")))
+    emoji = {e.get("name"): e.get("emoji") for e in listed}
+    entries = []
+    for path in sorted(glob.glob(os.path.join(root, "*.ap*"))
+                       + glob.glob(os.path.join(root, "*", "*.ap*"))):
+        if not os.path.isfile(path):
+            continue
+        folder = os.path.basename(os.path.dirname(path))
+        stem = os.path.splitext(os.path.basename(path))[0]
+        slot = re.sub(r"^AP_\d+_P\d+_", "", stem)
+        game = patch_game(path)
+        entries.append({
+            "visible": True,
+            "emoji": emoji.get(game) or "📦",
+            "name": slot if os.path.realpath(os.path.dirname(path)) == os.path.realpath(root)
+                    else f"{folder} - {slot}",
+            "label": game or os.path.splitext(path)[1],
+            "patch": path,
+        })
+    return entries
+
+
+def patch_game(path):
+    """The game a patch is for, from the archipelago.json inside it."""
+    try:
+        with zipfile.ZipFile(path) as z:
+            return json.loads(z.read("archipelago.json")).get("game", "")
+    except (OSError, KeyError, ValueError, zipfile.BadZipFile):
+        return ""
 
 
 def entry_key(entry):
@@ -328,10 +372,17 @@ class Launcher:
         # `commands = [""]` is a placeholder, not a command -- skip blanks so it
         # hits the "nothing to launch" status instead of silently doing nothing.
         commands = [c for c in entry.get("commands", []) if c.strip()]
+        patch = entry.get("patch", "")
 
-        if component and not ap:
+        if (component or patch) and not ap:
             self.status = "no Archipelago AppImage found"
             return True
+        if patch:
+            if debug:
+                self.debug_term(shlex.join([ap, patch]), f"{name} — patch")
+            else:
+                spawn([ap, patch])
+            return False
         if not component and not commands and not entry.get("proton_client"):
             self.status = f"{name} has nothing to launch"
             return True

@@ -4,19 +4,27 @@
             "enabled": false
         }
     },
+    "bar": {
+        "persistent": true
+    },
     "dashboard": {
+        "dragThreshold": 200,
         "showOnHover": true
     },
     "general": {
         "idle": {
+            "lockBeforeSleep": false,
             "timeouts": [
                 {
+                    "enabled": true,
                     "idleAction": "dpms off",
+                    "inhibitWhenAudio": false,
+                    "inhibitWhenCharging": false,
+                    "respectInhibitors": true,
                     "returnAction": "dpms on",
                     "timeout": 900
                 }
-            ],
-            "lockBeforeSleep": false
+            ]
         }
     },
     "launcher": {
@@ -25,6 +33,23 @@
             "foot",
             "org.flameshot.Flameshot"
         ]
+    },
+    "services": {
+        "audioIncrement": 0.01
+    },
+    "session": {
+        "commands": {
+            "hibernate": [
+                "systemctl",
+                "suspend"
+            ]
+        },
+        "icons": {
+            "hibernate": "bedtime"
+        }
+    },
+    "sidebar": {
+        "enabled": true
     },
     "utilities": {
         "enabled": true,
