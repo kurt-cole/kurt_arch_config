@@ -21,10 +21,22 @@ TOGGLE = [
     "foot", "-a", "ap-launcher", "-T", "Archipelago", f"{SCRIPTS}/ap-launcher.py",
 ]
 DEBOUNCE = 0.5  # a pad seen twice (e.g. bluetooth + usb) must not toggle twice
+# Pads whose guide button must NOT toggle the launcher. The 8BitDo's home
+# button is also its power button, so every power-on popped the launcher.
+# (The launcher's own gamepad navigation still uses these pads.)
+IGNORE = ("8bitdo",)
+
+
+class HotkeyPads(Gamepads):
+    def rescan(self):
+        super().rescan()
+        for path, dev in list(self.devices.items()):
+            if any(word in dev.name.lower() for word in IGNORE):
+                self.drop(path)  # reopened + dropped again each rescan; cheap
 
 
 def main():
-    pads = Gamepads()
+    pads = HotkeyPads()
     last = 0.0
     while True:
         fds = pads.fds()
