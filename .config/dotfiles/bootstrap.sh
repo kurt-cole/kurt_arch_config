@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # kurt-arch bootstrap: turn a fresh, booting Arch install into Barret's
 # caelestia/Hyprland setup. Run as your normal user (with sudo rights), from a
-# TTY or any terminal, with network up. The repo is private, so you need read
-# access (GitHub collaborator) and either an SSH key on GitHub or `gh auth login`:
+# TTY or any terminal, with network up. The repo is public, so no GitHub login
+# is needed to install:
 #
-#   git clone --branch kurt-arch git@github.com:barretg/arch-caelestia-config.git /tmp/dots
-#   DOTFILES_REPO=git@github.com:barretg/arch-caelestia-config.git bash /tmp/dots/.config/dotfiles/bootstrap.sh
+#   git clone https://github.com/kurt-cole/kurt_arch_config.git /tmp/dots
+#   bash /tmp/dots/.config/dotfiles/bootstrap.sh
 #
 # DOTFILES_REPO / DOTFILES_BRANCH override where the dotfiles come from (e.g.
 # your own fork).
@@ -17,8 +17,8 @@
 # monitor modes, optional apps (pkglist-extras.txt).
 set -euo pipefail
 
-REPO="${DOTFILES_REPO:-https://github.com/barretg/arch-caelestia-config.git}"
-BRANCH="${DOTFILES_BRANCH:-kurt-arch}"
+REPO="${DOTFILES_REPO:-https://github.com/kurt-cole/kurt_arch_config.git}"
+BRANCH="${DOTFILES_BRANCH:-main}"
 GITDIR="$HOME/.dotfiles.git"
 cfg() { git --git-dir="$GITDIR" --work-tree="$HOME" "$@"; }
 step() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
@@ -112,5 +112,5 @@ Done. Still to do by hand (see ~/.config/dotfiles/KURT.md):
   3. Pin your monitor modes in ~/.config/caelestia/hypr-user.lua (hyprctl monitors -j)
   4. Optional apps: ~/.config/dotfiles/pkglist-extras.txt
   5. Run `claude` once to sign in (after that, Super + ' opens it)
-  6. Point the dotfiles at your own repo:  config remote set-url origin <your repo>
+  6. Lenovo Legion laptop? run ~/.config/dotfiles/laptop-legion.sh (see LEGION.md)
 MSG
