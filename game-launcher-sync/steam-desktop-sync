@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Keep a .desktop launcher entry for every installed Steam game.
+
+Reads the appmanifest_*.acf files in every Steam library, writes
+~/.local/share/applications/steam-<appid>.desktop for each fully installed
+game, and deletes the entries it made for games that are gone. Run by
+steam-desktop-sync.path whenever a library's steamapps folder changes.
+"""
+import re
+import shutil
+from pathlib import Path
+
+HOME = Path.home()
+STEAM = HOME / ".local/share/Steam"
+APPS = HOME / ".local/share/applications"
+ICONS = HOME / ".local/share/icons/steam-desktop-sync"
+MARKER = "X-Steam-Desktop-Sync=true"
+
+# Tools Steam installs alongside games; never worth a launcher entry.
+SKIP_NAME = re.compile(r"^(Proton|Steam Linux Runtime|Steamworks Common Redistributables)")
+STATE_FULLY_INSTALLED = 4
+
+
+def library_paths():
+    paths = {STEAM}
+    vdf = STEAM / "steamapps/libraryfolders.vdf"
+    if vdf.exists():
+        paths.update(Path(p) for p in re.findall(r'"path"\s+"([^"]+)"', vdf.read_text()))
+    return [p / "steamapps" for p in paths]
+
+
+def libraries():
+    return [p for p in library_paths() if p.is_dir()]
+
+
+def read_manifest(path):
+    fields = dict(re.findall(r'^\s*"(appid|name|StateFlags)"\s+"((?:[^"\\]|\\.)*)"', path.read_text(errors="replace"), re.M))
+    if "appid" not in fields or "name" not in fields:
+        return None
+    name = re.sub(r"[™®]", "", fields["name"].replace('\\"', '"')).strip()
+    return fields["appid"], name, int(fields.get("StateFlags", "0"))
+
+
+def installed_games():
+    games = {}
+    for lib in libraries():
+        for acf in lib.glob("appmanifest_*.acf"):
+            try:
+                entry = read_manifest(acf)
+            except OSError:
+                continue
+            if entry and entry[2] & STATE_FULLY_INSTALLED and not SKIP_NAME.match(entry[1]):
+                games[entry[0]] = entry[1]
+    return games
+
+
+def icon_for(appid):
+    """Copy Steam's cached 32x32 icon somewhere it won't be cleared; fall back to the Steam icon."""
+    dest = ICONS / f"{appid}.jpg"
+    if dest.exists():
+        return str(dest)
+    cache = STEAM / "appcache/librarycache"
+    # Newer Steam keeps the icon as <sha1>.jpg inside a per-app folder; older Steam used <appid>_icon.jpg.
+    candidates = [p for p in (cache / appid).glob("*.jpg") if re.fullmatch(r"[0-9a-f]{40}", p.stem)]
+    candidates.append(cache / f"{appid}_icon.jpg")
+    for src in candidates:
+        if src.exists():
+            ICONS.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(src, dest)
+            return str(dest)
+    return "steam"
+
+
+def other_entry_exists(appid):
+    """True if something other than this script (e.g. Steam's own "Add desktop shortcut") already launches the game."""
+    pattern = re.compile(rf"rungameid/{appid}\b")
+    for f in APPS.glob("*.desktop"):
+        if f.name == f"steam-{appid}.desktop":
+            continue
+        try:
+            if pattern.search(f.read_text(errors="replace")):
+                return True
+        except OSError:
+            pass
+    return False
+
+
+def desktop_entry(appid, name):
+    return "\n".join([
+        "[Desktop Entry]",
+        "Type=Application",
+        f"Name={name}",
+        "Comment=Play this game on Steam",
+        f"Exec=steam steam://rungameid/{appid}",
+        f"Icon={icon_for(appid)}",
+        "Terminal=false",
+        "Categories=Game;",
+        MARKER,
+        "",
+    ])
+
+
+def main():
+    APPS.mkdir(parents=True, exist_ok=True)
+    games = installed_games()
+
+    for appid, name in games.items():
+        path = APPS / f"steam-{appid}.desktop"
+        if other_entry_exists(appid):
+            continue
+        content = desktop_entry(appid, name)
+        if not path.exists() or path.read_text() != content:
+            path.write_text(content)
+            print(f"added {name} ({appid})")
+
+    # A library on an unmounted drive looks like its games were uninstalled; keep their entries until it's back.
+    if any(not p.is_dir() for p in library_paths()):
+        return
+
+    for path in APPS.glob("steam-*.desktop"):
+        appid = path.stem.removeprefix("steam-")
+        if appid not in games and MARKER in path.read_text(errors="replace"):
+            path.unlink()
+            (ICONS / f"{appid}.jpg").unlink(missing_ok=True)
+            print(f"removed {appid}")
+
+
+if __name__ == "__main__":
+    main()

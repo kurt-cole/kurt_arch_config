@@ -1,0 +1,8 @@
+[Unit]
+Description=Sync launcher entries for installed Steam games
+# Steam writes to steamapps in bursts during downloads; don't let that trip the start limit.
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/steam-desktop-sync

@@ -1,0 +1,8 @@
+[Unit]
+Description=Sync launcher entries for installed Heroic games
+# Heroic can rewrite its install lists several times in a row; don't let that trip the start limit.
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/heroic-desktop-sync

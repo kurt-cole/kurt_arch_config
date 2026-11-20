@@ -1,0 +1,11 @@
+[Unit]
+Description=Watch Heroic install lists for installs and uninstalls
+
+[Path]
+PathChanged=%h/.config/heroic/legendaryConfig/legendary/installed.json
+PathChanged=%h/.config/heroic/gog_store/installed.json
+PathChanged=%h/.config/heroic/nile_store/installed.json
+PathChanged=%h/.config/heroic/sideload_apps/library.json
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+"""Keep a .desktop launcher entry for every game installed through Heroic.
+
+Reads Heroic's installed-game lists for Epic (legendary), GOG, Amazon (nile)
+and sideloaded apps, writes ~/.local/share/applications/heroic-<runner>-<app>.desktop
+for each, and deletes the entries it made for games that are gone. Run by
+heroic-desktop-sync.path whenever one of those lists changes.
+"""
+import json
+import re
+import shutil
+import urllib.request
+from pathlib import Path
+
+HOME = Path.home()
+HEROIC = HOME / ".config/heroic"
+APPS = HOME / ".local/share/applications"
+ICONS = HOME / ".local/share/icons/heroic-desktop-sync"
+MARKER = "X-Heroic-Desktop-Sync=true"
+
+
+def load(path):
+    try:
+        return json.loads(path.read_text())
+    except (OSError, ValueError):
+        return None
+
+
+def library(path, key):
+    """Map app_name -> library entry from one of Heroic's store caches."""
+    data = load(path) or {}
+    return {g["app_name"]: g for g in data.get(key, []) if isinstance(g, dict) and "app_name" in g}
+
+
+def installed_games():
+    """Map (runner, app_name) -> (title, cover art URL)."""
+    games = {}
+
+    epic = library(HEROIC / "store_cache/legendary_library.json", "library")
+    for app, info in (load(HEROIC / "legendaryConfig/legendary/installed.json") or {}).items():
+        if not info.get("is_dlc"):
+            games["legendary", app] = (info.get("title") or app, epic.get(app, {}).get("art_square"))
+
+    gog = library(HEROIC / "store_cache/gog_library.json", "games")
+    for info in (load(HEROIC / "gog_store/installed.json") or {}).get("installed", []):
+        app = info.get("appName")
+        if app and not info.get("is_dlc"):
+            meta = gog.get(app, {})
+            games["gog", app] = (meta.get("title") or app, meta.get("art_square"))
+
+    amazon = library(HEROIC / "store_cache/nile_library.json", "library")
+    for info in load(HEROIC / "nile_store/installed.json") or []:
+        app = info.get("id")
+        if app:
+            meta = amazon.get(app, {})
+            games["nile", app] = (meta.get("title") or app, meta.get("art_square"))
+
+    for meta in (load(HEROIC / "sideload_apps/library.json") or {}).get("games", []):
+        if meta.get("is_installed") and meta.get("app_name"):
+            games["sideload", meta["app_name"]] = (meta.get("title") or meta["app_name"], meta.get("art_square"))
+
+    return {k: (re.sub(r"[™®]", "", title).strip(), art) for k, (title, art) in games.items()}
+
+
+def slug(runner, app):
+    return f"heroic-{runner}-{re.sub(r'[^A-Za-z0-9_.-]', '_', app)}"
+
+
+def icon_for(runner, app, art):
+    """Keep a copy of the game's cover art; reuse Heroic's own icon cache, else download it, else the Heroic icon."""
+    dest = ICONS / f"{slug(runner, app)}.jpg"
+    if dest.exists():
+        return str(dest)
+    ICONS.mkdir(parents=True, exist_ok=True)
+    cached = HEROIC / f"icons/{app}.jpg"
+    try:
+        if cached.exists():
+            shutil.copyfile(cached, dest)
+            return str(dest)
+        if art and art.startswith("http"):
+            with urllib.request.urlopen(art, timeout=15) as r:
+                dest.write_bytes(r.read())
+            return str(dest)
+    except OSError:
+        dest.unlink(missing_ok=True)
+    return "heroic"
+
+
+def other_entry_exists(app, own):
+    """True if something other than this script (e.g. Heroic's own "Add shortcut") already launches the game."""
+    pattern = re.compile(rf"appName={re.escape(app)}(?![^&\s\"'])")
+    for f in APPS.glob("*.desktop"):
+        if f.name == own:
+            continue
+        try:
+            if pattern.search(f.read_text(errors="replace")):
+                return True
+        except OSError:
+            pass
+    return False
+
+
+def desktop_entry(runner, app, title, art):
+    return "\n".join([
+        "[Desktop Entry]",
+        "Type=Application",
+        f"Name={title}",
+        "Comment=Play this game in Heroic",
+        f'Exec=xdg-open "heroic://launch?appName={app}&runner={runner}"',
+        f"Icon={icon_for(runner, app, art)}",
+        "Terminal=false",
+        "Categories=Game;",
+        MARKER,
+        "",
+    ])
+
+
+def main():
+    APPS.mkdir(parents=True, exist_ok=True)
+    games = installed_games()
+    wanted = set()
+
+    for (runner, app), (title, art) in games.items():
+        name = slug(runner, app)
+        wanted.add(name)
+        path = APPS / f"{name}.desktop"
+        if other_entry_exists(app, path.name):
+            continue
+        content = desktop_entry(runner, app, title, art)
+        if not path.exists() or path.read_text() != content:
+            path.write_text(content)
+            print(f"added {title} ({runner}/{app})")
+
+    for path in APPS.glob("heroic-*.desktop"):
+        if path.stem not in wanted and MARKER in path.read_text(errors="replace"):
+            path.unlink()
+            (ICONS / f"{path.stem}.jpg").unlink(missing_ok=True)
+            print(f"removed {path.stem}")
+
+
+if __name__ == "__main__":
+    main()

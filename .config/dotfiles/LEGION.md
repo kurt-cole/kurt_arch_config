@@ -62,6 +62,12 @@ appimagelauncher -> plain `appimagelauncher`, vscodium -> `vscodium-bin`.
 
 Pick Arch in GRUB, log in through tuigreet, and Hyprland starts.
 
+## 5. After signing into Steam / Heroic
+
+Run `bash ~/game-launcher-sync/install.sh` once Steam (and Heroic, if used) has
+been opened and signed into. It adds every installed game to the app menu and
+keeps the list in sync. Re-run it after adding a new Steam library folder.
+
 ## Notes
 
 - `hypr-user.lua` pins the laptop panel (`eDP-1`) to 1920x1080@165. The desktop's
