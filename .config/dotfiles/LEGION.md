@@ -12,7 +12,11 @@ setup as the desktop (same packages, look and keybinds), plus laptop hardware su
    power buttons do" -> untick *Turn on fast startup*. (Otherwise Windows leaves
    the disk half-locked, and Linux can corrupt it.)
 3. **Make room**: Disk Management -> right-click C: -> *Shrink Volume*. Give Arch
-   at least 150 GB. Leave the space **unallocated**.
+   at least 150 GB. Leave the space **unallocated**. If C: won't shrink far enough
+   (it stopped at 13 GB here), use the second NVMe instead: this laptop has
+   Windows on a 512 GB drive and a separate 2 TB drive. The actual install split
+   the 2 TB NTFS data partition 1 TB / 1 TB (`ntfsresize` from the live USB) and
+   put Arch's ESP + root on that drive, leaving the Windows drive untouched.
 4. Make an Arch USB (archlinux.org/download, flash with Rufus in GPT mode, or
    `dd` from this desktop).
 
@@ -26,7 +30,9 @@ setup as the desktop (same packages, look and keybinds), plus laptop hardware su
 
 Connect to Wi-Fi first: `iwctl` -> `station wlan0 connect <SSID>`. Then run `archinstall`:
 
-- **Disk configuration**: choose *Manual partitioning* on the internal NVMe. Do
+- **Disk configuration**: choose *Manual partitioning* on the internal NVMe (or
+  partition + mount by hand and pick *Pre-mounted layout*: root at `/mnt`, the
+  1 GiB ESP at `/mnt/boot`). Do
   **not** pick the best-effort default (it wipes Windows). In the free space, create:
   - a **1 GiB FAT32** partition, mountpoint `/boot`, *boot/ESP* flag. This is a
     separate EFI partition for Arch, because Lenovo's Windows EFI partition is too small
@@ -45,17 +51,21 @@ Reboot and pull the USB.
 
 Log in at the TTY and connect Wi-Fi with `nmtui`. Then:
 
+    sudo pacman -S --needed git          # the Minimal profile doesn't include it
     git clone https://github.com/kurt-cole/kurt_arch_config.git /tmp/dots
     bash /tmp/dots/.config/dotfiles/bootstrap.sh
     bash ~/.config/dotfiles/laptop-legion.sh
     reboot
 
+Prompts during bootstrap: vulkan-driver -> `vulkan-radeon` (lib32 -> `lib32-vulkan-radeon`),
+appimagelauncher -> plain `appimagelauncher`, vscodium -> `vscodium-bin`.
+
 Pick Arch in GRUB, log in through tuigreet, and Hyprland starts.
 
 ## Notes
 
-- The desktop's monitor pins in `hypr-user.lua` (DP-1/DP-2) don't match the laptop's
-  panel (`eDP-1`), so they're ignored and the laptop panel auto-configures.
+- `hypr-user.lua` pins the laptop panel (`eDP-1`) to 1920x1080@165. The desktop's
+  DP-1/DP-2 pins are ignored on the laptop, and the eDP-1 pin is ignored on the desktop.
 - The laptop's HDMI port is probably wired to the RTX 3060, so plugging in an
   external monitor wakes the dGPU. That's normal.
 - If Hyprland ever starts on the NVIDIA GPU (laggy, battery drains fast), pin it

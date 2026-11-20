@@ -28,6 +28,8 @@ end
 -- come from `hyprctl monitors -j`. Example for two 1440p panels side by side:
 hl.monitor({ output = "DP-1", mode = "2560x1440@360", position = "0x0",    scale = 1 })
 hl.monitor({ output = "DP-2", mode = "2560x1440@99.95", position = "2560x0", scale = 1 })
+-- Legion Slim 7 laptop panel (no eDP-1 on the desktop, so this is ignored there)
+hl.monitor({ output = "eDP-1", mode = "1920x1080@165", position = "0x0", scale = 1 })
 
 -- checklist TUI lives on the todo special workspace (SUPER + R)
 hl.window_rule({ match = { class = "checklist" }, workspace = "special:todo" })
